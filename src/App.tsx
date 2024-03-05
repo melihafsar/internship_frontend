@@ -1,17 +1,22 @@
-// import './App.css'
-import { RouterProvider } from "react-router-dom";
-import { router } from './routes';
+import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "./context/AuthContext";
+import Router from "./router";
+import { Toaster } from "@/components/ui/toaster";
+import { UtilProvider } from "./context/UtilContext";
+import Loader from "./components/Loader";
 
-import { ThemeProvider } from "@/components/theme-provider"
-import { ModeToggle } from './components/mode-toggle';
- 
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <RouterProvider router={router} />
-      <ModeToggle />
+      <AuthProvider>
+        <UtilProvider>
+          <Loader />
+          <Router />
+          <Toaster />
+        </UtilProvider>
+      </AuthProvider>
     </ThemeProvider>
-  )
+  );
 }
- 
-export default App
+
+export default App;

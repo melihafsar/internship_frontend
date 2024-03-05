@@ -1,18 +1,21 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  important: true,
   darkMode: ["class"],
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
+  ],
   theme: {
     container: {
       center: true,
       padding: "2rem",
       screens: {
         "2xl": "1400px",
+        "3xl": "1600px",
+        "4xl": "1800px",
       },
     },
     extend: {
