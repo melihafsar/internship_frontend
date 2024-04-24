@@ -7,10 +7,11 @@ import {
 } from "@/components/ui/card";
 import { userInfoFields } from "./index";
 import React from "react";
+import { UserDetail } from "@/types";
 
 interface UserInfoFieldsProps {
-  user: { username: string; email: string };
-  setUser: (user: { username: string; email: string }) => void;
+  user: UserDetail;
+  setUser: React.Dispatch<React.SetStateAction<UserDetail>>;
 }
 
 function UserInfoFields({ user, setUser }: UserInfoFieldsProps) {

@@ -3,14 +3,31 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import NavigationItems from "./components/NavigationItems";
 import UserInfoFields from "./components/UserInfoFields";
+import { useToast } from "@/components/ui/use-toast";
+import { useUser } from "@/context/UserContext";
+import ProfileService from "@/services/profile.service";
 
 function Profile() {
   const [activeTab, setActiveTab] = useState("contact");
   const location = useLocation();
-  const [user, setUser] = useState({
-    username: "",
-    email: "",
-  });
+  const { userDetailData, setUserDetailData } = useUser();
+  const { toast } = useToast();
+
+  const fetchUserInfo = async () => {
+    try {
+      const response = await ProfileService.getUserInfo();
+      setUserDetailData(response.data);
+    } catch {
+      toast({
+        title: "Hata",
+        description: "Kullanıcı bilgileri getirilirken bir hata oluştu.",
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
 
   useEffect(() => {
     if (location.hash) setActiveTab(location.hash.slice(1));
@@ -30,7 +47,7 @@ function Profile() {
           </nav>
         </aside>
         <div className="flex-1 max-w-[1400px]">
-          <UserInfoFields user={user} setUser={setUser} />
+          <UserInfoFields user={userDetailData} setUser={setUserDetailData} />
         </div>
       </div>
     </div>
