@@ -19,50 +19,64 @@ export interface supabaseSession {
     };
   };
 }
-
-interface RootObject {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-  expires_at: number;
-  refresh_token: string;
-  user: User;
-}
-interface User {
-  id: string;
-  aud: string;
-  role: string;
+export interface UserDetail {
+  id: number;
   email: string;
-  email_confirmed_at: string;
-  phone: string;
-  confirmation_sent_at: string;
-  confirmed_at: string;
-  last_sign_in_at: string;
-  app_metadata: Appmetadata;
-  user_metadata: Usermetadata;
-  identities: Identity[];
-  created_at: string;
-  updated_at: string;
+  name: string;
+  surname: string;
+  profile_photo_url: string;
+  phone_number: string;
+  foreign_languages: Foreignlanguage[];
+  university_educations: Universityeducation[];
+  education_year: number;
+  works: Work[];
+  user_projects: Userproject[];
+  detail: Detail;
 }
-interface Identity {
-  identity_id: string;
-  id: string;
-  user_id: string;
-  identity_data: Identitydata;
-  provider: string;
-  last_sign_in_at: string;
-  created_at: string;
-  updated_at: string;
-  email: string;
+interface Detail {
+  date_of_birth: string;
+  gender: string;
+  driver_licences: string[];
+  marital_status: string;
+  military_status: string;
+  country_id: number;
+  city_id: number;
+  district: string;
+  address: string;
 }
-interface Identitydata {
-  email: string;
-  email_verified: boolean;
-  phone_verified: boolean;
-  sub: string;
+interface Userproject {
+  project_name: string;
+  description: string;
+  project_thumbnail: string;
+  project_link: string;
+  id: number;
 }
-interface Usermetadata {}
-interface Appmetadata {
-  provider: string;
-  providers: string[];
+interface Work {
+  position: string;
+  company_name: string;
+  start_date: string;
+  end_date: string;
+  is_working_now: boolean;
+  description: string;
+  duties: string;
+  work_type: string;
+  reason_for_leave: string;
+  id: number;
+}
+interface Universityeducation {
+  university_id: number;
+  university_name: string;
+  faculty: string;
+  department: string;
+  start_date: string;
+  end_date: string;
+  is_graduated: boolean;
+  gpa: number;
+  description: string;
+  id: number;
+}
+interface Foreignlanguage {
+  language_code: string;
+  degree: string;
+  id: number;
 }

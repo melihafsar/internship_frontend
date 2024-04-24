@@ -1,15 +1,21 @@
 import { useState } from "react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-} from "@/components/ui/accordion";
+
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AvatarImage } from "@/components/ui/avatar";
 import { useContactDetailsForm } from "@/schemas/contact-details-form.schema";
+import { Input } from "@/components/ui/input";
+import { useUtil } from "@/context/UtilContext";
+import ProfileService from "@/services/profile.service";
+import { useToast } from "@/components/ui/use-toast";
+import { ApiErrorData } from "@/types/error";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+} from "@/components/ui/accordion";
 import {
   Form,
   FormControl,
@@ -18,27 +24,23 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useUtil } from "@/context/UtilContext";
-import { Combobox } from "@/components/ui/combobox";
-import ProfileService from "@/services/profile.service";
-import { useToast } from "@/components/ui/use-toast";
-import { ApiErrorData } from "@/types/error";
+import { PhotoUploadDialog } from "./PhotoUploadDialog";
+import { UserDetail } from "@/types";
 
 interface ContactDetailsProps {
-  user?: { username: string; email: string };
-  setUser?: (user: { username: string; email: string }) => void;
+  user: UserDetail;
+  setUser?: React.Dispatch<React.SetStateAction<UserDetail>>;
 }
 
 const ContactDetailsForm = ({
+  user,
   form,
   loading,
-  comboboxData,
   handleFormSubmit,
 }: {
+  user: UserDetail;
   form: any;
   loading: boolean;
-  comboboxData: [{ value: string; label: string }] | [];
   handleFormSubmit: (data: any) => void;
 }) => {
   return (
@@ -60,7 +62,12 @@ const ContactDetailsForm = ({
                   </p>
                 </FormLabel>
                 <FormControl>
-                  <Input type="text" {...field} value={field.value} />
+                  <Input
+                    type="text"
+                    {...field}
+                    placeholder={user.name}
+                    value={field.value}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -78,7 +85,12 @@ const ContactDetailsForm = ({
                   </p>
                 </FormLabel>
                 <FormControl>
-                  <Input type="text" {...field} value={field.value} />
+                  <Input
+                    type="text"
+                    placeholder={user.surname}
+                    {...field}
+                    value={field.value}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -88,24 +100,22 @@ const ContactDetailsForm = ({
         <div className="flex flex-col md:flex-row space-y-4 md:space-x-4 md:space-y-0 justify-between">
           <FormField
             control={form.control}
-            name="age"
+            name="phoneNumber"
             render={({ field }) => (
               <FormItem className="w-full md:w-1/2 h-[100px]">
                 <FormLabel className="flex flex-row gap-x-2 items-baseline">
-                  Yaşınız
+                  Telefon Numaranız
                   <p className="text-[0.6rem] text-muted-foreground">
                     Bu alan isteğe bağlıdır, herkes görebilir.
                   </p>
                 </FormLabel>
                 <FormControl>
                   <Input
-                    type="number"
+                    type="tel"
                     {...field}
+                    placeholder={user.phone_number}
                     value={field.value}
-                    onChange={(e) => {
-                      field.onChange(parseInt(e.target.value));
-                    }}
-                    min={0}
+                    pattern="[0-9]{11}"
                   />
                 </FormControl>
                 <FormMessage />
@@ -114,25 +124,17 @@ const ContactDetailsForm = ({
           />
           <FormField
             control={form.control}
-            name="universityName"
+            name="email"
             render={({ field }) => (
               <FormItem className="w-full md:w-1/2 h-[100px]">
                 <FormLabel className="flex flex-row gap-x-2 items-baseline">
-                  Üniversiteniz
+                  E-posta Adresiniz
                   <p className="text-[0.6rem] text-muted-foreground">
-                    Bu alan isteğe bağlıdır, herkes görebilir.
+                    Bu alanı değiştiremezsiniz.
                   </p>
                 </FormLabel>
                 <FormControl>
-                  <Combobox
-                    {...field}
-                    data={comboboxData}
-                    title="Üniversite seçin"
-                    className="w-full"
-                    onSelect={(selectedValue) => {
-                      form.setValue("universityName", selectedValue);
-                    }}
-                  />
+                  <Input type="email" {...field} value={user.email} disabled />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -153,19 +155,20 @@ const ContactDetailsForm = ({
   );
 };
 
-function ContactDetails({ user, setUser }: ContactDetailsProps) {
+function ContactDetails({ user }: ContactDetailsProps) {
   const [showForm, setShowForm] = useState(false);
   const { loading, setLoading } = useUtil();
-  const [universities, setUniversities] = useState<
-    [{ value: string; label: string }] | []
-  >([]);
+  const [showUploadDialog, setShowUploadDialog] = useState(false);
   const { toast } = useToast();
 
   const handleFormSubmit = async (data: any) => {
     try {
       setLoading(true);
-      const response = await ProfileService.updateUserInfo(data);
-      setUser && setUser(response.data);
+      await ProfileService.updateUserInfo({
+        name: data.name,
+        surname: data.surname,
+        phone_number: data.phoneNumber,
+      });
       toast({
         title: "Başarılı",
         description: "Bilgileriniz başarıyla güncellendi.",
@@ -182,47 +185,30 @@ function ContactDetails({ user, setUser }: ContactDetailsProps) {
     }
   };
 
-  const fetchAllUniversities = async () => {
-    if (universities.length > 0) return;
-    try {
-      const { data } = await ProfileService.getUniversities();
-      const formattedData = data.map(
-        (uni: { university_id: number; name: string }) => ({
-          value: uni.name,
-          label: uni.name,
-        })
-      );
-      setUniversities(formattedData);
-    } catch (error) {
-      toast({
-        title: "Hata",
-        description: "Üniversiteler getirilirken bir hata oluştu.",
-        variant: "destructive",
-      });
-    }
-  };
-
   return (
     <>
+      <PhotoUploadDialog
+        show={showUploadDialog}
+        dialogClose={() => setShowUploadDialog(false)}
+      />
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
-        <Avatar className="h-32 w-32 m-4">
-          <AvatarImage
-            src="https://media.licdn.com/dms/image/D4D03AQFKXnb4_37upQ/profile-displayphoto-shrink_400_400/0/1704967127601?e=1714608000&v=beta&t=TS23KpCiHUQup8RoH9Wmvw90_GTnlAN0jbBimuk_wbg"
-            alt="profil_resmim"
-          />
-          <AvatarFallback>MA</AvatarFallback>
-        </Avatar>
+        <div
+          className="hover:opacity-60 flex items-center relative group cursor-pointer"
+          onClick={() => setShowUploadDialog(true)}
+        >
+          <Pencil className="absolute h-6 w-6 top-1/2 right-1/2 transform translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 z-50" />
+          <Avatar className="h-32 w-32 m-4">
+            <AvatarImage src={user?.profile_photo_url} alt="profil_resmim" />
+            <AvatarFallback>MA</AvatarFallback>
+          </Avatar>
+        </div>
         <div className="flex flex-1 flex-col space-y-2">
           <div className="flex flex-col gap-y-2 md:gap-y-0 md:flex-row justify-between items-center">
             <h1 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-2xl">
-              Melih Afşar
+              {user.name} {user.surname}
             </h1>
-
             <Button
-              onClick={() => {
-                setShowForm(!showForm);
-                universities.length === 0 && fetchAllUniversities();
-              }}
+              onClick={() => setShowForm(!showForm)}
               variant="outline"
               className="flex items-center space-x-2"
             >
@@ -256,9 +242,9 @@ function ContactDetails({ user, setUser }: ContactDetailsProps) {
           <AccordionContent>
             <Separator className="my-1" />
             <ContactDetailsForm
+              user={user}
               form={useContactDetailsForm().form}
               loading={loading}
-              comboboxData={universities}
               handleFormSubmit={handleFormSubmit}
             />
           </AccordionContent>

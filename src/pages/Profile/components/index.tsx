@@ -13,7 +13,7 @@ import ContactDetails from "./ContactDetails";
 import PrivateInformation from "./PrivateInformation";
 import WorkExperience from "./WorkExperience";
 import Education from "./Education";
-import Skills from "./Skills";
+import Skills from "./Skils";
 import Projects from "./Projects";
 import References from "./References";
 import ForeignLanguages from "./ForeignLanguages";
