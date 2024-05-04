@@ -45,4 +45,13 @@ export default {
     updateExperience(experienceId, experienceData) {
         return api.post(`/WorkHistory/Update/${experienceId}`, experienceData);
     },
+    createProject(newProjectData) {
+        return api.post('/UserProject/Create', newProjectData);
+    },
+    deleteProject(projectId) {
+        return api.post(`/UserProject/Delete/${projectId}`);
+    },
+    updateProject(projectId, projectData) {
+        return api.post(`/UserProject/Update/${projectId}`, projectData);
+    },
 };
