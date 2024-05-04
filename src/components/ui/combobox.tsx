@@ -46,7 +46,7 @@ export function Combobox({ data, title, className, onSelect }: ComboboxProps) {
         >
           <p className="truncate">
             {selectedValue
-              ? data.find((item) => item.label === selectedValue)?.label
+              ? data.find((item) => item.value === selectedValue)?.label
               : title}
           </p>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -61,7 +61,7 @@ export function Combobox({ data, title, className, onSelect }: ComboboxProps) {
               <CommandItem
                 key={`${item.label}-${index}`}
                 value={item.label}
-                onSelect={() => handleSelect(item.label)}
+                onSelect={() => handleSelect(item.value)}
               >
                 <Check
                   className={cn(

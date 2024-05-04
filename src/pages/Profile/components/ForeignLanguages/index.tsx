@@ -1,42 +1,103 @@
-import { useEffect, useState } from "react";
-
+import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import { useUtil } from "@/context/UtilContext";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-function ForeignLanguages() {
-  const [selectedDegree, setSelectedDegree] = useState(0);
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+} from "@/components/ui/accordion";
+import { useForeignLanguagesForm } from "@/schemas/foreign-languages-form.schema";
+import ForeignLanguagesForm from "./ForeignLanguagesForm";
+import ForeignLanguageCard from "./ForeignLanguageCard";
+import { UserDetail } from "@/types";
+import ProfileService from "@/services/profile.service";
 
-  const LanguageDegree = [
-    { key: 0, label: "A1 - Başlangıç" },
-    { key: 1, label: "A2 - Temel" },
-    { key: 2, label: "B1 - Orta" },
-    { key: 3, label: "B2 - İyi" },
-    { key: 4, label: "C1 - Çok İyi" },
-    { key: 5, label: "C2 - Ana Dil" },
-  ];
+interface ForeignLanguagesProps {
+  user: UserDetail;
+}
+
+function ForeignLanguages({ user }: ForeignLanguagesProps) {
+  const [showForm, setShowForm] = useState(false);
+  const { loading, setLoading } = useUtil();
+  const { toast } = useToast();
+
+  const handleFormSubmit = async (data: {
+    language_code: string;
+    degree: string;
+  }) => {
+    try {
+      setLoading(true);
+      await ProfileService.addNewForeignLanguage(data);
+      toast({
+        title: "Başarılı",
+        description: "Yeni yabancı dil bilgisi başarıyla eklendi.",
+        variant: "success",
+      });
+      setShowForm(false);
+    } catch (error: any) {
+      console.error(error);
+      toast({
+        title: "Hata",
+        description: "Yabancı dil bilgisi eklenirken bir hata oluştu.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <Select onValueChange={(value) => setSelectedDegree(value)}>
-      <SelectTrigger className="w-[200px]">
-        <SelectValue placeholder="Yabancı dil düzeyi seçiniz" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectLabel>Yabancı Dil Derecesi</SelectLabel>
-          {LanguageDegree.map((degree) => (
-            <SelectItem key={`${degree.key}-select-item`} value={degree.key}>
-              {degree.label}
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+    <>
+      <div className="flex flex-col md:flex-row justify-between items-center w-full my-2">
+        <h5 className="text-md font-medium my-2">
+          Eklediğim Yabancı Dil Bilgilerim
+          <Badge className="ml-2" variant="secondary">
+            {user.foreign_languages?.length}
+          </Badge>
+        </h5>
+        <Button
+          onClick={() => setShowForm(!showForm)}
+          variant="outline"
+          className="flex items-center space-x-2 mb-2"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Yabancı Dil Bilgisi Ekleyin
+        </Button>
+      </div>
+      {user.foreign_languages?.length > 0 && (
+        <div className="flex flex-col">
+          <Separator className="my-1" />
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
+            {user.foreign_languages.map((foreignLanguage) => (
+              <ForeignLanguageCard
+                key={foreignLanguage.id}
+                foreignLanguage={foreignLanguage}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+      <Accordion
+        type="single"
+        collapsible
+        value={showForm ? "foreignLanguage" : undefined}
+      >
+        <AccordionItem value="foreignLanguage">
+          <AccordionContent>
+            <Separator className="my-1" />
+            <ForeignLanguagesForm
+              form={useForeignLanguagesForm().form}
+              loading={loading}
+              handleFormSubmit={handleFormSubmit}
+            />
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </>
   );
 }
 

@@ -7,13 +7,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import EducationForm from "./EducationForm";
-import { useEducationForm } from "@/schemas/education-form.schema";
+import {
+  EducationFormTypes,
+  useEducationForm,
+} from "@/schemas/education-form.schema";
 import { useUtil } from "@/context/UtilContext";
 import { Universityeducation } from "@/types";
 
 interface EducationEditModalProps {
   triggerButton: React.ReactNode;
-  handleUpdateEducation: (data: any) => void;
+  handleUpdateEducation: (data: EducationFormTypes, e: any) => void;
   education: Universityeducation;
 }
 
@@ -38,7 +41,7 @@ function EducationEditModal({
           <EducationForm
             form={useEducationForm().form}
             loading={loading}
-            handleFormSubmit={(data: any) => handleUpdateEducation(data)}
+            handleFormSubmit={handleUpdateEducation}
             initialValues={education}
           />
         </div>
