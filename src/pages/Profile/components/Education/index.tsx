@@ -24,7 +24,6 @@ import moment from "moment";
 
 interface EducationProps {
   user: UserDetail;
-  setUser?: React.Dispatch<React.SetStateAction<UserDetail>>;
 }
 
 function Education({ user }: EducationProps) {

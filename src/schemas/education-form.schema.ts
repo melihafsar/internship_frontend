@@ -31,7 +31,7 @@ export const useEducationForm = () => {
       faculty: "",
       department: "",
       start_date: new Date(),
-      end_date: new Date(),
+      end_date: new Date(new Date().setDate(new Date().getDate() + 1)),
       is_graduated: false,
       education_year: 0,
       gpa: 0,

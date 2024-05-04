@@ -36,4 +36,13 @@ export default {
     updateForeignLanguage(languageId, languageData) {
         return api.post(`/ForeignLanguage/Update/${languageId}`, languageData);
     },
+    addNewExperience(newExperienceData) {
+        return api.post('/WorkHistory/Create', newExperienceData);
+    },
+    deleteExperience(experienceId) {
+        return api.post(`/WorkHistory/Delete/${experienceId}`);
+    },
+    updateExperience(experienceId, experienceData) {
+        return api.post(`/WorkHistory/Update/${experienceId}`, experienceData);
+    },
 };
