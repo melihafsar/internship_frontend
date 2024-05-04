@@ -1,6 +1,5 @@
 import { Combobox } from "@/components/ui/combobox";
 import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
@@ -26,11 +25,13 @@ import { Button } from "@/components/ui/button";
 import ProfileService from "@/services/profile.service";
 import { useToast } from "@/components/ui/use-toast";
 import { Universityeducation } from "@/types";
+import { EducationFormTypes } from "@/schemas/education-form.schema";
+import { UseFormReturn } from "react-hook-form";
 
 interface EducationFormProps {
-  form: any;
+  form: UseFormReturn<EducationFormTypes>;
   loading: boolean;
-  handleFormSubmit: (data: any) => void;
+  handleFormSubmit: (data: EducationFormTypes, e: any) => void;
   initialValues?: Universityeducation;
 }
 
@@ -40,9 +41,9 @@ const EducationForm = ({
   handleFormSubmit,
   initialValues,
 }: EducationFormProps) => {
-  const [isAvailableName, setIsAvailableName] = useState(false);
   const [universtiesList, setUniversitiesList] = useState([]);
   const { toast } = useToast();
+  form.watch("university_available");
 
   const fetchUniversities = async () => {
     try {
@@ -76,27 +77,43 @@ const EducationForm = ({
       });
   }, [form]);
 
+  useEffect(() => {
+    form.setValue("university_name", undefined);
+  }, [form.getValues("university_available")]);
+
   return (
     <Form {...form}>
       <form
-        onSubmit={(args) => form.handleSubmit(handleFormSubmit)(args)}
+        onSubmit={form.handleSubmit(handleFormSubmit)}
         className="mx-2 space-y-4"
       >
         <div className="flex items-center space-x-2 my-6">
-          <Switch
-            id="university-available"
-            checked={isAvailableName}
-            onCheckedChange={(value) => setIsAvailableName(value)}
-          />
-          <Label htmlFor="university-available" className="text-sm">
-            Üniversitem Listede {isAvailableName ? "Var" : "Yok"}
-          </Label>
-        </div>
-        <div className="flex flex-col md:flex-row space-y-4 md:space-x-4 md:space-y-0 justify-between mt-8 items-center">
-          {isAvailableName ? (
+          {
             <FormField
               control={form.control}
-              name="university_name"
+              name="university_available"
+              render={({ field }) => (
+                <FormItem className="w-full md:w-1/2">
+                  <FormLabel className="flex flex-row gap-x-2 items-center">
+                    <Switch
+                      id="university_available"
+                      checked={field.value}
+                      onCheckedChange={(value) => field.onChange(value)}
+                      className="mt-1"
+                    />
+                    Üniversitem Listede {field.value ? "Var" : "Yok"}
+                  </FormLabel>
+                  <FormMessage {...field} />
+                </FormItem>
+              )}
+            />
+          }
+        </div>
+        <div className="flex flex-col md:flex-row space-y-4 md:space-x-4 md:space-y-0 justify-between mt-8 items-center">
+          {form.getValues("university_available") ? (
+            <FormField
+              control={form.control}
+              name="university_id"
               render={({ field }) => (
                 <FormItem className="w-full md:w-1/2 h-[100px]">
                   <FormLabel className="flex flex-row gap-x-2 items-baseline">
@@ -106,10 +123,11 @@ const EducationForm = ({
                     </p>
                   </FormLabel>
                   <Combobox
+                    {...field}
                     data={universtiesList}
                     title="Üniversite"
                     onSelect={(value) => {
-                      field.onChange(value);
+                      field.onChange(parseInt(value));
                     }}
                     className="w-full"
                   />

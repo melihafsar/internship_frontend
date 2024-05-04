@@ -3,11 +3,14 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 
 const formSchema = z.object({
+  university_available: z.boolean(),
+  university_id: z.coerce.number().optional(),
   university_name: z
     .string()
-    .min(5, "Üniversite adı en az 5 karakter olmalıdır."),
-  faculty: z.string().min(8, "Fakülte adı en az 8 karakter olmalıdır."),
-  department: z.string().min(5, "Bölüm adı en az 5 karakter olmalıdır."),
+    .min(3, "Üniversite adı en az 3 karakter olmalıdır.")
+    .optional(),
+  faculty: z.string().min(3, "Fakülte adı en az 3 karakter olmalıdır."),
+  department: z.string().min(3, "Bölüm adı en az 3 karakter olmalıdır."),
   start_date: z.coerce.date(),
   end_date: z.coerce.date(),
   is_graduated: z.boolean(),
@@ -22,6 +25,8 @@ export const useEducationForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      university_available: true,
+      university_id: 0,
       university_name: "",
       faculty: "",
       department: "",

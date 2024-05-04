@@ -26,5 +26,14 @@ export default {
     },
     updateEducation(educationId, educationData) {
         return api.post(`/UniversityEducation/Update/${educationId}`, educationData);
-    }
+    },
+    addNewForeignLanguage(newLanguageData) {
+        return api.post('/ForeignLanguage/Create', newLanguageData);
+    },
+    deleteForeignLanguage(languageId) {
+        return api.post(`/ForeignLanguage/Delete/${languageId}`);
+    },
+    updateForeignLanguage(languageId, languageData) {
+        return api.post(`/ForeignLanguage/Update/${languageId}`, languageData);
+    },
 };

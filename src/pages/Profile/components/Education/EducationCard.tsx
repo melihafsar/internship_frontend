@@ -7,6 +7,8 @@ import ProfileService from "@/services/profile.service";
 import { useToast } from "@/components/ui/use-toast";
 import { useUtil } from "@/context/UtilContext";
 import EducationEditModal from "./EducationEditModal";
+import { EducationFormTypes } from "@/schemas/education-form.schema";
+import moment from "moment";
 
 interface EducationCardProps {
   education: Universityeducation;
@@ -33,10 +35,28 @@ function EducationCard({ education }: EducationCardProps) {
     setLoading(false);
   };
 
-  const handleUpdateEducation = async (data: any) => {
+  const handleUpdateEducation = async (data: EducationFormTypes, e: any) => {
+    e.preventDefault();
     try {
       setLoading(true);
-      await ProfileService.updateEducation(education.id, data);
+
+      const universityInfo = data.university_available
+        ? { university_id: data.university_id }
+        : { university_name: data.university_name };
+
+      await ProfileService.updateEducation(education.id, {
+        ...universityInfo,
+        faculty: data.faculty,
+        department: data.department,
+        is_graduated: data.is_graduated,
+        start_date: moment(data.start_date).format("YYYY-MM-DD"),
+        end_date: data.is_graduated
+          ? moment(data.end_date).format("YYYY-MM-DD")
+          : null,
+        education_year: data.is_graduated ? null : data.education_year,
+        gpa: data.gpa,
+        description: data.description,
+      });
       toast({
         title: "Eğitim bilgileriniz başarıyla güncellendi.",
         variant: "success",
@@ -67,7 +87,7 @@ function EducationCard({ education }: EducationCardProps) {
                 <Edit className="w-4 h-4" />
               </Button>
             }
-            handleUpdateEducation={(data: any) => handleUpdateEducation(data)}
+            handleUpdateEducation={handleUpdateEducation}
           />
           <ConfirmationDialog
             onConfirm={() => deleteEducationById(education.id)}
