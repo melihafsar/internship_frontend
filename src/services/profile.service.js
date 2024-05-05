@@ -45,4 +45,21 @@ export default {
     updateExperience(experienceId, experienceData) {
         return api.post(`/WorkHistory/Update/${experienceId}`, experienceData);
     },
+    createProject(newProjectData) {
+        return api.post('/UserProject/Create', newProjectData);
+    },
+    deleteProject(projectId) {
+        return api.post(`/UserProject/Delete/${projectId}`);
+    },
+    updateProject(projectId, projectData) {
+        return api.post(`/UserProject/Update/${projectId}`, projectData);
+    },
+    updateProjectField(projectId, field) {
+        return api.put(`/UserProject/UpdateThumbnail/${projectId}`, field, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+    },
+    updateUserDetails(userDetails) {
+        return api.post('/UserDetail/Update', userDetails);
+    }
 };

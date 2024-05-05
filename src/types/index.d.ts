@@ -44,7 +44,7 @@ interface Detail {
   district: string;
   address: string;
 }
-interface Userproject {
+interface UserProject {
   project_name: string;
   description: string;
   project_thumbnail: string;
