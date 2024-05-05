@@ -54,4 +54,12 @@ export default {
     updateProject(projectId, projectData) {
         return api.post(`/UserProject/Update/${projectId}`, projectData);
     },
+    updateProjectField(projectId, field) {
+        return api.put(`/UserProject/UpdateThumbnail/${projectId}`, field, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+    },
+    updateUserDetails(userDetails) {
+        return api.post('/UserDetail/Update', userDetails);
+    }
 };

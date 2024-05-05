@@ -24,8 +24,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { PhotoUploadDialog } from "./PhotoUploadDialog";
+import { ImageUploadDialog } from "./ImageUploadDialog";
 import { UserDetail } from "@/types";
+import { useNavigate } from "react-router-dom";
 
 interface ContactDetailsProps {
   user: UserDetail;
@@ -160,6 +161,7 @@ function ContactDetails({ user }: ContactDetailsProps) {
   const { loading, setLoading } = useUtil();
   const [showUploadDialog, setShowUploadDialog] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleFormSubmit = async (data: any) => {
     try {
@@ -185,11 +187,43 @@ function ContactDetails({ user }: ContactDetailsProps) {
     }
   };
 
+  const handleFileUpload = async (
+    e: React.FormEvent<HTMLFormElement>,
+    uploadFile: File | null
+  ) => {
+    e.preventDefault();
+    if (!uploadFile) {
+      toast({
+        title: "Lütfen bir resim dosyası seçin!",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", uploadFile);
+
+    try {
+      await ProfileService.updateProfileImage(formData);
+      toast({
+        title: "Resminiz başarıyla yüklendi.",
+        variant: "success",
+      });
+      window.location.reload();
+    } catch (error) {
+      toast({
+        title: `Resim yüklenirken bir hata oluştu. ${error}`,
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <>
-      <PhotoUploadDialog
+      <ImageUploadDialog
         show={showUploadDialog}
         dialogClose={() => setShowUploadDialog(false)}
+        handleFileUpload={handleFileUpload}
       />
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <div

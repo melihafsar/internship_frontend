@@ -110,7 +110,7 @@ function WorkForm({
           control={form.control}
           name="is_working_now"
           render={({ field }) => (
-            <FormItem className="w-full md:w-1/2">
+            <FormItem className="w-full">
               <FormLabel className="flex flex-row gap-x-2 items-center">
                 <Switch
                   checked={field.value}
