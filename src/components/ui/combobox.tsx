@@ -23,11 +23,18 @@ interface ComboboxProps {
   title: string;
   className?: string;
   onSelect: (value: string) => void;
+  value?: string;
 }
 
-export function Combobox({ data, title, className, onSelect }: ComboboxProps) {
+export function Combobox({
+  data,
+  title,
+  className,
+  onSelect,
+  value,
+}: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
-  const [selectedValue, setSelectedValue] = React.useState("");
+  const [selectedValue, setSelectedValue] = React.useState(value || "");
 
   const handleSelect = (value: string) => {
     setSelectedValue(value);

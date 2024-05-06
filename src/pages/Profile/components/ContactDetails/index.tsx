@@ -26,11 +26,9 @@ import {
 } from "@/components/ui/form";
 import { ImageUploadDialog } from "./ImageUploadDialog";
 import { UserDetail } from "@/types";
-import { useNavigate } from "react-router-dom";
 
 interface ContactDetailsProps {
   user: UserDetail;
-  setUser?: React.Dispatch<React.SetStateAction<UserDetail>>;
 }
 
 const ContactDetailsForm = ({
@@ -161,7 +159,6 @@ function ContactDetails({ user }: ContactDetailsProps) {
   const { loading, setLoading } = useUtil();
   const [showUploadDialog, setShowUploadDialog] = useState(false);
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   const handleFormSubmit = async (data: any) => {
     try {
