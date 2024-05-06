@@ -26,12 +26,6 @@ export const navigationItems = [
     icon: <User />,
   },
   {
-    id: "private-nav",
-    label: "Özel Bilgiler",
-    href: "#private",
-    icon: <FolderKey />,
-  },
-  {
     id: "experience-nav",
     label: "İş Deneyimleri",
     href: "#experience",
@@ -42,6 +36,12 @@ export const navigationItems = [
     label: "Eğitim Bilgileri",
     href: "#education",
     icon: <BookOpenText />,
+  },
+  {
+    id: "private-nav",
+    label: "Özel Bilgiler",
+    href: "#private",
+    icon: <FolderKey />,
   },
   {
     id: "skills-nav",
@@ -78,13 +78,6 @@ export const userInfoFields = [
     component: <ContactDetails />,
   },
   {
-    id: "private",
-    title: "Özel Bilgiler",
-    description:
-      "Firmaların sizi daha iyi tanımasına yardımcı olacak bilgilerinizi doldurarak daha fazla iş fırsatı yakalayın.",
-    component: <PrivateInformation />,
-  },
-  {
     id: "experience",
     title: "İş Deneyimleri",
     description:
@@ -97,6 +90,13 @@ export const userInfoFields = [
     description:
       "Eğitim bilgilerinizi paylaşmanız sizi diğer adaylardan öne çıkarır.",
     component: <Education />,
+  },
+  {
+    id: "private",
+    title: "Özel Bilgiler",
+    description:
+      "Firmaların sizi daha iyi tanımasına yardımcı olacak bilgilerinizi doldurarak daha fazla iş fırsatı yakalayın.",
+    component: <PrivateInformation />,
   },
   {
     id: "skills",
