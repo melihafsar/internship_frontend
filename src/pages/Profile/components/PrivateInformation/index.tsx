@@ -9,7 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useUtil } from "@/context/UtilContext";
 import { UserDetail } from "@/types";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ProfileService from "@/services/profile.service";
 import {
   PrivateInformationFormTypes,
@@ -17,6 +17,7 @@ import {
 } from "@/schemas/private-information-schema";
 import PrivateInfoForm from "./PrivateInfoForm";
 import moment from "moment";
+import { showAccordionInProfile } from "@/utils/helpers.utils";
 
 interface PrivateInformationProps {
   user: UserDetail;
@@ -26,6 +27,7 @@ function PrivateInformation({ user }: PrivateInformationProps) {
   const [showForm, setShowForm] = useState(false);
   const { loading, setLoading } = useUtil();
   const { toast } = useToast();
+  const formDivRef = useRef<HTMLDivElement>(null);
 
   const handleFormSubmit = async (
     data: PrivateInformationFormTypes,
@@ -65,7 +67,9 @@ function PrivateInformation({ user }: PrivateInformationProps) {
       <div className="flex flex-col md:flex-row justify-between items-center w-full my-2">
         <h5 className="text-sm font-medium my-2">Eklediğim Özel Bilgilerim</h5>
         <Button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() =>
+            showAccordionInProfile(showForm, formDivRef, setShowForm)
+          }
           variant="outline"
           className="flex items-center space-x-2 mb-2"
         >
@@ -78,7 +82,7 @@ function PrivateInformation({ user }: PrivateInformationProps) {
         collapsible
         value={showForm ? "education" : undefined}
       >
-        <AccordionItem value="education">
+        <AccordionItem value="education" ref={formDivRef}>
           <AccordionContent>
             <Separator className="my-1" />
             <PrivateInfoForm

@@ -10,12 +10,13 @@ import { useToast } from "@/components/ui/use-toast";
 import { useUtil } from "@/context/UtilContext";
 import { UserDetail } from "@/types";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import WorkForm from "./WorkForm";
 import WorkCard from "./WorkCard";
 import ProfileService from "@/services/profile.service";
 import { WorkFormTypes, useWorkForm } from "@/schemas/work-form.schema";
 import moment from "moment";
+import { showAccordionInProfile } from "@/utils/helpers.utils";
 
 interface WorkExperienceProps {
   user: UserDetail;
@@ -25,6 +26,7 @@ function WorkExperience({ user }: WorkExperienceProps) {
   const [showForm, setShowForm] = useState(false);
   const { loading, setLoading } = useUtil();
   const { toast } = useToast();
+  const formDivRef = useRef<HTMLDivElement>(null);
 
   const handleFormSubmit = async (data: WorkFormTypes, e: any) => {
     e.preventDefault();
@@ -70,7 +72,9 @@ function WorkExperience({ user }: WorkExperienceProps) {
           </Badge>
         </h5>
         <Button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() =>
+            showAccordionInProfile(showForm, formDivRef, setShowForm)
+          }
           variant="outline"
           className="flex items-center space-x-2 mb-2"
         >
@@ -89,9 +93,9 @@ function WorkExperience({ user }: WorkExperienceProps) {
       <Accordion
         type="single"
         collapsible
-        value={showForm ? "education" : undefined}
+        value={showForm ? "experience" : undefined}
       >
-        <AccordionItem value="education">
+        <AccordionItem value="experience" ref={formDivRef}>
           <AccordionContent>
             <Separator className="my-1" />
             <WorkForm

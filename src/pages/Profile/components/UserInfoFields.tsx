@@ -11,7 +11,7 @@ import { UserDetail } from "@/types";
 
 interface UserInfoFieldsProps {
   user: UserDetail;
-  setUser: React.Dispatch<React.SetStateAction<UserDetail>>;
+  setUser?: React.Dispatch<React.SetStateAction<UserDetail>>;
 }
 
 function UserInfoFields({ user, setUser }: UserInfoFieldsProps) {

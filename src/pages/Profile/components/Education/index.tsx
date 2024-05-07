@@ -5,7 +5,7 @@ import {
   AccordionContent,
   AccordionItem,
 } from "@/components/ui/accordion";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import {
   EducationFormTypes,
@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import EducationCard from "./EducationCard";
 import EducationForm from "./EducationForm";
 import moment from "moment";
+import { showAccordionInProfile } from "@/utils/helpers.utils";
 
 interface EducationProps {
   user: UserDetail;
@@ -30,6 +31,7 @@ function Education({ user }: EducationProps) {
   const [showForm, setShowForm] = useState(false);
   const { loading, setLoading } = useUtil();
   const { toast } = useToast();
+  const formDivRef = useRef<HTMLDivElement>(null);
 
   const handleFormSubmit = async (data: EducationFormTypes, e: any) => {
     e.preventDefault();
@@ -79,7 +81,9 @@ function Education({ user }: EducationProps) {
           </Badge>
         </h5>
         <Button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() =>
+            showAccordionInProfile(showForm, formDivRef, setShowForm)
+          }
           variant="outline"
           className="flex items-center space-x-2 mb-2"
         >
@@ -97,7 +101,7 @@ function Education({ user }: EducationProps) {
         collapsible
         value={showForm ? "education" : undefined}
       >
-        <AccordionItem value="education">
+        <AccordionItem value="education" ref={formDivRef}>
           <AccordionContent>
             <Separator className="my-1" />
             <EducationForm

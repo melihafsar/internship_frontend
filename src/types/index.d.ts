@@ -30,13 +30,14 @@ export interface UserDetail {
   university_educations: Universityeducation[];
   education_year: number;
   works: Work[];
-  user_projects: Userproject[];
+  projects: Userproject[];
   detail: Detail;
+  references: Reference[];
 }
 interface Detail {
   date_of_birth: string;
   gender: string;
-  driver_licences: string[];
+  driver_licenses: string[];
   marital_status: string;
   military_status: string;
   country_id: number;
@@ -78,5 +79,16 @@ interface Universityeducation {
 interface Foreignlanguage {
   language_code: string;
   degree: string;
+  id: number;
+}
+
+interface Reference {
+  name: string;
+  surname: string;
+  company: string;
+  duty: string;
+  email: string;
+  phone_number: string;
+  description: string;
   id: number;
 }

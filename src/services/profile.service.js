@@ -61,5 +61,14 @@ export default {
     },
     updateUserDetails(userDetails) {
         return api.post('/UserDetail/Update', userDetails);
-    }
+    },
+    addNewReference(newReferenceData) {
+        return api.post('/UserDetail/Reference/Create', newReferenceData);
+    },
+    deleteReference(referenceId) {
+        return api.post(`/UserDetail/Reference/Delete/${referenceId}`);
+    },
+    updateReference(referenceId, referenceData) {
+        return api.post(`/UserDetail/Reference/Update/${referenceId}`, referenceData);
+    },
 };

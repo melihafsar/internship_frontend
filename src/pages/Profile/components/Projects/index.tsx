@@ -10,7 +10,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useUtil } from "@/context/UtilContext";
 import { UserDetail } from "@/types";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ProfileService from "@/services/profile.service";
 import {
   ProjectFormTypes,
@@ -18,6 +18,7 @@ import {
 } from "@/schemas/project-form.schema";
 import ProjectCard from "./ProjectCard";
 import ProjectForm from "./ProjectForm";
+import { showAccordionInProfile } from "@/utils/helpers.utils";
 
 interface ProjectsProps {
   user: UserDetail;
@@ -27,6 +28,7 @@ function Projects({ user }: ProjectsProps) {
   const [showForm, setShowForm] = useState(false);
   const { loading, setLoading } = useUtil();
   const { toast } = useToast();
+  const formDivRef = useRef<HTMLDivElement>(null);
 
   const handleFormSubmit = async (data: ProjectFormTypes, e: any) => {
     e.preventDefault();
@@ -57,11 +59,13 @@ function Projects({ user }: ProjectsProps) {
         <h5 className="text-md font-medium my-2">
           Eklediğim Projelerim
           <Badge className="ml-2" variant="secondary">
-            {user.user_projects?.length}
+            {user.projects?.length}
           </Badge>
         </h5>
         <Button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() =>
+            showAccordionInProfile(showForm, formDivRef, setShowForm)
+          }
           variant="outline"
           className="flex items-center space-x-2 mb-2"
         >
@@ -69,10 +73,10 @@ function Projects({ user }: ProjectsProps) {
           Yeni Proje Ekleyin
         </Button>
       </div>
-      {user.user_projects?.length > 0 && (
+      {user.projects?.length > 0 && (
         <>
           <Separator className="my-1" />
-          {user.user_projects.map((project) => (
+          {user.projects.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}
         </>
@@ -82,7 +86,7 @@ function Projects({ user }: ProjectsProps) {
         collapsible
         value={showForm ? "project" : undefined}
       >
-        <AccordionItem value="project">
+        <AccordionItem value="project" ref={formDivRef}>
           <AccordionContent>
             <Separator className="my-1" />
             <ProjectForm

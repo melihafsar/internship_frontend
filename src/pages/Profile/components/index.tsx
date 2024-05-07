@@ -43,12 +43,12 @@ export const navigationItems = [
     href: "#private",
     icon: <FolderKey />,
   },
-  {
-    id: "skills-nav",
-    label: "Yetenekler",
-    href: "#skills",
-    icon: <LayoutTemplate />,
-  },
+  // {
+  //   id: "skills-nav",
+  //   label: "Yetenekler",
+  //   href: "#skills",
+  //   icon: <LayoutTemplate />,
+  // },
   {
     id: "languages-nav",
     label: "Yabancı Diller",
@@ -98,13 +98,13 @@ export const userInfoFields = [
       "Firmaların sizi daha iyi tanımasına yardımcı olacak bilgilerinizi doldurarak daha fazla iş fırsatı yakalayın.",
     component: <PrivateInformation />,
   },
-  {
-    id: "skills",
-    title: "Yetenekler",
-    description:
-      "Yeteneklerinizden bahsederek daha farklı alanlarda iş fırsatları yakalayabilirsiniz.",
-    component: <Skills />,
-  },
+  // {
+  //   id: "skills",
+  //   title: "Yetenekler",
+  //   description:
+  //     "Yeteneklerinizden bahsederek daha farklı alanlarda iş fırsatları yakalayabilirsiniz.",
+  //   component: <Skills />,
+  // },
   {
     id: "languages",
     title: "Yabancı Diller",

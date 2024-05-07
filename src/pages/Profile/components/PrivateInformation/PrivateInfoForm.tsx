@@ -105,7 +105,7 @@ function PrivateInfoForm({
           ? new Date(initialValues.date_of_birth)
           : new Date(new Date().setDate(new Date().getDate() - 1)),
         gender: initialValues.gender || "",
-        driver_licences: initialValues.driver_licences || [],
+        driver_licenses: initialValues.driver_licenses || [],
         marital_status: initialValues.marital_status || "",
         military_status: initialValues.military_status || "",
         country_id: initialValues.country_id || 0,
@@ -239,7 +239,7 @@ function PrivateInfoForm({
           />
           <FormField
             control={form.control}
-            name="driver_licences"
+            name="driver_licenses"
             render={({ field }) => (
               <FormItem className="w-full md:w-1/2 h-[100px]">
                 <FormLabel className="flex flex-row gap-x-2 items-baseline">

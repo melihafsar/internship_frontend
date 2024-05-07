@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useUtil } from "@/context/UtilContext";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +15,7 @@ import ForeignLanguagesForm from "./ForeignLanguagesForm";
 import ForeignLanguageCard from "./ForeignLanguageCard";
 import { UserDetail } from "@/types";
 import ProfileService from "@/services/profile.service";
+import { showAccordionInProfile } from "@/utils/helpers.utils";
 
 interface ForeignLanguagesProps {
   user: UserDetail;
@@ -24,6 +25,7 @@ function ForeignLanguages({ user }: ForeignLanguagesProps) {
   const [showForm, setShowForm] = useState(false);
   const { loading, setLoading } = useUtil();
   const { toast } = useToast();
+  const formDivRef = useRef<HTMLDivElement>(null);
 
   const handleFormSubmit = async (data: {
     language_code: string;
@@ -60,7 +62,9 @@ function ForeignLanguages({ user }: ForeignLanguagesProps) {
           </Badge>
         </h5>
         <Button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() =>
+            showAccordionInProfile(showForm, formDivRef, setShowForm)
+          }
           variant="outline"
           className="flex items-center space-x-2 mb-2"
         >
@@ -86,7 +90,7 @@ function ForeignLanguages({ user }: ForeignLanguagesProps) {
         collapsible
         value={showForm ? "foreignLanguage" : undefined}
       >
-        <AccordionItem value="foreignLanguage">
+        <AccordionItem value="foreignLanguage" ref={formDivRef}>
           <AccordionContent>
             <Separator className="my-1" />
             <ForeignLanguagesForm

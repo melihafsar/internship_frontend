@@ -16,7 +16,7 @@ export const MaritalStatusTypesArray = [
 ];
 
 export const DriverLicencesClassArray = [
-  { value: "none", label: "Ehliyetim yok" },
+  { value: "None", label: "Ehliyetim yok" },
   { value: "M", label: "M" },
   { value: "A1", label: "A1" },
   { value: "A2", label: "A2" },
@@ -27,11 +27,11 @@ export const DriverLicencesClassArray = [
   { value: "C", label: "C" },
   { value: "D1", label: "D1" },
   { value: "D", label: "D" },
-  { value: "B+E", label: "B+E" },
-  { value: "C1+E", label: "C1+E" },
-  { value: "C+E", label: "C+E" },
-  { value: "D1+E", label: "D1+E" },
-  { value: "D+E", label: "D+E" },
+  { value: "BE", label: "BE" },
+  { value: "C1E", label: "C1E" },
+  { value: "CE", label: "CE" },
+  { value: "D1E", label: "D1E" },
+  { value: "DE", label: "DE" },
   { value: "F", label: "F" },
   { value: "G", label: "G" },
 ];

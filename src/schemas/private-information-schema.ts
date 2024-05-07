@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 const formSchema = z.object({
   date_of_birth: z.coerce.date(),
   gender: z.string().min(1, "Lütfen cinsiyetinizi seçiniz!"),
-  driver_licences: z.array(z.string()).min(1, "En az bir seçeneği seçiniz!"),
+  driver_licenses: z.array(z.string()).min(1, "En az bir seçeneği seçiniz!"),
   marital_status: z.string(),
   military_status: z.string().optional(),
   country_id: z.number().optional(),
@@ -22,7 +22,7 @@ export const usePrivateInformationForm = () => {
     defaultValues: {
       date_of_birth: new Date(),
       gender: "",
-      driver_licences: [],
+      driver_licenses: [],
       marital_status: "",
       military_status: "",
       country_id: 0,
