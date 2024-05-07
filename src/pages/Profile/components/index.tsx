@@ -3,7 +3,6 @@ import {
   FlaskConical,
   FolderKey,
   Languages,
-  LayoutTemplate,
   Presentation,
   User,
   Waypoints,
@@ -13,10 +12,10 @@ import ContactDetails from "./ContactDetails";
 import PrivateInformation from "./PrivateInformation";
 import WorkExperience from "./WorkExperience";
 import Education from "./Education";
-import Skills from "./Skils";
 import Projects from "./Projects";
 import References from "./References";
 import ForeignLanguages from "./ForeignLanguages";
+import { UserDetail } from "@/types";
 
 export const navigationItems = [
   {
@@ -75,55 +74,55 @@ export const userInfoFields = [
     title: "İletişim Bilgileri",
     description:
       "İletişim bilgilerinizi doğru bir şekilde doldurmanız sizi diğer kullanıcılarla buluşturmamız da yardımcı olacaktır.",
-    component: <ContactDetails />,
+    component: (user: UserDetail) => <ContactDetails user={user} />,
   },
   {
     id: "experience",
     title: "İş Deneyimleri",
     description:
       "İş deneyimlerinizi paylaşarak daha fazla iş fırsatı yakalayın.",
-    component: <WorkExperience />,
+    component: (user: UserDetail) => <WorkExperience user={user} />,
   },
   {
     id: "education",
     title: "Eğitim Bilgileri",
     description:
       "Eğitim bilgilerinizi paylaşmanız sizi diğer adaylardan öne çıkarır.",
-    component: <Education />,
+    component: (user: UserDetail) => <Education user={user} />,
   },
   {
     id: "private",
     title: "Özel Bilgiler",
     description:
       "Firmaların sizi daha iyi tanımasına yardımcı olacak bilgilerinizi doldurarak daha fazla iş fırsatı yakalayın.",
-    component: <PrivateInformation />,
+    component: (user: UserDetail) => <PrivateInformation user={user} />,
   },
   // {
   //   id: "skills",
   //   title: "Yetenekler",
   //   description:
   //     "Yeteneklerinizden bahsederek daha farklı alanlarda iş fırsatları yakalayabilirsiniz.",
-  //   component: <Skills />,
+  //   component: (user : UserDetail) =>  <Skills user={user}/>,
   // },
   {
     id: "languages",
     title: "Yabancı Diller",
     description:
       "Öğrendiğiniz yabancı dilleri yazarak yaşadığınız ülkeye göre farklı dillerde iş fırsatları yakalayabilirsiniz.",
-    component: <ForeignLanguages />,
+    component: (user: UserDetail) => <ForeignLanguages user={user} />,
   },
   {
     id: "projects",
     title: "Projeler",
     description:
       "Yaptığınız projeleri paylaşarak firmaların sizi daha eşsiz bulmasını sağlayın.",
-    component: <Projects />,
+    component: (user: UserDetail) => <Projects user={user} />,
   },
   {
     id: "references",
     title: "Referanslar",
     description:
       "Referanslarınız ile firmaların sizi daha iyi tanımasını sağlayın.",
-    component: <References />,
+    component: (user: UserDetail) => <References user={user} />,
   },
 ];

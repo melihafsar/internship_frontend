@@ -51,7 +51,9 @@ function WorkForm({
       form.reset({
         ...initialValues,
         start_date: new Date(initialValues.start_date),
-        end_date: new Date(initialValues.end_date),
+        end_date: initialValues?.end_date
+          ? new Date(initialValues?.end_date!)
+          : undefined,
       });
   }, [form, initialValues]);
 

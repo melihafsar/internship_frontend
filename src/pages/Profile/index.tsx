@@ -47,7 +47,7 @@ function Profile() {
           </nav>
         </aside>
         <div className="flex-1 max-w-[1400px]">
-          <UserInfoFields user={userDetailData} setUser={setUserDetailData} />
+          <UserInfoFields user={userDetailData} />
         </div>
       </div>
     </div>

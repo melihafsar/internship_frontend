@@ -39,23 +39,24 @@ function EducationCard({ education }: EducationCardProps) {
     e.preventDefault();
     try {
       setLoading(true);
+      const universityInfo = {
+        ...data,
+      };
 
-      const universityInfo = data.university_available
-        ? { university_id: data.university_id }
-        : { university_name: data.university_name };
+      // @ts-ignore
+      if (data.university_available) delete universityInfo.university_name;
+      // @ts-ignore
+      else delete universityInfo.university_id;
+      // @ts-ignore
+      delete universityInfo.university_available;
 
-      await ProfileService.updateEducation(education.id, {
+      await ProfileService.updateEducation(education.id!, {
         ...universityInfo,
-        faculty: data.faculty,
-        department: data.department,
-        is_graduated: data.is_graduated,
         start_date: moment(data.start_date).format("YYYY-MM-DD"),
-        end_date: data.is_graduated
+        end_date: data?.is_graduated
           ? moment(data.end_date).format("YYYY-MM-DD")
           : null,
         education_year: data.is_graduated ? null : data.education_year,
-        gpa: data.gpa,
-        description: data.description,
       });
       toast({
         title: "Eğitim bilgileriniz başarıyla güncellendi.",
@@ -90,7 +91,7 @@ function EducationCard({ education }: EducationCardProps) {
             handleUpdateEducation={handleUpdateEducation}
           />
           <ConfirmationDialog
-            onConfirm={() => deleteEducationById(education.id)}
+            onConfirm={() => deleteEducationById(education.id!)}
             triggerButton={
               <Button size="icon" variant="ghost">
                 <Trash className="w-4 h-4 text-red-500" />
@@ -108,7 +109,7 @@ function EducationCard({ education }: EducationCardProps) {
         <p className="text-muted-foreground">
           {formatToLocaleDate(education.start_date)} -{" "}
           {education.is_graduated
-            ? formatToLocaleDate(education.end_date)
+            ? formatToLocaleDate(education?.end_date!)
             : "Devam Ediyor"}
         </p>
         <div className="flex items-center space-x-2">

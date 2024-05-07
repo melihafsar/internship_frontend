@@ -1,4 +1,3 @@
-import { UserProject } from "@/types";
 import ConfirmationDialog from "@/components/ConfirmationDialog";
 import { Button } from "@/components/ui/button";
 import { Edit, Pencil, Trash } from "lucide-react";
@@ -10,6 +9,7 @@ import ProjectEditModal from "./ProjectEditModal";
 import { useMemo, useState } from "react";
 import { ImageUploadDialog } from "../ContactDetails/ImageUploadDialog";
 import { Link } from "react-router-dom";
+import { UserProject } from "@/types";
 
 interface ProjectCardProps {
   project: UserProject;
@@ -60,7 +60,9 @@ function ProjectCard({ project }: ProjectCardProps) {
     e.preventDefault();
     try {
       setLoading(true);
-      await ProfileService.updateProject(project.id, data);
+      await ProfileService.updateProject(project.id!, {
+        ...data,
+      } as UserProject);
       toast({
         title: "Proje başarıyla güncellendi.",
         variant: "success",
@@ -92,7 +94,7 @@ function ProjectCard({ project }: ProjectCardProps) {
 
     try {
       const response = await ProfileService.updateProjectField(
-        project.id,
+        project.id!,
         formData
       );
       setImageUrl(response.url);
@@ -134,7 +136,7 @@ function ProjectCard({ project }: ProjectCardProps) {
         <div className="flex flex-col justify-start flex-1">
           <div className="flex w-full gap-2 justify-between items-center">
             <Link
-              to={project.project_link}
+              to={project.project_link || "#projects"}
               target="_blank"
               className="font-semibold hover:underline"
             >
@@ -152,7 +154,7 @@ function ProjectCard({ project }: ProjectCardProps) {
                 handleUpdateProject={handleUpdateProject}
               />
               <ConfirmationDialog
-                onConfirm={() => deleteProjectById(project.id)}
+                onConfirm={() => deleteProjectById(project.id!)}
                 triggerButton={
                   <Button size="icon" variant="ghost">
                     <Trash className="w-4 h-4 text-red-500" />

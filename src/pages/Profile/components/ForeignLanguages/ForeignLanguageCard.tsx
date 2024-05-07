@@ -38,7 +38,7 @@ function ForeignLanguageCard({ foreignLanguage }: ForeignLanguagesProps) {
   }) => {
     try {
       setLoading(true);
-      await ProfileService.updateForeignLanguage(foreignLanguage.id, data);
+      await ProfileService.updateForeignLanguage(foreignLanguage.id!, data);
       toast({
         title: "Yabancı dil bilgileriniz başarıyla güncellendi.",
         variant: "success",
@@ -88,7 +88,7 @@ function ForeignLanguageCard({ foreignLanguage }: ForeignLanguagesProps) {
             }) => handleUpdateForeignLanguage(data)}
           />
           <ConfirmationDialog
-            onConfirm={() => deleteForeignLanguageById(foreignLanguage.id)}
+            onConfirm={() => deleteForeignLanguageById(foreignLanguage.id!)}
             triggerButton={
               <Button size="icon" variant="ghost">
                 <Trash className="w-4 h-4 text-red-500" />

@@ -12,7 +12,7 @@ function DesktopMenu() {
     if (path && path?.split("/")?.length < 4) {
       return path === "/"
         ? path === pathname
-        : !!matchPath({ path, end: false, exact: true }, pathname);
+        : !!matchPath({ path, end: false }, pathname);
     } else if (path && path?.split("/")?.length >= 4) {
       return path === pathname;
     }

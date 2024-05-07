@@ -18,7 +18,6 @@ export function Router() {
       children: mainRoutes.map((route) => ({
         path: route.path,
         element: route.element,
-        children: route.children || [],
       })),
     },
     {

@@ -28,58 +28,58 @@ export interface UserDetail {
   phone_number: string;
   foreign_languages: Foreignlanguage[];
   university_educations: Universityeducation[];
-  education_year: number;
   works: Work[];
-  projects: Userproject[];
+  projects: UserProject[];
   detail: Detail;
   references: Reference[];
 }
 interface Detail {
-  date_of_birth: string;
+  date_of_birth?: string;
   gender: string;
   driver_licenses: string[];
-  marital_status: string;
-  military_status: string;
-  country_id: number;
-  city_id: number;
-  district: string;
-  address: string;
+  marital_status?: string;
+  military_status?: string;
+  country_id?: number;
+  city_id?: number;
+  district?: string;
+  address?: string;
 }
 interface UserProject {
   project_name: string;
   description: string;
-  project_thumbnail: string;
-  project_link: string;
-  id: number;
+  project_thumbnail?: string;
+  project_link?: string;
+  id?: number;
 }
 interface Work {
   position: string;
   company_name: string;
   start_date: string;
-  end_date: string;
+  end_date?: string;
   is_working_now: boolean;
-  description: string;
+  description?: string;
   duties: string;
-  work_type: string;
-  reason_for_leave: string;
-  id: number;
+  work_type?: string;
+  reason_for_leave?: string;
+  id?: number;
 }
 interface Universityeducation {
-  university_id: number;
-  university_name: string;
+  university_id?: number;
+  university_name?: string;
   faculty: string;
   department: string;
   start_date: string;
-  end_date: string;
+  end_date: string | null;
   is_graduated: boolean;
+  education_year?: number | null;
   gpa: number;
-  description: string;
-  id: number;
+  description?: string;
+  id?: number;
 }
 interface Foreignlanguage {
   language_code: string;
   degree: string;
-  id: number;
+  id?: number;
 }
 
 interface Reference {
@@ -90,5 +90,5 @@ interface Reference {
   email: string;
   phone_number: string;
   description: string;
-  id: number;
+  id?: number;
 }

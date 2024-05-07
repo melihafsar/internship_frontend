@@ -1,4 +1,3 @@
-import { tr } from "date-fns/locale";
 import {
   AlertDialog,
   AlertDialogAction,

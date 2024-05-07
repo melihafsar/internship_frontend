@@ -36,7 +36,7 @@ function ReferenceCard({ reference }: ReferenceCardProps) {
     e.preventDefault();
     try {
       setLoading(true);
-      await ProfileService.updateReference(reference.id, data);
+      await ProfileService.updateReference(reference.id!, data);
       toast({
         title: "Referansınız başarıyla güncellendi.",
         variant: "success",
@@ -71,7 +71,7 @@ function ReferenceCard({ reference }: ReferenceCardProps) {
             handleUpdateReference={handleUpdateReference}
           />
           <ConfirmationDialog
-            onConfirm={() => deleteReferenceById(reference.id)}
+            onConfirm={() => deleteReferenceById(reference.id!)}
             triggerButton={
               <Button size="icon" variant="ghost">
                 <Trash className="w-4 h-4 text-red-500" />

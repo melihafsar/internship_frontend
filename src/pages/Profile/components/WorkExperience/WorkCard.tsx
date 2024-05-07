@@ -55,12 +55,12 @@ function WorkCard({ work }: WorkCardProps) {
     e.preventDefault();
     try {
       setLoading(true);
-      await ProfileService.updateExperience(work.id, {
+      await ProfileService.updateExperience(work.id!, {
         company_name: data.company_name,
         position: data.position,
         start_date: moment(data.start_date).format("YYYY-MM-DD"),
         end_date: data.is_working_now
-          ? null
+          ? undefined
           : moment(data.end_date).format("YYYY-MM-DD"),
         is_working_now: data.is_working_now,
         description: data.description,
@@ -100,7 +100,7 @@ function WorkCard({ work }: WorkCardProps) {
             handleUpdateWork={handleUpdateWorkHistory}
           />
           <ConfirmationDialog
-            onConfirm={() => deleteWorkHistoryById(work.id)}
+            onConfirm={() => deleteWorkHistoryById(work.id!)}
             triggerButton={
               <Button size="icon" variant="ghost">
                 <Trash className="w-4 h-4 text-red-500" />
@@ -121,7 +121,7 @@ function WorkCard({ work }: WorkCardProps) {
           {formatToLocaleDate(work.start_date)} -{" "}
           {work.is_working_now
             ? "Devam Ediyor"
-            : formatToLocaleDate(work.end_date)}
+            : formatToLocaleDate(work.end_date!)}
         </p>
       </div>
       <div className="flex flex-col mt-2">

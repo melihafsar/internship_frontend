@@ -72,7 +72,7 @@ const EducationForm = ({
     if (initialValues)
       form.reset({
         ...initialValues,
-        end_date: new Date(initialValues.end_date),
+        end_date: new Date(initialValues.end_date!),
         start_date: new Date(initialValues.start_date),
       });
   }, [form]);
@@ -124,6 +124,7 @@ const EducationForm = ({
                   </FormLabel>
                   <Combobox
                     {...field}
+                    value={field.value?.toString()}
                     data={universtiesList}
                     title="Üniversite"
                     onSelect={(value) => {

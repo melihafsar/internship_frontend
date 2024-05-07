@@ -14,7 +14,7 @@ const formSchema = z.object({
   start_date: z.coerce.date(),
   end_date: z.coerce.date(),
   is_graduated: z.boolean(),
-  education_year: z.coerce.number().min(0),
+  education_year: z.coerce.number().min(0).nullable(),
   gpa: z.coerce.number().min(0),
   description: z.string().optional(),
 });

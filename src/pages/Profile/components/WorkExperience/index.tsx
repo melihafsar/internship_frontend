@@ -33,17 +33,14 @@ function WorkExperience({ user }: WorkExperienceProps) {
     try {
       setLoading(true);
       await ProfileService.addNewExperience({
-        company_name: data.company_name,
-        position: data.position,
+        ...data,
         start_date: moment(data.start_date).format("YYYY-MM-DD"),
         end_date: data.is_working_now
-          ? null
+          ? undefined
           : moment(data.end_date).format("YYYY-MM-DD"),
-        description: data.description,
-        is_working_now: data.is_working_now,
-        duties: data.duties,
-        work_type: data.work_type,
-        reason_for_leave: data.is_working_now ? "" : data.reason_for_leave,
+        reason_for_leave: data.is_working_now
+          ? undefined
+          : data.reason_for_leave,
       });
       toast({
         title: "Başarılı",

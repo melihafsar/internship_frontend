@@ -6,15 +6,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { userInfoFields } from "./index";
-import React from "react";
 import { UserDetail } from "@/types";
 
 interface UserInfoFieldsProps {
   user: UserDetail;
-  setUser?: React.Dispatch<React.SetStateAction<UserDetail>>;
 }
 
-function UserInfoFields({ user, setUser }: UserInfoFieldsProps) {
+function UserInfoFields({ user }: UserInfoFieldsProps) {
   return (
     <>
       {userInfoFields.map((field) => (
@@ -24,12 +22,7 @@ function UserInfoFields({ user, setUser }: UserInfoFieldsProps) {
               <CardTitle className="text-lg">{field.title}</CardTitle>
               <CardDescription>{field.description}</CardDescription>
             </CardHeader>
-            <CardContent>
-              {React.cloneElement(field.component, {
-                user: user,
-                setUser: setUser,
-              })}
-            </CardContent>
+            <CardContent>{field.component(user)}</CardContent>
           </Card>
         </div>
       ))}

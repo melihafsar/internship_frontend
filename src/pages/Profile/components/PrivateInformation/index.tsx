@@ -40,11 +40,7 @@ function PrivateInformation({ user }: PrivateInformationProps) {
         ...data,
         date_of_birth: data.date_of_birth
           ? moment(data.date_of_birth).format("YYYY-MM-DD")
-          : null,
-        country_id: data.country_id || null,
-        city_id: data.city_id || null,
-        marital_status: data.marital_status || null,
-        military_status: data.military_status || null,
+          : undefined,
       });
       toast({
         title: "Başarılı",

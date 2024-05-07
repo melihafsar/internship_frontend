@@ -1,4 +1,3 @@
-import { Switch } from "@/components/ui/switch";
 import {
   Popover,
   PopoverContent,
@@ -7,7 +6,6 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
   FormControl,
@@ -38,7 +36,7 @@ import {
   genderTypesArray,
 } from "@/const";
 import { MultiSelect } from "@/components/MultiSelect";
-import LocationService from "@/services/location.service";
+import LocationService from "@/services/location.service.ts";
 import { Combobox } from "@/components/ui/combobox";
 
 interface WorkFormProps {
@@ -318,7 +316,7 @@ function PrivateInfoForm({
                   className="w-full"
                   value={
                     initialValues?.country_id?.toString() ||
-                    field.value.toString()
+                    field.value?.toString()
                   }
                 />
                 <FormMessage {...field} />
@@ -346,8 +344,8 @@ function PrivateInfoForm({
                     }}
                     className="w-full"
                     value={
-                      initialValues?.city_id.toString() ||
-                      field.value.toString()
+                      initialValues?.city_id?.toString() ||
+                      field.value?.toString()
                     }
                   />
                   <FormMessage {...field} />
