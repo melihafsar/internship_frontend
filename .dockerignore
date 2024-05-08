@@ -3,7 +3,6 @@
 .vscode
 .dockerignore
 .gitignore
-.env
 config
 dist
 node_modules
