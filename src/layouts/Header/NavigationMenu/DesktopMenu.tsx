@@ -21,24 +21,26 @@ function DesktopMenu() {
 
   return (
     <ul className="flex flex-row space-x-2">
-      {mainRoutes.map((route) => (
-        <li key={route.path}>
-          {route.meta.title !== "Profilim" ? (
-            <Button
-              variant="ghost"
-              className={cn(
-                typeof route.meta.title === "string" ? "w-28" : "",
-                match(route.path) ? "bg-orange-500 text-white" : ""
-              )}
-              onClick={() => navigate(route.path)}
-            >
-              {route.meta.title}
-            </Button>
-          ) : (
-            <ProfileDropdown />
-          )}
-        </li>
-      ))}
+      {mainRoutes
+        .filter((route) => route.showNavBar)
+        .map((route) => (
+          <li key={route.path}>
+            {route.meta.title !== "Profilim" ? (
+              <Button
+                variant="ghost"
+                className={cn(
+                  typeof route.meta.title === "string" ? "w-28" : "",
+                  match(route.path) ? "bg-orange-500 text-white" : ""
+                )}
+                onClick={() => navigate(route.path)}
+              >
+                {route.meta.title}
+              </Button>
+            ) : (
+              <ProfileDropdown />
+            )}
+          </li>
+        ))}
     </ul>
   );
 }

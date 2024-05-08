@@ -19,12 +19,19 @@ export default {
     name,
     surname,
     phone_number,
+    account_type,
   }: {
-    name: string;
-    surname: string;
-    phone_number: string;
+    name?: string;
+    surname?: string;
+    phone_number?: string;
+    account_type?: string;
   }) {
-    return api.post("/Account/UpdateUserInfo", { name, surname, phone_number });
+    return api.post("/Account/UpdateUserInfo", {
+      name,
+      surname,
+      phone_number,
+      account_type,
+    });
   },
   getProfile() {
     return api.get("/Account/Get");

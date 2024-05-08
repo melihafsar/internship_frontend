@@ -1,9 +1,9 @@
 import React, { createContext, useEffect, useMemo, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { supabaseSession } from "@/types";
 interface AuthContextProps {
-  session: supabaseSession;
-  supabase: any;
+  session: Promise<supabaseSession | null>;
+  supabase: SupabaseClient<any, "public", any>;
 }
 
 export const AuthContext = createContext<AuthContextProps>(
@@ -16,21 +16,13 @@ const supabase = createClient(
 );
 
 export const AuthProvider = ({ children }: any) => {
-  const [session, setSession] = useState<any>(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
-  const value = useMemo(() => ({ session, supabase }), [session]);
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{ supabase, session: supabase.auth.getSession() as any }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {
