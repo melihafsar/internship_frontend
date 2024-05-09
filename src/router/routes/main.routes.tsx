@@ -7,6 +7,7 @@ const Profile = lazy(() => import("@/pages/Profile"));
 const HomePage = lazy(() => import("@/pages/HomePage"));
 const Applications = lazy(() => import("@/pages/Applications"));
 const Messages = lazy(() => import("@/pages/Messages"));
+const UserRegister = lazy(() => import("@/pages/UserRegister"));
 
 const messagesTitle = (
   <div className="flex items-center space-x-2">
@@ -30,6 +31,7 @@ export const mainRoutes = [
     meta: {
       title: "Anasayfa",
     },
+    showNavBar: true,
   },
   {
     path: "/applications",
@@ -38,6 +40,7 @@ export const mainRoutes = [
     meta: {
       title: "Başvurularım",
     },
+    showNavBar: true,
   },
   {
     path: "/messages",
@@ -46,6 +49,7 @@ export const mainRoutes = [
     meta: {
       title: messagesTitle,
     },
+    showNavBar: true,
   },
   {
     path: "/profile",
@@ -54,5 +58,19 @@ export const mainRoutes = [
     meta: {
       title: "Profilim",
     },
+    showNavBar: true,
+  },
+  {
+    path: "/user-registered",
+    element: (
+      <ProtectedRoute
+        title=""
+        component={(args) => <UserRegister {...args} />}
+      />
+    ),
+    meta: {
+      title: "Kullanıcı Kayıt",
+    },
+    showNavBar: false,
   },
 ];

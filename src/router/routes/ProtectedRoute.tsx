@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import Page from "@/layouts/Page";
 import { useUtil } from "@/context/UtilContext";
@@ -22,21 +22,38 @@ const ProtectedRoute = ({
 }: ProtectedRouteProps) => {
   const { session } = useAuth();
   const { loading, setLoading } = useUtil();
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+
+  const validateSession = async () => {
+    setLoading(true);
+    if (!session) {
+      return;
+    }
+    const result = await session;
+    if (result) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    setLoading(true);
-    if (session !== undefined || session !== null) setLoading(false);
-  }, [session]);
+    validateSession();
+  }, []);
 
-  if (loading) return <Spinner />;
+  if (loading || isLoggedIn == null) return <Spinner />;
+  if (isLoggedIn)
+    return (
+      <Page
+        title={title}
+        className={fixPageHeight ? fixPageHeightClassName : ""}
+      >
+        <Component {...rest} />
+      </Page>
+    );
 
-  return session !== null && !loading ? (
-    <Page title={title} className={fixPageHeight ? fixPageHeightClassName : ""}>
-      <Component {...rest} />
-    </Page>
-  ) : (
-    !loading && <Navigate to="/login" replace />
-  );
+  return <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoute;
