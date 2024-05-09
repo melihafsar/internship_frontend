@@ -37,7 +37,7 @@ import {
 } from "@/const";
 import { MultiSelect } from "@/components/MultiSelect";
 import LocationService from "@/services/location.service.ts";
-import { Combobox } from "@/components/ui/combobox";
+import { Combobox, ComboboxData } from "@/components/ui/combobox";
 
 interface WorkFormProps {
   form: UseFormReturn<PrivateInformationFormTypes>;
@@ -55,15 +55,15 @@ function PrivateInfoForm({
   handleFormSubmit,
   initialValues,
 }: WorkFormProps) {
-  const [countryList, setCountryList] = useState([]);
-  const [cityList, setCityList] = useState([]);
+  const [countryList, setCountryList] = useState<ComboboxData>([]);
+  const [cityList, setCityList] = useState<ComboboxData>([]);
   const showCityField = form.getValues("country_id") !== (null || 0);
   const showOtherAddressField = form.getValues("city_id") !== (null || 0);
 
   const getCountryList = async () => {
     const response = await LocationService.getCountries();
     const coutryList = response.map(
-      (item: { id: number; name: string; code: string; code3: string }) => {
+      (item) => {
         return {
           value: item.id.toString(),
           label: item.name,
@@ -76,7 +76,7 @@ function PrivateInfoForm({
   const getCitiesList = async (countryId: number) => {
     const response = await LocationService.getCities(countryId);
     const cityList = response.map(
-      (item: { id: number; name: string; country_id: number }) => {
+      (item) => {
         return {
           value: item.id.toString(),
           label: item.name,

@@ -23,7 +23,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 import { useLoginForm } from "@/schemas/login-form.schema";
 import { useNavigate } from "react-router-dom";
-import UserService from "@/services/user.service";
 import { cn } from "@/lib/utils";
 import { useUtil } from "@/context/UtilContext";
 
@@ -85,7 +84,7 @@ export const Login = () => {
   const { form } = useLoginForm();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { supabase, session } = useAuth();
+  const { supabase } = useAuth();
   const { loading, setLoading } = useUtil();
   const [currentUser, setCurrentUser] = useState("Intern");
 

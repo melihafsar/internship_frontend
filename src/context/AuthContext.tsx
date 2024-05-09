@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useMemo, useState } from "react";
+import React, { createContext } from "react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { supabaseSession } from "@/types";
 interface AuthContextProps {

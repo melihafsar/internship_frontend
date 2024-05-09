@@ -8,6 +8,7 @@ const HomePage = lazy(() => import("@/pages/HomePage"));
 const Applications = lazy(() => import("@/pages/Applications"));
 const Messages = lazy(() => import("@/pages/Messages"));
 const UserRegister = lazy(() => import("@/pages/UserRegister"));
+const MyCompany = lazy(() => import("@/pages/MyCompany"));
 
 const messagesTitle = (
   <div className="flex items-center space-x-2">
@@ -73,4 +74,17 @@ export const mainRoutes = [
     },
     showNavBar: false,
   },
+  {
+    path: "/my-company",
+    element: (
+      <ProtectedRoute
+        title="Şirketim"
+        component={MyCompany}
+      />
+    ),
+    meta: {
+      title: "Şirketim",
+    },
+    showNavBar: false,
+  }
 ];

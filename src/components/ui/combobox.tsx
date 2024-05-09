@@ -18,13 +18,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+
+
+export type ComboboxData = { value: string; label: string }[] | [];
 interface ComboboxProps {
-  data: { value: string; label: string }[] | [];
+  data: ComboboxData;
   title: string;
   className?: string;
   onSelect: (value: string) => void;
   value?: string;
 }
+
 
 export function Combobox({
   data,
