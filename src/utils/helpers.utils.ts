@@ -1,3 +1,7 @@
+import { ServiceReponse } from "@/types";
+import { AxiosError } from "axios";
+import { UseFormReturn } from "react-hook-form";
+
 export const showAccordionInProfile = (
   isOpen: boolean,
   formRef: React.RefObject<HTMLDivElement>,
@@ -9,3 +13,12 @@ export const showAccordionInProfile = (
     formRef.current?.scrollIntoView({ behavior: "smooth" });
   }, 100);
 };
+
+export function showErrors(form: UseFormReturn<any>, errorResponse?: AxiosError<ServiceReponse<any>>) {
+  const errors = errorResponse?.response?.data?.error?.errors
+  if (errors) {
+    Object.entries(errors).forEach(([key, value]) => {
+      form.setError(key, { type: "server", message: value });
+    });
+  }
+}; 

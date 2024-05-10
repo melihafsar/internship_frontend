@@ -37,7 +37,7 @@ const CompanyForm = ({
 }: CompanyFormProps) => {
     const [countries, setCountries] = useState<ComboboxData>([]);
     const [cities, setCities] = useState<ComboboxData>([]);
-    const [uploadDialogProps, setUploadDialogProps] = useState<{show: boolean, field?: FieldPath<CompanyFormTypes>}>({ show: false, field: undefined })
+    const [uploadDialogProps, setUploadDialogProps] = useState<{ show: boolean, field?: FieldPath<CompanyFormTypes>, type?: "Image" | "Background" }>({ show: false, field: undefined })
     const { toast } = useToast();
 
     const fetchCountries = async () => {
@@ -61,19 +61,16 @@ const CompanyForm = ({
 
     const handleUploadImage = async (e: React.FormEvent<HTMLFormElement>, file: File) => {
         e.preventDefault();
-        if (!file) {
-          toast({
-            title: "Lütfen bir resim dosyası seçin!",
-            variant: "destructive",
-          });
-          return;
+        if (!file || uploadDialogProps.field === undefined || uploadDialogProps.type === undefined) {
+            toast({
+                title: "Lütfen bir resim dosyası seçin!",
+                variant: "destructive",
+            });
+            return;
         }
-    
-        const formData = new FormData();
-        formData.append("file", file);
-        form.setValue
-        const result = await UploadService.uploadImage(formData)
-        if (!result || uploadDialogProps.field === undefined) {
+
+        const result = await UploadService.uploadImage(file, uploadDialogProps.type)
+        if (!result) {
             toast({
                 title: "Resim yüklenirken bir hata oluştu.",
                 variant: "destructive",
@@ -120,7 +117,7 @@ const CompanyForm = ({
                                     </FormLabel>
                                     <FormControl className="w-full">
                                         <div className="hover:opacity-60 relative flex items-center group cursor-pointer"
-                                            onClick={() => setUploadDialogProps({ show: true, field: field.name })}>
+                                            onClick={() => setUploadDialogProps({ show: true, field: field.name, type: "Background" })}>
                                             <EditIcon />
                                             <img className="rounded-md object-cover bg-gray-100 w-full max-h-[300px]" src={field.value ?? "./no-image.svg"} />
                                         </div>
@@ -136,7 +133,7 @@ const CompanyForm = ({
                                 <FormItem className="absolute top-[150px] left-[50px]">
                                     <FormControl>
                                         <div className="relative flex items-center group cursor-pointer"
-                                            onClick={() => setUploadDialogProps({ show: true, field: field.name })}>
+                                            onClick={() => setUploadDialogProps({ show: true, field: field.name, type: "Image" })}>
                                             <EditIcon />
                                             <img className="rounded-md object-cover bg-gray-100 w-[256px]" src={field.value ?? "./no-image.svg"} />
                                         </div>
@@ -171,6 +168,21 @@ const CompanyForm = ({
                             <FormItem className="w-full h-[100px]">
                                 <FormLabel className="flex flex-row gap-x-2 items-baseline">
                                     Kısa Açıklama
+                                </FormLabel>
+                                <FormControl>
+                                    <Input {...field} />
+                                </FormControl>
+                                <FormMessage {...field} />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="website_url"
+                        render={({ field }) => (
+                            <FormItem className="w-full h-[100px]">
+                                <FormLabel className="flex flex-row gap-x-2 items-baseline">
+                                    Web Sitesi
                                 </FormLabel>
                                 <FormControl>
                                     <Input {...field} />

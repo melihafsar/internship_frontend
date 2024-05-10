@@ -17,6 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useEffect } from "react";
 
 
 
@@ -45,6 +46,10 @@ export function Combobox({
     onSelect(value);
     setOpen(false);
   };
+
+  useEffect(() => {
+    setSelectedValue(value || "");  
+  }, [value])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

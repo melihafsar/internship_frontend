@@ -3,6 +3,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 
 const formSchema = z.object({
+  id: z.number().optional(),
   name: z.string().min(1, "Bu alan zorunludur.").max(255, "Bu alan en fazla 255 karakter olabilir."),
   short_description: z.string().max(75, "Bu alan en fazla 75 karakter olabilir."),
   logo_url: z.string().optional(),

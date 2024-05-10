@@ -46,9 +46,9 @@ function Education({ user }: EducationProps) {
         faculty: data.faculty,
         department: data.department,
         is_graduated: data.is_graduated,
-        start_date: moment(data.start_date).format("YYYY-MM-DD"),
+        start_date: moment(data.start_date).local().format("YYYY-MM-DD"),
         end_date: data.is_graduated
-          ? moment(data.end_date).format("YYYY-MM-DD")
+          ? moment(data.end_date).local().format("YYYY-MM-DD")
           : null,
         education_year: data.is_graduated ? null : data.education_year,
         gpa: data.gpa,

@@ -78,8 +78,8 @@ const EducationForm = ({
   }, [form]);
 
   useEffect(() => {
-    form.setValue("university_name", undefined);
-  }, [form.getValues("university_available")]);
+    form.setValue("university_name", "");
+  }, [form.watch("university_available")]);
 
   return (
     <Form {...form}>

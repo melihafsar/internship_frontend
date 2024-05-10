@@ -27,7 +27,7 @@ export const useEducationForm = () => {
     defaultValues: {
       university_available: true,
       university_id: 0,
-      university_name: "",
+      university_name: undefined,
       faculty: "",
       department: "",
       start_date: new Date(),

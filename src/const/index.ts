@@ -41,3 +41,8 @@ export const MilitaryStatusArray = [
   { value: "Deferred", label: "Ertelenmiş" },
   { value: "Exempt", label: "Muaf" },
 ];
+
+export const EmploymentTypeArray = [
+  { value: "FullTime", label: "Tam Zamanlı" },
+  { value: "PartTime", label: "Yarı Zamanlı" },
+];

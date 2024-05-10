@@ -92,3 +92,21 @@ interface Reference {
   description: string;
   id?: number;
 }
+
+interface ServiceError {
+  name: string;
+  details: string;
+  errors: { [key: string]: string };
+}
+
+interface ServiceReponse<T> {
+  data: T;
+  error: ServiceError;
+}
+
+interface PagedListDto<T> {
+  items: T[];
+  from: number;
+  count: number;
+  total: number;
+}

@@ -9,6 +9,7 @@ const Applications = lazy(() => import("@/pages/Applications"));
 const Messages = lazy(() => import("@/pages/Messages"));
 const UserRegister = lazy(() => import("@/pages/UserRegister"));
 const MyCompany = lazy(() => import("@/pages/MyCompany"));
+const InternshipPostingPage = lazy(() => import("@/pages/MyCompany/InternshipPosting"));
 
 const messagesTitle = (
   <div className="flex items-center space-x-2">
@@ -85,6 +86,16 @@ export const mainRoutes = [
     meta: {
       title: "Şirketim",
     },
+    showNavBar: false,
+  },
+  {
+    path: "/create-posting",
+    element: (
+      <ProtectedRoute
+        title="Staj İlanı Oluştur"
+        component={InternshipPostingPage}
+      />
+    ),
     showNavBar: false,
   }
 ];
