@@ -22,3 +22,8 @@ export function showErrors(form: UseFormReturn<any>, errorResponse?: AxiosError<
     });
   }
 }; 
+
+export function getError(errorResponse?: AxiosError<ServiceReponse<any>>) {
+  const error = errorResponse?.response?.data?.error
+  return error;
+}; 

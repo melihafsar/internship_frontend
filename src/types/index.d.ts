@@ -99,7 +99,7 @@ interface ServiceError {
   errors: { [key: string]: string };
 }
 
-interface ServiceReponse<T> {
+interface ServiceReponse<T = any> {
   data: T;
   error: ServiceError;
 }

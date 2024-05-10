@@ -96,6 +96,9 @@ export const mainRoutes = [
         component={InternshipPostingPage}
       />
     ),
+    meta: {
+      title: "İlan oluştur",
+    },
     showNavBar: false,
   }
 ];
