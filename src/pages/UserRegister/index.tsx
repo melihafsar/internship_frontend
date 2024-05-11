@@ -31,9 +31,9 @@ function index() {
     try {
       await ProfileService.updateUserInfo({
         account_type: userType!,
-      }).then(() => {
+      }).then(async () => {
+        await supabase.auth.refreshSession();
         navigate("/");
-        supabase.auth.refreshSession();
       });
     } catch (error) {
       toast({
