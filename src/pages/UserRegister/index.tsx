@@ -1,5 +1,6 @@
 import Spinner from "@/components/Spinner";
 import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/context/AuthContext";
 import ProfileService from "@/services/profile.service";
 import UserService from "@/services/user.service";
 import { useEffect } from "react";
@@ -9,6 +10,7 @@ function index() {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
+  const { supabase } = useAuth();
 
   const updateUserType = async () => {
     const searchParams = new URLSearchParams(location.search.toString());
@@ -31,6 +33,7 @@ function index() {
         account_type: userType!,
       }).then(() => {
         navigate("/");
+        supabase.auth.refreshSession();
       });
     } catch (error) {
       toast({
