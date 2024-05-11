@@ -96,17 +96,6 @@ export const Login = () => {
     });
   };
 
-  // const validateSession = async () => {
-  //   if (await session) {
-  //     navigate("/");
-  //     return;
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   validateSession();
-  // }, [session]);
-
   useEffect(() => {
     form.reset();
   }, [currentTab]);

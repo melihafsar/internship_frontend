@@ -4,40 +4,31 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/context/AuthContext";
+import { useUser } from "@/context/UserContext";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useNavigate } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
-import { UserDetail } from "@/types";
 
-interface ProfileDropdownProps {
-  user: UserDetail;
-}
-
-export const ProfileDropdown = ({ user }: ProfileDropdownProps) => {
+export const CompanyDropdown = () => {
   const { supabase } = useAuth();
   const navigate = useNavigate();
+  const { companyDetail } = useUser();
 
-  const ProfileAvatar = () => {
+  const CompanyAvatar = () => {
     return (
       <div className="flex justify-center items-center space-x-2">
-        <Avatar className="w-8 h-8">
-          <AvatarImage src={user?.profile_photo_url} alt="profil_resmim" />
-          <AvatarFallback>
-            {user?.name && user?.surname
-              ? user?.name?.charAt(0) + user?.surname?.charAt(0)
-              : user?.email?.charAt(0)}
-          </AvatarFallback>
-        </Avatar>
-        <h3 className="text-sm font-semibold">
-          {user?.name && user?.surname
-            ? `${user.name} ${user.surname}`
-            : user?.email}
+        {companyDetail?.name && (
+          <Avatar className="w-8 h-8">
+            <AvatarImage src={companyDetail?.logo_url} alt="profil_resmim" />
+            <AvatarFallback>{companyDetail?.name?.slice(0, 2)}</AvatarFallback>
+          </Avatar>
+        )}
+        <h3 className="text-sm font-semibold truncate">
+          {companyDetail?.name || "Şirketim"}
         </h3>
       </div>
     );
@@ -45,20 +36,17 @@ export const ProfileDropdown = ({ user }: ProfileDropdownProps) => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost">{ProfileAvatar()}</Button>
+      <DropdownMenuTrigger asChild className="ml-1">
+        <Button variant="ghost">{CompanyAvatar()}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>{ProfileAvatar()}</DropdownMenuLabel>
-        <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => navigate("/profile")}>
-            Profilim
+          <DropdownMenuItem onClick={() => navigate("/my-company")}>
+            Şirketim
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            Mesajlarım
-            <Badge className="ml-2 rounded-full">3</Badge>
+          <DropdownMenuItem onClick={() => navigate("/my-posting")}>
+            İlanlarım
             <DropdownMenuShortcut>⌘M</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>

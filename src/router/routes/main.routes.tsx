@@ -9,7 +9,9 @@ const Applications = lazy(() => import("@/pages/Applications"));
 const Messages = lazy(() => import("@/pages/Messages"));
 const UserRegister = lazy(() => import("@/pages/UserRegister"));
 const MyCompany = lazy(() => import("@/pages/MyCompany"));
-const InternshipPostingPage = lazy(() => import("@/pages/MyCompany/InternshipPosting"));
+const InternshipPostingPage = lazy(
+  () => import("@/pages/MyCompany/InternshipPosting")
+);
 
 const messagesTitle = (
   <div className="flex items-center space-x-2">
@@ -38,29 +40,42 @@ export const mainRoutes = [
   {
     path: "/applications",
     id: "applications",
-    element: <ProtectedRoute title="Başvurularım" component={Applications} />,
+    element: (
+      <ProtectedRoute
+        userType={0}
+        title="Başvurularım"
+        component={Applications}
+      />
+    ),
     meta: {
       title: "Başvurularım",
     },
     showNavBar: true,
+    userType: 0,
   },
   {
     path: "/messages",
     id: "messages",
-    element: <ProtectedRoute title="Mesajlarım" component={Messages} />,
+    element: (
+      <ProtectedRoute userType={0} title="Mesajlarım" component={Messages} />
+    ),
     meta: {
       title: messagesTitle,
     },
     showNavBar: true,
+    userType: 0,
   },
   {
     path: "/profile",
     id: "profile",
-    element: <ProtectedRoute title="Profilim" component={Profile} />,
+    element: (
+      <ProtectedRoute userType={0} title="Profilim" component={Profile} />
+    ),
     meta: {
       title: "Profilim",
     },
     showNavBar: true,
+    userType: 0,
   },
   {
     path: "/user-registered",
@@ -76,22 +91,10 @@ export const mainRoutes = [
     showNavBar: false,
   },
   {
-    path: "/my-company",
+    path: "/my-posting",
     element: (
       <ProtectedRoute
-        title="Şirketim"
-        component={MyCompany}
-      />
-    ),
-    meta: {
-      title: "Şirketim",
-    },
-    showNavBar: false,
-  },
-  {
-    path: "/create-posting",
-    element: (
-      <ProtectedRoute
+        userType={1}
         title="Staj İlanı Oluştur"
         component={InternshipPostingPage}
       />
@@ -99,6 +102,18 @@ export const mainRoutes = [
     meta: {
       title: "İlan oluştur",
     },
-    showNavBar: false,
-  }
+    showNavBar: true,
+    userType: 1,
+  },
+  {
+    path: "/my-company",
+    element: (
+      <ProtectedRoute userType={1} title="Şirketim" component={MyCompany} />
+    ),
+    meta: {
+      title: "Şirketim",
+    },
+    showNavBar: true,
+    userType: 1,
+  },
 ];

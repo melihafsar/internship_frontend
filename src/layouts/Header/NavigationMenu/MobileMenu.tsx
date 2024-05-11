@@ -11,10 +11,29 @@ import { useNavigate } from "react-router-dom";
 import { Menu } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { getUserType } from "@/utils/helpers.utils.ts";
 
 function MobileMenu() {
   const navigate = useNavigate();
   const { supabase } = useAuth();
+  const [filteredRoutes, setFilteredRoutes] = useState<any[]>([]);
+
+  useEffect(() => {
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      const type = getUserType(session);
+      const routes = mainRoutes.filter((route) => {
+        if (route.showNavBar && route.userType !== undefined) {
+          return route.userType === type;
+        }
+        return route.showNavBar;
+      });
+      setFilteredRoutes(routes);
+    });
+    return () => {
+      data?.subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <DropdownMenu>
@@ -25,7 +44,7 @@ function MobileMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuGroup>
-          {mainRoutes.map((route) => (
+          {filteredRoutes.map((route) => (
             <DropdownMenuItem
               key={route.path}
               onClick={() => navigate(route.path)}
@@ -36,8 +55,8 @@ function MobileMenu() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={() => {
-            supabase.auth.signOut();
+          onClick={async () => {
+            await supabase.auth.signOut();
             navigate("/login");
           }}
         >
