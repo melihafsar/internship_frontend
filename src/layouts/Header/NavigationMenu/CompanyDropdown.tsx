@@ -45,7 +45,9 @@ export const CompanyDropdown = () => {
             Şirketim
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => navigate("/my-posting")}>
+          <DropdownMenuItem
+            onClick={() => navigate("/my-company#company-posts")}
+          >
             İlanlarım
             <DropdownMenuShortcut>⌘M</DropdownMenuShortcut>
           </DropdownMenuItem>

@@ -91,16 +91,16 @@ export const mainRoutes = [
     showNavBar: false,
   },
   {
-    path: "/my-posting",
+    path: "/my-company#company-posts",
     element: (
       <ProtectedRoute
         userType={1}
         title="Staj İlanı Oluştur"
-        component={InternshipPostingPage}
+        component={MyCompany}
       />
     ),
     meta: {
-      title: "İlan oluştur",
+      title: "İlan Oluştur",
     },
     showNavBar: true,
     userType: 1,
