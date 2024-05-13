@@ -49,7 +49,7 @@ export function Combobox({
 
   useEffect(() => {
     setSelectedValue(value || "");  
-  }, [value])
+  }, [value, data])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

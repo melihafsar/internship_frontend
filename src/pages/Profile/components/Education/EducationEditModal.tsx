@@ -17,7 +17,7 @@ import { Universityeducation } from "@/types";
 interface EducationEditModalProps {
   triggerButton: React.ReactNode;
   handleUpdateEducation: (data: EducationFormTypes, e: any) => void;
-  education: Universityeducation;
+  education: EducationFormTypes;
 }
 
 function EducationEditModal({

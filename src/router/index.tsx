@@ -2,6 +2,7 @@ import {
   createBrowserRouter,
   RouterProvider,
   Navigate,
+  HashRouter,
 } from "react-router-dom";
 import MainLayout from "@/layouts/MainLayout";
 import PublicLayout from "@/layouts/PublicLayout";
@@ -32,7 +33,7 @@ export function Router() {
       path: "*",
       element: <Navigate to="/404" replace />,
     },
-  ]);
+  ], {});
 }
 
 export const RouterProviderWrapper = () => (

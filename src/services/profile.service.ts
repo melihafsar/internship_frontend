@@ -1,12 +1,17 @@
 import {
   Detail,
   Foreignlanguage,
+  LinkedinScrapeResponse,
   Reference,
+  ServiceReponse,
   Universityeducation,
   UserProject,
   Work,
 } from "@/types";
 import { api } from "../api";
+import { EducationFormTypes } from "@/schemas/education-form.schema";
+import { CompanyFormTypes } from "@/schemas/company-form.schema";
+import { WorkFormTypes } from "@/schemas/work-form.schema";
 
 export default {
   getUserInfo() {
@@ -32,6 +37,21 @@ export default {
       phone_number,
       account_type,
     });
+  },
+  async scrapeLinkedin(dto: { access_token: string }) {
+    var result = await api.post("/Account/ScrapeLinkedin", dto) as LinkedinScrapeResponse;
+    result.educations.forEach((education) => {
+      education.start_date = new Date(education.start_date);
+      education.end_date = new Date(education.end_date);
+      education.university_available = !!education.university_id;
+    });
+
+    result.work_history.forEach((work) => {
+      work.start_date = new Date(work.start_date);
+      work.end_date = new Date(work.end_date);
+    });
+
+    return result;
   },
   getProfile() {
     return api.get("/Account/Get");

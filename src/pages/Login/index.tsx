@@ -166,6 +166,7 @@ export const Login = () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "linkedin_oidc",
       options: {
+        scopes: "r_basicprofile",
         redirectTo: `${window.location.origin}/user-registered?userType=${currentUser}`,
       },
     });

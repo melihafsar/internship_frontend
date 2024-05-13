@@ -77,9 +77,9 @@ const EducationForm = ({
       });
   }, [form]);
 
-  useEffect(() => {
-    form.setValue("university_name", "");
-  }, [form.watch("university_available")]);
+  // useEffect(() => {
+  //   // form.setValue("university_name", "");
+  // }, [form.watch("university_available")]);
 
   return (
     <Form {...form}>
@@ -109,60 +109,57 @@ const EducationForm = ({
             />
           }
         </div>
-        <div className="flex flex-col md:flex-row space-y-4 md:space-x-4 md:space-y-0 justify-between mt-8 items-center">
-          {form.getValues("university_available") ? (
-            <FormField
-              control={form.control}
-              name="university_id"
-              render={({ field }) => (
-                <FormItem className="w-full md:w-1/2 h-[100px]">
-                  <FormLabel className="flex flex-row gap-x-2 items-baseline">
-                    Üniversiteniz
-                    <p className="text-[0.6rem] text-muted-foreground">
-                      Bu alan zorunludur ve herkes görebilir.
-                    </p>
-                  </FormLabel>
-                  <Combobox
-                    {...field}
-                    value={field.value?.toString()}
-                    data={universtiesList}
-                    title="Üniversite"
-                    onSelect={(value) => {
-                      field.onChange(parseInt(value));
-                    }}
-                    className="w-full"
-                  />
-                  <FormMessage {...field} />
-                </FormItem>
-              )}
-            />
-          ) : (
-            <FormField
-              control={form.control}
-              name="university_name"
-              render={({ field }) => (
-                <FormItem className="w-full md:w-1/2 h-[100px]">
-                  <FormLabel className="flex flex-row gap-x-2 items-baseline">
-                    Üniversiteniz
-                    <p className="text-[0.6rem] text-muted-foreground">
-                      Bu alan zorunludur ve herkes görebilir.
-                    </p>
-                  </FormLabel>
-                  <Input
-                    {...field}
-                    placeholder="Üniversite Adını Giriniz"
-                    className="mt-1"
-                  />
-                  <FormMessage {...field} />
-                </FormItem>
-              )}
-            />
-          )}
+        <div className="flex flex-col md:flex-row md:space-y-0 justify-between mt-8 items-center">
+          <FormField
+            control={form.control}
+            name="university_id"
+            render={({ field }) => (
+              <FormItem className={cn("w-full md:w-1/2 h-[100px]", form.getValues("university_available") ? "" : "hidden")}>
+                <FormLabel className="flex flex-row gap-x-2 items-baseline">
+                  Üniversiteniz
+                  <p className="text-[0.6rem] text-muted-foreground">
+                    Bu alan zorunludur ve herkes görebilir.
+                  </p>
+                </FormLabel>
+                <Combobox
+                  value={field.value?.toString()}
+                  data={universtiesList}
+                  title="Üniversite"
+                  onSelect={(value) => {
+                    field.onChange(parseInt(value));
+                  }}
+                  className="w-full"
+                />
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="university_name"
+            render={({ field }) => (
+              <FormItem className={cn("w-full md:w-1/2 h-[100px]", form.getValues("university_available") ? "hidden" : "")}>
+                <FormLabel className="flex flex-row gap-x-2 items-baseline">
+                  Üniversiteniz
+                  <p className="text-[0.6rem] text-muted-foreground">
+                    Bu alan zorunludur ve herkes görebilir.
+                  </p>
+                </FormLabel>
+                <Input
+                  {...field}
+                  placeholder="Üniversite Adını Giriniz"
+                  className="mt-1"
+                />
+                <FormMessage {...field} />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="faculty"
             render={({ field }) => (
-              <FormItem className="w-full md:w-1/2 h-[100px]">
+              <FormItem className="w-full md:ml-4 md:w-1/2 h-[100px]">
                 <FormLabel className="flex flex-row gap-x-2 items-baseline">
                   Fakülteniz
                   <p className="text-[0.6rem] text-muted-foreground">

@@ -16,7 +16,7 @@ const formSchema = z.object({
   is_graduated: z.boolean(),
   education_year: z.coerce.number().min(0).nullable(),
   gpa: z.coerce.number().min(0),
-  description: z.string().optional(),
+  description: z.string().nullish(),
 });
 
 export type EducationFormTypes = z.infer<typeof formSchema>;

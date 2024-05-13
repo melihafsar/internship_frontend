@@ -1,3 +1,6 @@
+import { EducationFormTypes } from "@/schemas/education-form.schema";
+import { WorkFormTypes } from "@/schemas/work-form.schema";
+
 export interface supabaseSession {
   access_token: string;
   expires_at: number;
@@ -73,7 +76,7 @@ interface Universityeducation {
   is_graduated: boolean;
   education_year?: number | null;
   gpa: number;
-  description?: string;
+  description?: string | null;
   id?: number;
 }
 interface Foreignlanguage {
@@ -109,4 +112,10 @@ interface PagedListDto<T> {
   from: number;
   count: number;
   total: number;
+}
+
+interface LinkedinScrapeResponse  {
+  educations: EducationFormTypes[];
+  work_history: WorkFormTypes[];
+  error: ServiceError
 }

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import { Linkedin, Pencil } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AvatarImage } from "@/components/ui/avatar";
@@ -26,6 +26,11 @@ import {
 } from "@/components/ui/form";
 import { ImageUploadDialog } from "./ImageUploadDialog";
 import { UserDetail } from "@/types";
+import { useAuth } from "@/context/AuthContext";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { ImportLinkedinDialog } from "./ImportLinkedinModal";
+import { EducationFormTypes } from "@/schemas/education-form.schema";
+import { WorkFormTypes } from "@/schemas/work-form.schema";
 
 interface ContactDetailsProps {
   user: UserDetail;
@@ -158,7 +163,56 @@ function ContactDetails({ user }: ContactDetailsProps) {
   const [showForm, setShowForm] = useState(false);
   const { loading, setLoading } = useUtil();
   const [showUploadDialog, setShowUploadDialog] = useState(false);
+  const { linkedinProviderToken } = useAuth();
+  const [linkedinImportState, setLinkedinImportState] = useState<{
+    linkedLinkedin: boolean,
+    scrapingLinkedin: boolean,
+    showDialog: boolean
+  }>({ linkedLinkedin: false, scrapingLinkedin: false, showDialog: false });
+  const [scrapeResult, setScrapeResult] = useState<{ educations: EducationFormTypes[], work_history: WorkFormTypes[] }>();
+  const [showLinkedinImportDialog, setshowLinkedinImportDialog] = useState(false);
+
   const { toast } = useToast();
+
+  const linkWithLinkedin = async () => {
+    try {
+      setLinkedinImportState({ ...linkedinImportState, scrapingLinkedin: true });
+      
+      if (!linkedinProviderToken) {
+        toast({
+          title: "Hata",
+          description: "Linkedin Hesabı ile bağlantı kurulamadı.",
+          variant: "destructive",
+        });
+        setLinkedinImportState({ ...linkedinImportState, scrapingLinkedin: false });
+        return
+      }
+      if (!scrapeResult) {
+        const result = await ProfileService.scrapeLinkedin({ access_token: linkedinProviderToken.access_token });
+        setLinkedinImportState({ ...linkedinImportState, showDialog: true });
+        setScrapeResult({ educations: result.educations, work_history: result.work_history });
+      }
+      setshowLinkedinImportDialog(true);
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: error.response.error.details,
+        variant: "destructive",
+      });
+    } finally {
+      setLinkedinImportState({ ...linkedinImportState, scrapingLinkedin: false });
+    }
+  };
+
+  const checkLinkedinLink = async () => {
+    if (linkedinProviderToken) {
+      setLinkedinImportState({ ...linkedinImportState, linkedLinkedin: true });
+    }
+  }
+
+  useEffect(() => {
+    checkLinkedinLink();
+  }, []);
 
   const handleFormSubmit = async (data: any) => {
     try {
@@ -222,6 +276,13 @@ function ContactDetails({ user }: ContactDetailsProps) {
         dialogClose={() => setShowUploadDialog(false)}
         handleFileUpload={handleFileUpload}
       />
+      <ImportLinkedinDialog
+        show={showLinkedinImportDialog}
+        dialogClose={() => setshowLinkedinImportDialog(false)}
+        data={scrapeResult}
+        setData={setScrapeResult}
+      />
+      
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <div
           className="hover:opacity-60 flex items-center relative group cursor-pointer"
@@ -238,14 +299,35 @@ function ContactDetails({ user }: ContactDetailsProps) {
             <h1 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-2xl">
               {user.name} {user.surname}
             </h1>
-            <Button
-              onClick={() => setShowForm(!showForm)}
-              variant="outline"
-              className="flex items-center space-x-2"
-            >
-              <Pencil className="h-4 w-4 mr-2" />
-              Bilgilerinizi Düzenleyin
-            </Button>
+            <div className="flex flex-col gap-2">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={() => linkWithLinkedin()}
+                      className="flex items-center space-x-2 bg-[#0077b5] text-white hover:bg-[#00669d]"
+                      disabled={linkedinImportState.scrapingLinkedin}
+                    >
+                      <Linkedin className="h-4 w-4 mr-2" />
+                      Linkedin ile Doldur
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {
+                      linkedinImportState.linkedLinkedin ? "Bilgilerinizi Linkedin Hesabınızdan Doldurun." : "Bilgilerinizi Linkedin Hesabınızdan Doldurmak için Linkedin ile Bağlanın."
+                    }
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <Button
+                onClick={() => setShowForm(!showForm)}
+                variant="outline"
+                className="flex items-center space-x-2"
+              >
+                <Pencil className="h-4 w-4 mr-2" />
+                Bilgilerinizi Düzenleyin
+              </Button>
+            </div>
           </div>
           <div className="mb-2 text-muted-foreground text-[12px] md:text-sm">
             <div className="flex space-x-1 justify-between">
