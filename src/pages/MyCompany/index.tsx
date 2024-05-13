@@ -1,55 +1,38 @@
-import { CompanyFormTypes, useCompanyForm } from "@/schemas/company-form.schema";
-import CompanyForm from "./components/CompanyForm";
 import { useEffect, useState } from "react";
-import CompanyService from "@/services/company.service";
-import { useToast } from "@/components/ui/use-toast";
-import { showErrors } from "@/utils/helpers.utils";
-
+import { useLocation } from "react-router-dom";
+import { Separator } from "@radix-ui/react-dropdown-menu";
+import CompanyInfoFields from "./components/CompanyInfoFields";
+import CompanyNavigationItems from "./components/CompanyNavigationItems";
+import { useUser } from "@/context/UserContext";
 
 export const MyCompany = () => {
-    const { form } = useCompanyForm();
-    const [loading, setLoading] = useState(false);
-    const { toast } = useToast();
-    
-    const handleFormSubmit = async (data : CompanyFormTypes) => {
-        try {
-            setLoading(true);
-            await CompanyService.updateCompany({...data});
-            toast({
-              title: "Başarılı",
-              description: "Özel bilgiler başarıyla eklendi.",
-              variant: "success",
-            });
-          } catch (error : any) {
-            showErrors(form, error);
-            toast({
-              title: "Hata",
-              description: "Özel bilgiler eklenirken bir hata oluştu.",
-              variant: "destructive",
-            });
-          }
-          setLoading(false);
-    }
+  const [activeTab, setActiveTab] = useState("contact");
+  const { companyDetail } = useUser();
+  const location = useLocation();
 
-    const fetchCompany = async () => {
-      setLoading(true);
-        try {
-          const response = await CompanyService.getCompany();
-          form.reset(response.data);
-        } catch {
-          toast({
-            title: "Hata",
-            description: "Şirket bilgileri getirilirken bir hata oluştu.",
-          });
-        }
-        setLoading(false);
-      }
+  useEffect(() => {
+    if (location.hash) setActiveTab(location.hash.slice(1));
+  }, [location.hash]);
 
-    useEffect(() => {
-      fetchCompany();
-    }, [])
-    
-
-    return <CompanyForm loading={loading} form={form} handleFormSubmit={handleFormSubmit}/>
+  return (
+    <div className="pb-2 scroll-smooth">
+      <p className="text-muted-foreground">
+        Profil bilgilerinizi güncelleyebilir ve diğer kullanıcılar tarafından
+        görülecek şekilde ayarlayabilirsiniz.
+      </p>
+      <Separator className="my-6" />
+      <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+        <aside className="bg-primary-foreground rounded-md lg:bg-transparent lg:w-1/5 sticky top-0 z-30">
+          <nav className="flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1 overflow-x-auto py-2 sticky top-2">
+            <CompanyNavigationItems activeTab={activeTab} />
+          </nav>
+        </aside>
+        <div className="flex-1 max-w-[1400px]">
+          <CompanyInfoFields company={companyDetail} />
+        </div>
+      </div>
+    </div>
+  );
 };
+
 export default MyCompany;

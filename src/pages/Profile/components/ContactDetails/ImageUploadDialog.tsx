@@ -10,6 +10,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { RotateCw } from "lucide-react";
 
 interface ImageUploadDialogProps {
   show: boolean;
@@ -17,6 +18,7 @@ interface ImageUploadDialogProps {
   handleFileUpload: (e: React.FormEvent<HTMLFormElement>, file: File) => void;
   title?: string;
   description?: string;
+  loading?: boolean;
 }
 
 export const ImageUploadDialog = (props: ImageUploadDialogProps) => {
@@ -26,6 +28,7 @@ export const ImageUploadDialog = (props: ImageUploadDialogProps) => {
     handleFileUpload,
     title = "Resmi Yükle",
     description = "Resminizi yükleyerek profilinizin daha kişisel olmasını sağlayabilirsiniz.",
+    loading,
   } = props;
   const [uploadFile, setUploadFile] = useState<File | null>(null);
 
@@ -57,7 +60,8 @@ export const ImageUploadDialog = (props: ImageUploadDialogProps) => {
               className="w-full"
               variant="default"
             >
-              Resmi Yükle
+              {loading && <RotateCw className="mr-2 h-4 w-4 animate-spin" />}
+              {loading ? "Lütfen bekleyin..." : "Resmi Yükle"}
             </Button>
           </DialogFooter>
         </form>

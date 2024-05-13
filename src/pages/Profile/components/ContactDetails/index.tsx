@@ -230,13 +230,18 @@ function ContactDetails({ user }: ContactDetailsProps) {
           <Pencil className="absolute h-6 w-6 top-1/2 right-1/2 transform translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 z-50" />
           <Avatar className="h-32 w-32 m-4">
             <AvatarImage src={user?.profile_photo_url} alt="profil_resmim" />
-            <AvatarFallback>MA</AvatarFallback>
+            <AvatarFallback>
+              {user?.name
+                ? user?.name?.charAt(0).toUpperCase() +
+                  user?.surname?.charAt(0).toUpperCase()
+                : user.email.slice(0, 2)}
+            </AvatarFallback>
           </Avatar>
         </div>
         <div className="flex flex-1 flex-col space-y-2">
           <div className="flex flex-col gap-y-2 md:gap-y-0 md:flex-row justify-between items-center">
             <h1 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-2xl">
-              {user.name} {user.surname}
+              {user.name || "Ad"} {user.surname || "Soyad"}
             </h1>
             <Button
               onClick={() => setShowForm(!showForm)}
@@ -263,7 +268,6 @@ function ContactDetails({ user }: ContactDetailsProps) {
           </div>
         </div>
       </div>
-
       <Accordion
         type="single"
         value={showForm ? "profile" : undefined}
