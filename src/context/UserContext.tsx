@@ -85,7 +85,7 @@ export const UserProvider = ({ children }: any) => {
       companyDetail,
       setCompanyDetail,
     }),
-    [userDetailData]
+    [userDetailData, companyDetail]
   );
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

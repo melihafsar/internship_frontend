@@ -36,10 +36,9 @@ function index({ company }: CompanyPostsProps) {
   };
 
   useEffect(() => {
-    //TODO: Test this if statement
-    // if (!company?.id) return;
+    if (!company?.id) return;
     fetchPostings();
-  }, []);
+  }, [company]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -62,7 +61,7 @@ function index({ company }: CompanyPostsProps) {
       <Separator className="mt-1 mb-4" />
       {postings ? (
         <div className="flex flex-col">
-          <div className="flex flex-col md:flex-row w-full gap-2">
+          <div className="flex flex-col md:flex-row w-full gap-4 flex-wrap">
             {postings?.items.map((posting: InternshipPostingFormTypes) => (
               <CompanyPostingCard key={posting.id} posting={posting} />
             ))}

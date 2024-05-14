@@ -43,22 +43,25 @@ function CompanyBanner({
 
   const fetchCountries = async (countryId: number) => {
     const result = await locationService.getCountries();
-    const matchedCountry = result.find((item) => item.id === Number(countryId));
-    setLocation({ ...location, country: matchedCountry?.name || "" });
+    return result.find((item) => item.id === Number(countryId));
   };
 
   const fetchCities = async (countryId: number, cityId: number) => {
     const result = await locationService.getCities(countryId);
-    const matchedCity = result.find((item) => item.id === cityId);
-    setLocation({ ...location, city: matchedCity?.name || "" });
+    return result.find((item) => item.id === cityId);
   };
 
   const getLocation = async () => {
     const countryId = form.getValues("country_id");
     const cityId = form.getValues("city_id");
     if (!countryId || !cityId) return;
-    fetchCountries(countryId);
-    fetchCities(countryId, cityId);
+    const matchedCountry = await fetchCountries(countryId);
+    const matchedCity = await fetchCities(countryId, cityId);
+
+    setLocation({
+      country: matchedCountry?.name || "",
+      city: matchedCity?.name || "",
+    });
   };
 
   useEffect(() => {
