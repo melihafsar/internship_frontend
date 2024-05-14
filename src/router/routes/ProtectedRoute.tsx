@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import Page from "@/layouts/Page";
-import { useUtil } from "@/context/UtilContext";
+import { UtilProvider, useUtil } from "@/context/UtilContext";
 import Spinner from "@/components/Spinner";
 import { useAuth } from "@/context/AuthContext.tsx";
 import { getUserType } from "@/utils/helpers.utils.ts";
@@ -59,7 +59,9 @@ const ProtectedRoute = ({
         title={title}
         className={fixPageHeight ? fixPageHeightClassName : ""}
       >
-        <Component {...rest} />
+        <UtilProvider>
+          <Component {...rest} />
+        </UtilProvider>
       </Page>
     );
   return <Navigate to="/login" replace />;
