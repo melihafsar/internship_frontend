@@ -1,4 +1,4 @@
-import { Combobox } from "@/components/ui/combobox";
+import { Combobox, ComboboxData } from "@/components/ui/combobox";
 import { Switch } from "@/components/ui/switch";
 import {
   Popover,
@@ -22,11 +22,11 @@ import { CalendarIcon } from "lucide-react";
 import { tr } from "date-fns/locale";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import ProfileService from "@/services/profile.service";
 import { useToast } from "@/components/ui/use-toast";
 import { Universityeducation } from "@/types";
 import { EducationFormTypes } from "@/schemas/education-form.schema";
 import { UseFormReturn } from "react-hook-form";
+import LookupService from "@/services/lookup.service";
 
 interface EducationFormProps {
   form: UseFormReturn<EducationFormTypes>;
@@ -41,13 +41,13 @@ const EducationForm = ({
   handleFormSubmit,
   initialValues,
 }: EducationFormProps) => {
-  const [universtiesList, setUniversitiesList] = useState([]);
+  const [universtiesList, setUniversitiesList] = useState<ComboboxData>([]);
   const { toast } = useToast();
   form.watch("university_available");
 
   const fetchUniversities = async () => {
     try {
-      const response = await ProfileService.getUniversities();
+      const response = await LookupService.getUniversities();
       const transformedData = response.data.map(
         (item: { id: number; name: string }) => ({
           value: item.id.toString(),

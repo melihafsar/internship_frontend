@@ -12,9 +12,6 @@ export default {
   getUserInfo() {
     return api.post("/Account/GetInfo");
   },
-  getUniversities() {
-    return api.get("/University/List");
-  },
   updateUserInfo({
     name,
     surname,
