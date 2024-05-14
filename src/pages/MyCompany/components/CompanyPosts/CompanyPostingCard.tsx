@@ -1,58 +1,67 @@
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogDescription,
-//   DialogHeader,
-//   DialogTitle,
-//   DialogTrigger,
-// } from "@/components/ui/dialog";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import PostingCard from "@/components/PostingCard";
 import { Button } from "@/components/ui/button";
-// import InternshipApplicationForm from "../../../Applications/InternshipApplicationForm";
-// import InternshipService from "@/services/internship.service";
-// import {
-//   InternshipApplicationFormTypes,
-//   useInternshipApplicationForm,
-// } from "@/schemas/internship-application.schema";
+import InternshipApplicationForm from "../../../Applications/InternshipApplicationForm";
+import InternshipService from "@/services/internship.service";
+import {
+  InternshipApplicationFormTypes,
+  useInternshipApplicationForm,
+} from "@/schemas/internship-application.schema";
+import InternshipPostingForm from "./InternshipPostingForm";
 import {
   InternshipPostingFormTypes,
-  // useInternshipPostingForm,
+  useInternshipPostingForm,
 } from "@/schemas/internship-posting.schema";
-// import { useState } from "react";
-// import CompanyService from "@/services/company.service";
-// import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
-import { Link } from "lucide-react";
-
+import { useState } from "react";
+import CompanyService from "@/services/company.service";
+import { useToast } from "@/components/ui/use-toast";
 interface CompanyPostingCardProps {
   posting: InternshipPostingFormTypes;
 }
 
 function CompanyPostingCard({ posting }: CompanyPostingCardProps) {
-  // const { form } = useInternshipPostingForm();
+  const { form } = useInternshipPostingForm();
   // const applicationFormHandle = useInternshipApplicationForm();
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [updatePostingModalOpen, setUpdatePostingModalOpen] = useState(false);
   // const [applyPostingOpen, setApplyPostingOpen] = useState(false);
-  // const { toast } = useToast();
+  const { toast } = useToast();
 
-  // const deletePosting = async (item: InternshipPostingFormTypes) => {
-  //   setLoading(true);
-  //   try {
-  //     await CompanyService.endPosting(item);
-  //   } catch {
-  //     toast({
-  //       title: "Hata",
-  //       description: "Şirket bilgileri getirilirken bir hata oluştu.",
-  //     });
-  //   }
-  //   setLoading(false);
-  // };
+  const deletePosting = async (item: InternshipPostingFormTypes) => {
+    setLoading(true);
+    try {
+      await CompanyService.endPosting(item);
+    } catch {
+      toast({
+        title: "Hata",
+        description: "Şirket bilgileri getirilirken bir hata oluştu.",
+      });
+    }
+    setLoading(false);
+  };
+
+  //updatePosting
+  const handleFormSubmit = async (data: InternshipPostingFormTypes) => {
+    setLoading(true);
+    console.log(data);
+    try {
+      await CompanyService.updatePosting(data);
+    } catch {
+      toast({
+        title: "Hata",
+        description: "Şirket bilgileri getirilirken bir hata oluştu.",
+      });
+    }
+    setLoading(false);
+    setUpdatePostingModalOpen(false);
+  };
 
   // const applyToPosting = async (item: InternshipApplicationFormTypes) => {
   //   setLoading(true);
@@ -68,34 +77,55 @@ function CompanyPostingCard({ posting }: CompanyPostingCardProps) {
   //   setLoading(false);
   // };
 
-  const navigate = useNavigate();
-
-  return (
-    <Card className="w-[500px] p-5 select-none">
-      <CardHeader className="p-0">
-        <img className="mb-3" src={posting.image_url} />
-        <CardTitle>{posting.title}</CardTitle>
-      </CardHeader>
-      <CardContent className="p-0 my-2">
-        <p className="text-sm text-gray-500 line-clamp-3">
-          {posting.description}
-        </p>
-      </CardContent>
-      <CardFooter className="flex justify-between pl-0 pt-0">
-        <Button
-          variant={"link"}
-          onClick={() => navigate(`/internships/${posting.id}`)}
+  const accessFunctionality = () => {
+    return (
+      <div className="flex flex-row justify-between gap-2">
+        <Dialog
+          open={updatePostingModalOpen}
+          onOpenChange={setUpdatePostingModalOpen}
         >
-          <Link className="mr-1" size={14} />
-          Daha Fazla Bilgi
-        </Button>
-      </CardFooter>
-
-      {/* <Button onClick={() => form.reset({ ...posting })}>Düzenle</Button>
-        <Button onClick={() => deletePosting(posting)} variant={"destructive"}>
+          <DialogTrigger asChild>
+            <Button
+              className="flex-1"
+              onClick={() => form.reset({ ...posting })}
+            >
+              Düzenle
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Staj İlan Bilgileri</DialogTitle>
+              <DialogDescription>
+                Staj ilanınızın bilgilerini güncelleyebilirsiniz.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="h-full overflow-y-auto w-full">
+              <InternshipPostingForm
+                loading={loading}
+                form={form}
+                handleFormSubmit={handleFormSubmit}
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+        <Button
+          className="flex-1"
+          disabled={new Date(posting.dead_line) < new Date()}
+          onClick={() => deletePosting(posting)}
+          variant={"destructive"}
+        >
           Sonlandır
-        </Button> */}
-      {/* <Dialog open={applyPostingOpen} onOpenChange={setApplyPostingOpen}>
+        </Button>
+      </div>
+    );
+  };
+
+  return <PostingCard posting={posting}>{accessFunctionality()}</PostingCard>;
+}
+
+export default CompanyPostingCard;
+{
+  /* <Dialog open={applyPostingOpen} onOpenChange={setApplyPostingOpen}>
         <DialogTrigger asChild>
           <Button
             onClick={() => {
@@ -123,9 +153,5 @@ function CompanyPostingCard({ posting }: CompanyPostingCardProps) {
             />
           </div>
         </DialogContent>
-      </Dialog> */}
-    </Card>
-  );
+      </Dialog> */
 }
-
-export default CompanyPostingCard;

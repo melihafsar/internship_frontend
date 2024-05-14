@@ -54,28 +54,37 @@ function index({ company }: CompanyDetailProps) {
     setLoading(false);
   };
 
-  const fetchCompany = async () => {
-    setLoading(true);
-    try {
-      const response = await CompanyService.getCompany();
-      form.reset(response.data);
-      setCompanyData(response.data);
-      setCompanyImages({
-        logo: response.data?.logo_url || "./no-image.svg",
-        background: response.data?.background_photo_url || "./no-image.svg",
-      });
-    } catch {
-      toast({
-        title: "Hata",
-        description: "Şirket bilgileri getirilirken bir hata oluştu.",
-      });
-    }
-    setLoading(false);
-  };
-
   useEffect(() => {
-    fetchCompany();
-  }, []);
+    form.reset(company);
+    setCompanyData(company);
+    setCompanyImages({
+      logo: company?.logo_url || "./no-image.svg",
+      background: company?.background_photo_url || "./no-image.svg",
+    });
+  }, [company]);
+
+  // const fetchCompany = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await CompanyService.getCompany();
+  //     form.reset(response.data);
+  //     setCompanyData(response.data);
+  //     setCompanyImages({
+  //       logo: response.data?.logo_url || "./no-image.svg",
+  //       background: response.data?.background_photo_url || "./no-image.svg",
+  //     });
+  //   } catch {
+  //     toast({
+  //       title: "Hata",
+  //       description: "Şirket bilgileri getirilirken bir hata oluştu.",
+  //     });
+  //   }
+  //   setLoading(false);
+  // };
+
+  // useEffect(() => {
+  //   fetchCompany();
+  // }, []);
 
   return (
     <div className="flex flex-col">

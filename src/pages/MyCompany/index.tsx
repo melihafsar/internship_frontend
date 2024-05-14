@@ -4,15 +4,32 @@ import { Separator } from "@radix-ui/react-dropdown-menu";
 import CompanyInfoFields from "./components/CompanyInfoFields";
 import CompanyNavigationItems from "./components/CompanyNavigationItems";
 import { useUser } from "@/context/UserContext";
+import CompanyService from "@/services/company.service";
+import { CompanyFormTypes } from "@/schemas/company-form.schema";
 
 export const MyCompany = () => {
   const [activeTab, setActiveTab] = useState("contact");
-  const { companyDetail } = useUser();
+  // const { companyDetail } = useUser();
   const location = useLocation();
+  const [companyData, setCompanyData] = useState<CompanyFormTypes>();
 
   useEffect(() => {
     if (location.hash) setActiveTab(location.hash.slice(1));
   }, [location.hash]);
+
+  const fetchCompany = async () => {
+    try {
+      const response = await CompanyService.getCompany();
+
+      setCompanyData(response.data);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCompany();
+  }, []);
 
   return (
     <div className="pb-2 scroll-smooth">
@@ -28,7 +45,7 @@ export const MyCompany = () => {
           </nav>
         </aside>
         <div className="flex-1 max-w-[1400px]">
-          <CompanyInfoFields company={companyDetail} />
+          <CompanyInfoFields company={companyData} />
         </div>
       </div>
     </div>

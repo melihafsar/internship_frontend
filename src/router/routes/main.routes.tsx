@@ -25,12 +25,12 @@ export const mainRoutes = [
     path: "/",
     id: "homepage",
     element: (
-      <Page
-        title="Anasayfa"
-        className="overflow-hidden h-[calc(100vh-80px-4rem)]"
+      <div
+        // title="Anasayfa"
+        className="overflow-hidden h-[calc(100vh-80px-4rem)] p-0 m-0"
       >
         <HomePage />
-      </Page>
+      </div>
     ),
     meta: {
       title: "Anasayfa",

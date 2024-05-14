@@ -9,7 +9,7 @@ import { companyInfoFields } from "./index";
 import { CompanyFormTypes } from "@/schemas/company-form.schema";
 
 interface CompanyInfoFieldsProps {
-  company: CompanyFormTypes;
+  company?: CompanyFormTypes;
 }
 
 function CompanyInfoFields({ company }: CompanyInfoFieldsProps) {
