@@ -50,7 +50,7 @@ function PostingCard({ posting, children }: PostingCardProps) {
           <Button
             variant={"link"}
             className="py-0"
-            onClick={() => navigate(`/internships/${posting.id}`)}
+            onClick={() => navigate(`/applications/${posting.id}`)}
           >
             <Link className="mr-1" size={14} />
             Daha Fazla Bilgi

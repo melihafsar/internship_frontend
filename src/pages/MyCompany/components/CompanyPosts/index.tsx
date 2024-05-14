@@ -30,6 +30,7 @@ function index({ company }: CompanyPostsProps) {
       toast({
         title: "Hata",
         description: "Şirket staj ilanları getirilirken bir hata oluştu.",
+        variant: "destructive",
       });
     }
     setLoading(false);

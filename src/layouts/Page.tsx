@@ -6,10 +6,12 @@ export default function Page({
   title,
   children,
   className,
+  showTitle = true,
 }: {
-  title?: string;
+  title: string;
   children: React.ReactNode;
   className: string;
+  showTitle?: boolean;
 }) {
   const defaultStyle = "flex flex-col flex-1 p-4";
   return (
@@ -18,7 +20,7 @@ export default function Page({
         <title>{`${title} | Marmara`}</title>
         <meta name="description" content="Marmara - Staj Platformu" />
       </Helmet>
-      {title && <h1 className="text-[1.4rem] font-bold mb-2">{title}</h1>}
+      {showTitle && <h1 className="text-[1.4rem] font-bold mb-2">{title}</h1>}
       {children}
     </div>
   );

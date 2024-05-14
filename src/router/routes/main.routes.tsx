@@ -9,6 +9,9 @@ const Applications = lazy(() => import("@/pages/Applications"));
 const Messages = lazy(() => import("@/pages/Messages"));
 const UserRegister = lazy(() => import("@/pages/UserRegister"));
 const MyCompany = lazy(() => import("@/pages/MyCompany"));
+const ApplicationsDetailPage = lazy(
+  () => import("@/pages/Applications/ApplicationsDetail")
+);
 
 const messagesTitle = (
   <div className="flex items-center space-x-2">
@@ -22,7 +25,11 @@ export const mainRoutes = [
     path: "/",
     id: "homepage",
     element: (
-      <Page className="overflow-hidden p-0 m-0">
+      <Page
+        title="Anasayfa"
+        className="overflow-hidden p-0 m-0"
+        showTitle={false}
+      >
         <HomePage />
       </Page>
     ),
@@ -46,6 +53,21 @@ export const mainRoutes = [
     },
     showNavBar: true,
     userType: 0,
+  },
+  {
+    path: "/applications/:id",
+    id: "applications-detail",
+    element: (
+      <ProtectedRoute
+        userType={0}
+        title="İlan Detayları"
+        component={ApplicationsDetailPage}
+      />
+    ),
+    meta: {
+      title: "İlan Detayları",
+    },
+    showNavBar: false,
   },
   {
     path: "/messages",

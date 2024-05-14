@@ -34,7 +34,7 @@ export const ProfileDropdown = ({ user }: ProfileDropdownProps) => {
               : user?.email?.charAt(0)}
           </AvatarFallback>
         </Avatar>
-        <h3 className="text-sm font-semibold w-40 truncate">
+        <h3 className="text-sm font-semibold max-w-40 truncate">
           {user?.name && user?.surname
             ? `${user.name} ${user.surname}`
             : user?.email}
@@ -46,7 +46,7 @@ export const ProfileDropdown = ({ user }: ProfileDropdownProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="w-56 truncate">
+        <Button variant="ghost" className="max-w-56 truncate">
           {ProfileAvatar()}
         </Button>
       </DropdownMenuTrigger>

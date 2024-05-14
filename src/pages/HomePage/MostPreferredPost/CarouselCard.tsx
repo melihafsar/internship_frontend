@@ -1,14 +1,19 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { InternshipPostingFormTypes } from "@/schemas/internship-posting.schema";
 import { Briefcase, Wallet } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface CarouselCardProps {
   posting: InternshipPostingFormTypes;
 }
 
 function CarouselCard({ posting }: CarouselCardProps) {
+  const navigate = useNavigate();
   return (
-    <Card className="bg-secondary text-neutral rounded-lg overflow-hidden">
+    <Card
+      className="bg-secondary text-neutral rounded-lg overflow-hidden cursor-pointer"
+      onClick={() => navigate(`/applications/${posting.id}`)}
+    >
       <CardContent className="flex aspect-square items-center justify-center p-0 group relative">
         <div className="relative w-full h-full">
           <img
