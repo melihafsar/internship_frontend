@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import CompanyService from "@/services/company.service";
 import SearchBar from "./SearchBar";
 import MostPreferredPost from "./MostPreferredPost";
+import PostingCard from "@/components/PostingCard";
 
 function HomePage() {
   const [postings, setPostings] =
@@ -42,6 +43,13 @@ function HomePage() {
       <div className="flex justify-center w-full my-16">
         <MostPreferredPost />
       </div>
+      {postings && (
+        <div className="flex flex-col justify-center items-center w-[90%] md:flex-row  gap-4 flex-wrap mb-8">
+          {postings?.items.map((posting: InternshipPostingFormTypes) => (
+            <PostingCard key={posting.id} posting={posting} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

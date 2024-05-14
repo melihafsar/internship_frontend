@@ -36,7 +36,6 @@ function index({ company }: CompanyPostsProps) {
   };
 
   useEffect(() => {
-    //TODO: Test this if statement
     if (!company?.id) return;
     fetchPostings();
   }, [company]);

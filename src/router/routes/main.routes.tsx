@@ -1,7 +1,7 @@
 import { lazy } from "react";
 import ProtectedRoute from "./ProtectedRoute";
-import Page from "@/layouts/Page";
 import { Mail } from "lucide-react";
+import Page from "@/layouts/Page";
 
 const Profile = lazy(() => import("@/pages/Profile"));
 const HomePage = lazy(() => import("@/pages/HomePage"));
@@ -9,9 +9,6 @@ const Applications = lazy(() => import("@/pages/Applications"));
 const Messages = lazy(() => import("@/pages/Messages"));
 const UserRegister = lazy(() => import("@/pages/UserRegister"));
 const MyCompany = lazy(() => import("@/pages/MyCompany"));
-const InternshipPostingPage = lazy(
-  () => import("@/pages/MyCompany/InternshipPosting")
-);
 
 const messagesTitle = (
   <div className="flex items-center space-x-2">
@@ -25,12 +22,9 @@ export const mainRoutes = [
     path: "/",
     id: "homepage",
     element: (
-      <div
-        // title="Anasayfa"
-        className="overflow-hidden h-[calc(100vh-80px-4rem)] p-0 m-0"
-      >
+      <Page className="overflow-hidden p-0 m-0">
         <HomePage />
-      </div>
+      </Page>
     ),
     meta: {
       title: "Anasayfa",

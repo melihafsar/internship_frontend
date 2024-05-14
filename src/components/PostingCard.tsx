@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InternshipPostingFormTypes } from "@/schemas/internship-posting.schema";
 
 import { Briefcase, Link, Wallet } from "lucide-react";
@@ -22,7 +16,7 @@ interface PostingCardProps {
 function PostingCard({ posting, children }: PostingCardProps) {
   const navigate = useNavigate();
   return (
-    <Card className="flex-1 min-w-[270px] max-w-[300px] p-5 select-none p-0 hover:shadow-lg transition-transform duration-300 transform hover:scale-105">
+    <Card className="flex-1 min-w-[270px] max-w-[90%] md:max-w-[300px] p-5 select-none p-0 hover:shadow-lg transition-transform duration-300 transform hover:scale-105">
       <CardHeader className="p-0">
         <img
           className="mb-3 object-cover w-full h-64 rounded-t-lg"

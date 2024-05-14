@@ -7,7 +7,7 @@ export default function Page({
   children,
   className,
 }: {
-  title: string;
+  title?: string;
   children: React.ReactNode;
   className: string;
 }) {
@@ -18,7 +18,7 @@ export default function Page({
         <title>{`${title} | Marmara`}</title>
         <meta name="description" content="Marmara - Staj Platformu" />
       </Helmet>
-      <div className="text-[1.4rem] font-bold mb-2">{title}</div>
+      {title && <h1 className="text-[1.4rem] font-bold mb-2">{title}</h1>}
       {children}
     </div>
   );
