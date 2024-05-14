@@ -5,7 +5,7 @@ import { FieldPath, UseFormReturn } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { CompanyFormTypes } from "@/schemas/company-form.schema";
-import locationService from "@/services/location.service";
+import locationService from "@/services/lookup.service";
 import { count } from "console";
 
 const EditIcon = () => {

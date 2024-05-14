@@ -36,8 +36,8 @@ import {
   genderTypesArray,
 } from "@/const";
 import { MultiSelect } from "@/components/MultiSelect";
-import LocationService from "@/services/location.service.ts";
 import { Combobox, ComboboxData } from "@/components/ui/combobox";
+import LookupService from "@/services/lookup.service";
 
 interface WorkFormProps {
   form: UseFormReturn<PrivateInformationFormTypes>;
@@ -61,7 +61,7 @@ function PrivateInfoForm({
   const showOtherAddressField = form.getValues("city_id") !== (null || 0);
 
   const getCountryList = async () => {
-    const response = await LocationService.getCountries();
+    const response = await LookupService.getCountries();
     const coutryList = response.map(
       (item) => {
         return {
@@ -74,7 +74,7 @@ function PrivateInfoForm({
   };
 
   const getCitiesList = async (countryId: number) => {
-    const response = await LocationService.getCities(countryId);
+    const response = await LookupService.getCities(countryId);
     const cityList = response.map(
       (item) => {
         return {

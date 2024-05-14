@@ -23,7 +23,7 @@ import { EmploymentTypeArray, workTypesArray } from "@/const";
 import { cn } from "@/lib/utils";
 import { ImageUploadDialog } from "@/pages/Profile/components/ContactDetails/ImageUploadDialog";
 import { InternshipPostingFormTypes } from "@/schemas/internship-posting.schema";
-import locationService from "@/services/location.service";
+import locationService from "@/services/lookup.service";
 import uploadService from "@/services/upload.service";
 import { format } from "date-fns";
 import { CalendarIcon, Pencil } from "lucide-react";

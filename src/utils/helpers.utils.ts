@@ -1,4 +1,4 @@
-import { ServiceReponse } from "@/types";
+import { ServiceResponse } from "@/types";
 import { AxiosError } from "axios";
 import { UseFormReturn } from "react-hook-form";
 import { jwtDecode } from "jwt-decode";
@@ -17,7 +17,7 @@ export const showAccordionInProfile = (
 
 export function showErrors(
   form: UseFormReturn<any>,
-  errorResponse?: AxiosError<ServiceReponse<any>>
+  errorResponse?: AxiosError<ServiceResponse<any>>
 ) {
   const errors = errorResponse?.response?.data?.error?.errors;
   if (errors) {
@@ -27,7 +27,7 @@ export function showErrors(
   }
 }
 
-export function getError(errorResponse?: AxiosError<ServiceReponse<any>>) {
+export function getError(errorResponse?: AxiosError<ServiceResponse<any>>) {
   const error = errorResponse?.response?.data?.error;
   return error;
 }

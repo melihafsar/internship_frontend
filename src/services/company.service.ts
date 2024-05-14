@@ -1,10 +1,10 @@
 import { CompanyFormTypes } from "@/schemas/company-form.schema";
 import { api } from "../api";
-import { PagedListDto, ServiceReponse } from "@/types";
+import { PagedListDto, ServiceResponse } from "@/types";
 import { InternshipPostingFormTypes } from "@/schemas/internship-posting.schema";
 
 export default {
-  getCompany(): Promise<ServiceReponse<CompanyFormTypes>> {
+  getCompany(): Promise<ServiceResponse<CompanyFormTypes>> {
     return api.get("/Company/Get");
   },
   updateCompany(data: CompanyFormTypes) {
@@ -15,7 +15,7 @@ export default {
   listPostings(
     from: number,
     companyId?: number
-  ): Promise<ServiceReponse<PagedListDto<InternshipPostingFormTypes>>> {
+  ): Promise<ServiceResponse<PagedListDto<InternshipPostingFormTypes>>> {
     return api
       .get(`/Company/InternshipPosting/List`, {
         params: {
@@ -25,7 +25,7 @@ export default {
       })
       .then(
         (
-          response: ServiceReponse<PagedListDto<InternshipPostingFormTypes>>
+          response: ServiceResponse<PagedListDto<InternshipPostingFormTypes>>
         ) => {
           response.data.items.forEach((item) => {
             item.dead_line = new Date(item.dead_line);

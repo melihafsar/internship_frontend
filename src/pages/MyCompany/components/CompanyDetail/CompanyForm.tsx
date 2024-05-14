@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { CompanyFormTypes } from "@/schemas/company-form.schema";
-import locationService from "@/services/location.service";
+import locationService from "@/services/lookup.service";
 import { useEffect, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 
