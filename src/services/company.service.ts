@@ -14,13 +14,17 @@ export default {
   },
   listPostings(
     from: number,
-    companyId?: number
+    companyId?: number,
+    take?: number,
+    sort?: string
   ): Promise<ServiceResponse<PagedListDto<InternshipPostingFormTypes>>> {
     return api
       .get(`/Company/InternshipPosting/List`, {
         params: {
           from,
           companyId,
+          take,
+          sort,
         },
       })
       .then(

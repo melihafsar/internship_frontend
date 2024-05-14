@@ -21,7 +21,12 @@ function MostPreferredPost() {
 
   const fetchPostings = async () => {
     try {
-      const response = await CompanyService.listPostings(0);
+      const response = await CompanyService.listPostings(
+        0,
+        undefined,
+        10,
+        "Popularity"
+      );
       setPostings(response.data);
     } catch {
       toast({
