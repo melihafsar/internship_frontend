@@ -234,7 +234,7 @@ function ContactDetails({ user }: ContactDetailsProps) {
               {user?.name
                 ? user?.name?.charAt(0).toUpperCase() +
                   user?.surname?.charAt(0).toUpperCase()
-                : user.email.slice(0, 2)}
+                : user?.email?.slice(0, 2)}
             </AvatarFallback>
           </Avatar>
         </div>
