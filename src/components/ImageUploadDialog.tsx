@@ -31,7 +31,6 @@ export const ImageUploadDialog = (props: ImageUploadDialogProps) => {
     loading,
   } = props;
   const [uploadFile, setUploadFile] = useState<File | null>(null);
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) setUploadFile(file);

@@ -1,8 +1,8 @@
+import { ImageUploadDialog } from "@/components/ImageUploadDialog";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { ImageUploadDialog } from "@/pages/Profile/components/ContactDetails/ImageUploadDialog";
 import { InternshipApplicationFormTypes } from "@/schemas/internship-application.schema";
 import UploadService from "@/services/upload.service";
 import { getError } from "@/utils/helpers.utils";

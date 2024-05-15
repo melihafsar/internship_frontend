@@ -24,7 +24,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ImageUploadDialog } from "./ImageUploadDialog";
+import { ImageUploadDialog } from "../../../../components/ImageUploadDialog";
 import { UserDetail } from "@/types";
 
 interface ContactDetailsProps {

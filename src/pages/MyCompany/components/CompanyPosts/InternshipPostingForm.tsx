@@ -1,3 +1,4 @@
+import { ImageUploadDialog } from "@/components/ImageUploadDialog";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Combobox, ComboboxData } from "@/components/ui/combobox";
@@ -21,7 +22,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { EmploymentTypeArray, workTypesArray } from "@/const";
 import { cn } from "@/lib/utils";
-import { ImageUploadDialog } from "@/pages/Profile/components/ContactDetails/ImageUploadDialog";
 import { InternshipPostingFormTypes } from "@/schemas/internship-posting.schema";
 import locationService from "@/services/lookup.service";
 import uploadService from "@/services/upload.service";
@@ -56,6 +56,7 @@ const InternshipPostingForm = ({
   const [uploadDialogProps, setUploadDialogProps] = useState<{
     show: boolean;
     field?: FieldPath<InternshipPostingFormTypes>;
+    type?: "Image" | "Background";
   }>({ show: false, field: undefined });
   const { toast } = useToast();
 
@@ -83,6 +84,7 @@ const InternshipPostingForm = ({
     file: File
   ) => {
     e.preventDefault();
+    e.stopPropagation();
     if (!file) {
       toast({
         title: "Lütfen bir resim dosyası seçin!",
@@ -91,7 +93,7 @@ const InternshipPostingForm = ({
       return;
     }
 
-    const result = await uploadService.uploadImage(file, "Image");
+    const result = await uploadService.uploadImage(file, uploadDialogProps.type ?? "Image");
     if (!result || uploadDialogProps.field === undefined) {
       toast({
         title: "Resim yüklenirken bir hata oluştu.",
@@ -127,6 +129,8 @@ const InternshipPostingForm = ({
           dialogClose={() =>
             setUploadDialogProps({ ...uploadDialogProps, show: false })
           }
+          description=""
+          title="İlanınız için bir görsel seçin."
           handleFileUpload={handleUploadImage}
         />
         <div className="flex flex-col w-full relative space-y-4">
@@ -137,7 +141,7 @@ const InternshipPostingForm = ({
               render={({ field }) => (
                 <FormItem className="w-max md:w-1/2">
                   <FormLabel className="flex flex-row gap-x-2 items-baseline">
-                    İlanı Görseli
+                    İlan Görseli
                     <p className="text-[0.6rem] text-muted-foreground">
                       İlanın daha çekici olmasını sağlar.
                     </p>
@@ -146,7 +150,7 @@ const InternshipPostingForm = ({
                     <div
                       className="relative flex items-center group cursor-pointer"
                       onClick={() =>
-                        setUploadDialogProps({ show: true, field: field.name })
+                        setUploadDialogProps({ show: true, field: field.name, type: "Image" })
                       }
                     >
                       <EditIcon />
@@ -203,6 +207,35 @@ const InternshipPostingForm = ({
               />
             </div>
           </div>
+          <FormField
+            control={form.control}
+            name="background_photo_url"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel className="flex flex-row gap-x-2 items-baseline">
+                  İlan Arka Plan Görseli
+                  <p className="text-[0.6rem] text-muted-foreground">
+                    İlanın daha çekici olmasını sağlar.
+                  </p>
+                </FormLabel>
+                <FormControl>
+                  <div
+                    className="relative flex items-center group cursor-pointer"
+                    onClick={() =>
+                      setUploadDialogProps({ show: true, field: field.name, type: "Background" })
+                    }
+                  >
+                    <EditIcon />
+                    <img
+                      className="rounded-md bg-gray-100 w-full h-[200px] object-contain"
+                      src={field.value ?? "./no-image.svg"}
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage {...field} />
+              </FormItem>
+            )}
+          />
           <div className="flex flex-col md:flex-row gap-2 items-center">
             <FormField
               control={form.control}
@@ -410,26 +443,29 @@ const InternshipPostingForm = ({
                 </FormItem>
               )}
             />
-            <div className="flex w-full h-[40px] justify-start md:justify-end">
-              <FormField
-                control={form.control}
-                name="has_salary"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel className="flex flex-row gap-x-2 items-center">
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={(value) => field.onChange(value)}
-                        className="mt-1"
-                      />
-                      Maaş Ödemesi {field.value ? "Var" : "Yok"}
-                    </FormLabel>
-
-                    <FormMessage {...field} />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="has_salary"
+              render={({ field }) => (
+                <FormItem className="w-full h-[100px]">
+                  <FormLabel className="flex flex-row gap-x-2 items-baseline">
+                    Maaş Ödemesi
+                    <p className="text-[0.6rem] text-muted-foreground">
+                      Bu alan zorunludur.
+                    </p>
+                  </FormLabel>
+                  <FormControl>
+                    <Combobox
+                      className="w-full"
+                      data={[{ label: "Maaş Ödemesi Var", value: "true" }, { label: "Maaş Ödemesi Yok", value: "false" }]}
+                      title="Maaş Ödemesi"
+                      value={field.value?.toString()}
+                      onSelect={(value) => field.onChange(value)}
+                    /></FormControl>
+                  <FormMessage {...field} />
+                </FormItem>
+              )}
+            />
           </div>
           <Button
             type="submit"
