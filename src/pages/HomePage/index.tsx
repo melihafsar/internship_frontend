@@ -26,7 +26,8 @@ function HomePage() {
       const response = await CompanyService.listPostings(
         pagination.from,
         undefined,
-        pagination.take
+        pagination.take,
+        "CreatedAt"
       );
       setPostings((prev) => ({
         ...response.data,

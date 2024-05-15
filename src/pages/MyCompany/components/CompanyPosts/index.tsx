@@ -10,6 +10,7 @@ import { Plus } from "lucide-react";
 import CompanyPostingCard from "./CompanyPostingCard";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import InfiniteLoader from "@/components/InfiniteLoader";
 
 interface CompanyPostsProps {
   company: CompanyFormTypes;
@@ -20,13 +21,35 @@ function index({ company }: CompanyPostsProps) {
   const [postings, setPostings] =
     useState<PagedListDto<InternshipPostingFormTypes>>();
   const { toast } = useToast();
+  const [hasError, setHasError] = useState(false);
+  const [pagination, setPagination] = useState({
+    from: 0,
+    take: 10,
+    total: 0,
+  });
 
   const fetchPostings = async () => {
     setLoading(true);
     try {
-      const response = await CompanyService.listPostings(0, company?.id);
-      setPostings(response.data);
+      const response = await CompanyService.listPostings(
+        pagination.from,
+        company?.id,
+        pagination.take,
+        "CreatedAt"
+      );
+      setPostings((prev) => ({
+        ...response.data,
+        items: prev
+          ? [...prev.items, ...response.data.items]
+          : response.data.items,
+      }));
+      setPagination({
+        ...pagination,
+        from: pagination.from + pagination.take,
+        total: response.data.total,
+      });
     } catch {
+      setHasError(true);
       toast({
         title: "Hata",
         description: "Şirket staj ilanları getirilirken bir hata oluştu.",
@@ -62,11 +85,18 @@ function index({ company }: CompanyPostsProps) {
       <Separator className="mt-1 mb-4" />
       {postings ? (
         <div className="flex flex-col">
-          <div className="flex flex-col md:flex-row w-full gap-4 flex-wrap">
+          <InfiniteLoader
+            loadMore={fetchPostings}
+            from={pagination.from}
+            totalElements={pagination.total}
+            loading={loading}
+            hasError={hasError}
+            className="flex flex-col md:flex-row w-full gap-4 flex-wrap"
+          >
             {postings?.items.map((posting: InternshipPostingFormTypes) => (
               <CompanyPostingCard key={posting.id} posting={posting} />
             ))}
-          </div>
+          </InfiniteLoader>
         </div>
       ) : (
         <p className="font-semibold tracking-tight text-sm text-center">

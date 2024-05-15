@@ -5,14 +5,15 @@ import { UtilProvider, useUtil } from "@/context/UtilContext";
 import Spinner from "@/components/Spinner";
 import { useAuth } from "@/context/AuthContext.tsx";
 import { getUserType } from "@/utils/helpers.utils.ts";
+import { cn } from "@/lib/utils";
 
 interface ProtectedRouteProps {
   component: React.ElementType;
   userType?: number;
-
   [key: string]: any;
-
   fixPageHeight?: boolean;
+  showTitle?: boolean;
+  className?: string;
 }
 
 const fixPageHeightClassName = "overflow-hidden h-[calc(100vh-80px-4rem)]";
@@ -23,6 +24,8 @@ const ProtectedRoute = ({
   title,
   authenticated,
   fixPageHeight = false,
+  showTitle = true,
+  className,
   ...rest
 }: ProtectedRouteProps) => {
   const { loading, setLoading } = useUtil();
@@ -57,7 +60,8 @@ const ProtectedRoute = ({
     return (
       <Page
         title={title}
-        className={fixPageHeight ? fixPageHeightClassName : ""}
+        className={cn(className, fixPageHeight && fixPageHeightClassName)}
+        showTitle={showTitle}
       >
         <UtilProvider>
           <Component {...rest} />
