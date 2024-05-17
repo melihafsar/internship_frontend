@@ -12,6 +12,9 @@ export default {
   getUserInfo() {
     return api.post("/Account/GetInfo");
   },
+  registerNotificationToken(token: string) {
+    api.post("/Account/RegisterNotificationToken", { token });
+  },
   updateUserInfo({
     name,
     surname,

@@ -20,13 +20,13 @@ function CompanyInfoBanner({ posting, userType }: CompanyInfoBannerProps) {
     posting?.is_current_user_following || false
   );
 
-  const companyId = posting.company?.id;
+  const companyId = posting.company?.company_id;
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleFollowCompanyClick = async () => {
     try {
-      await internshipService.followCompany(companyId, !isFollowingCompany);
+      await internshipService.followCompany(posting.company?.company_id, !isFollowingCompany);
       setIsFollowingCompany(!isFollowingCompany);
     } catch (error) {
       toast({
