@@ -5,6 +5,7 @@ import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import ProfileService from "@/services/profile.service";
 import { useToast } from "@/components/ui/use-toast";
+import { mobileCheck } from "@/utils/helpers.utils";
 interface AuthContextProps {
   session: Promise<supabaseSession | null>;
   supabase: SupabaseClient<any, "public", any>;
@@ -31,10 +32,20 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
 
 
-if ('serviceWorker' in navigator) {
+declare global {
+  interface Window {
+    registerToken: (token: string) => Promise<any> | undefined;
+    FlutterRegisterToken: {
+      postMessage: (message: string) => void;
+    }
+  }
+}
+
+
+if ('serviceWorker' in navigator && !mobileCheck()) {
+  const messaging = getMessaging(app);
   navigator.serviceWorker.register('/firebase-messaging-sw.js')
     .then((registration) => {
       console.log('Service Worker registered with scope:', registration.scope);
@@ -50,8 +61,11 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-
-
+if (mobileCheck()) {
+  window.registerToken = async (token) => {
+    ProfileService.registerNotificationToken(token);
+  }
+}
 
 
 
@@ -60,16 +74,22 @@ export const AuthProvider = ({ children }: any) => {
   const toast = useToast();
 
   useEffect(() => {
-    const unsub = onMessage(messaging, (payload) => {
-      toast.toast({
-        title: payload.notification?.title,
-        description: payload.notification?.body,
-        variant: "success",
+    if (!mobileCheck()) {
+      const messaging = getMessaging(app);
+      const unsub = onMessage(messaging, (payload) => {
+        toast.toast({
+          title: payload.notification?.title,
+          description: payload.notification?.body,
+          variant: "success",
+        });
+
       });
+      return unsub;
+    }
+    else {
+      window.FlutterRegisterToken?.postMessage("init");
+    }
 
-    });
-
-    return unsub;
   }, [])
 
 
