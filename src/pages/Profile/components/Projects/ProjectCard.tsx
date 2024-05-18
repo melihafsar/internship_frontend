@@ -7,7 +7,7 @@ import { useUtil } from "@/context/UtilContext";
 import { ProjectFormTypes } from "@/schemas/project-form.schema";
 import ProjectEditModal from "./ProjectEditModal";
 import { useMemo, useState } from "react";
-import { ImageUploadDialog } from "../ContactDetails/ImageUploadDialog";
+import { ImageUploadDialog } from "../../../../components/ImageUploadDialog";
 import { Link } from "react-router-dom";
 import { UserProject } from "@/types";
 

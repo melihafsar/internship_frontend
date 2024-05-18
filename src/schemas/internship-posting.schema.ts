@@ -9,6 +9,7 @@ const formSchema = z.object({
     .min(1, "Bu alan zorunludur.")
     .max(255, "Bu alan en fazla 255 karakter olabilir."),
   image_url: z.string().optional(),
+  background_photo_url: z.string().optional(),
   description: z
     .string()
     .min(1, "Bu alan zorunludur.")

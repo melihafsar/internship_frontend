@@ -3,18 +3,16 @@ import { useLocation } from "react-router-dom";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import CompanyInfoFields from "./components/CompanyInfoFields";
 import CompanyNavigationItems from "./components/CompanyNavigationItems";
-import { useUser } from "@/context/UserContext";
 import CompanyService from "@/services/company.service";
 import { CompanyFormTypes } from "@/schemas/company-form.schema";
 
 export const MyCompany = () => {
   const [activeTab, setActiveTab] = useState("contact");
-  // const { companyDetail } = useUser();
   const location = useLocation();
   const [companyData, setCompanyData] = useState<CompanyFormTypes>();
 
   useEffect(() => {
-    if (location.hash) setActiveTab(location.hash.slice(1));
+    if (location.hash) setActiveTab(location?.hash?.slice(1));
   }, [location.hash]);
 
   const fetchCompany = async () => {

@@ -8,12 +8,6 @@ import {
 } from "@/components/ui/dialog";
 import PostingCard from "@/components/PostingCard";
 import { Button } from "@/components/ui/button";
-import InternshipApplicationForm from "../../../Applications/InternshipApplicationForm";
-import InternshipService from "@/services/internship.service";
-import {
-  InternshipApplicationFormTypes,
-  useInternshipApplicationForm,
-} from "@/schemas/internship-application.schema";
 import InternshipPostingForm from "./InternshipPostingForm";
 import {
   InternshipPostingFormTypes,
@@ -28,20 +22,25 @@ interface CompanyPostingCardProps {
 
 function CompanyPostingCard({ posting }: CompanyPostingCardProps) {
   const { form } = useInternshipPostingForm();
-  // const applicationFormHandle = useInternshipApplicationForm();
   const [loading, setLoading] = useState(false);
   const [updatePostingModalOpen, setUpdatePostingModalOpen] = useState(false);
-  // const [applyPostingOpen, setApplyPostingOpen] = useState(false);
+
   const { toast } = useToast();
 
   const deletePosting = async (item: InternshipPostingFormTypes) => {
     setLoading(true);
     try {
       await CompanyService.endPosting(item);
+      toast({
+        title: "Başarılı",
+        description: "Staj ilanı başarıyla sonlandırıldı.",
+        variant: "success",
+      });
     } catch {
       toast({
         title: "Hata",
         description: "Şirket bilgileri getirilirken bir hata oluştu.",
+        variant: "destructive",
       });
     }
     setLoading(false);
@@ -53,29 +52,21 @@ function CompanyPostingCard({ posting }: CompanyPostingCardProps) {
     console.log(data);
     try {
       await CompanyService.updatePosting(data);
+      toast({
+        title: "Başarılı",
+        description: "Staj ilan bilgileri başarıyla kaydedildi.",
+        variant: "success",
+      });
     } catch {
       toast({
         title: "Hata",
         description: "Şirket bilgileri getirilirken bir hata oluştu.",
+        variant: "destructive",
       });
     }
     setLoading(false);
     setUpdatePostingModalOpen(false);
   };
-
-  // const applyToPosting = async (item: InternshipApplicationFormTypes) => {
-  //   setLoading(true);
-  //   try {
-  //     await InternshipService.applyToPosting(item);
-  //     setApplyPostingOpen(false);
-  //   } catch {
-  //     toast({
-  //       title: "Hata",
-  //       description: "Şirket bilgileri getirilirken bir hata oluştu.",
-  //     });
-  //   }
-  //   setLoading(false);
-  // };
 
   const accessFunctionality = () => {
     return (
@@ -124,34 +115,3 @@ function CompanyPostingCard({ posting }: CompanyPostingCardProps) {
 }
 
 export default CompanyPostingCard;
-{
-  /* <Dialog open={applyPostingOpen} onOpenChange={setApplyPostingOpen}>
-        <DialogTrigger asChild>
-          <Button
-            onClick={() => {
-              applicationFormHandle.form.reset({
-                internship_posting_id: posting.id!,
-              });
-            }}
-            variant={"outline"}
-          >
-            Apply
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Eğitim Bilgilerini Düzenle</DialogTitle>
-            <DialogDescription>
-              Eğitim bilgilerinizi düzenleyebilir ve güncelleyebilirsiniz.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="h-full overflow-y-auto w-full">
-            <InternshipApplicationForm
-              form={applicationFormHandle.form}
-              loading={loading}
-              handleFormSubmit={applyToPosting}
-            />
-          </div>
-        </DialogContent>
-      </Dialog> */
-}

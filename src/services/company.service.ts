@@ -52,4 +52,7 @@ export default {
     const id = data.id;
     return api.post(`/Company/InternshipPosting/End/${id}`);
   },
+  getPostingDetail(id: number) {
+    return api.get(`/Company/InternshipPosting/Get/${id}`);
+  },
 };

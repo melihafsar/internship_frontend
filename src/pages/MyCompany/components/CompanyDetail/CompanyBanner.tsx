@@ -1,12 +1,12 @@
 import { Pencil } from "lucide-react";
-import { ImageUploadDialog } from "@/pages/Profile/components/ContactDetails/ImageUploadDialog";
+
 import UploadService from "@/services/upload.service";
 import { FieldPath, UseFormReturn } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { CompanyFormTypes } from "@/schemas/company-form.schema";
 import locationService from "@/services/lookup.service";
-import { count } from "console";
+import { ImageUploadDialog } from "@/components/ImageUploadDialog";
 
 const EditIcon = () => {
   return (

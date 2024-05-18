@@ -9,6 +9,10 @@ const Applications = lazy(() => import("@/pages/Applications"));
 const Messages = lazy(() => import("@/pages/Messages"));
 const UserRegister = lazy(() => import("@/pages/UserRegister"));
 const MyCompany = lazy(() => import("@/pages/MyCompany"));
+const ApplicationsDetailPage = lazy(
+  () => import("@/pages/Applications/ApplicationsDetail")
+);
+const CompanyDetail = lazy(() => import("@/pages/CompanyPortfolio"));
 
 const messagesTitle = (
   <div className="flex items-center space-x-2">
@@ -22,7 +26,11 @@ export const mainRoutes = [
     path: "/",
     id: "homepage",
     element: (
-      <Page className="overflow-hidden p-0 m-0">
+      <Page
+        title="Anasayfa"
+        className="overflow-hidden p-0 m-0"
+        showTitle={false}
+      >
         <HomePage />
       </Page>
     ),
@@ -46,6 +54,39 @@ export const mainRoutes = [
     },
     showNavBar: true,
     userType: 0,
+  },
+  {
+    path: "/applications/:id",
+    id: "applications-detail",
+    element: (
+      <ProtectedRoute
+        title="İlan Detayları"
+        component={ApplicationsDetailPage}
+        showTitle={false}
+        className="overflow-hidden p-0 m-0"
+      />
+    ),
+    meta: {
+      title: "İlan Detayları",
+    },
+    showNavBar: false,
+  },
+  {
+    path: "/company-detail/:id",
+    id: "company-detail",
+    element: (
+      <Page
+        title="Şirket Detayları"
+        // className="overflow-hidden p-0 m-0"
+        // showTitle={false}
+      >
+        <CompanyDetail />
+      </Page>
+    ),
+    meta: {
+      title: "Şirket Detayları",
+    },
+    showNavBar: false,
   },
   {
     path: "/messages",

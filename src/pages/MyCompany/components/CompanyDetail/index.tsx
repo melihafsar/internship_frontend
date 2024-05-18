@@ -63,29 +63,6 @@ function index({ company }: CompanyDetailProps) {
     });
   }, [company]);
 
-  // const fetchCompany = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await CompanyService.getCompany();
-  //     form.reset(response.data);
-  //     setCompanyData(response.data);
-  //     setCompanyImages({
-  //       logo: response.data?.logo_url || "./no-image.svg",
-  //       background: response.data?.background_photo_url || "./no-image.svg",
-  //     });
-  //   } catch {
-  //     toast({
-  //       title: "Hata",
-  //       description: "Şirket bilgileri getirilirken bir hata oluştu.",
-  //     });
-  //   }
-  //   setLoading(false);
-  // };
-
-  // useEffect(() => {
-  //   fetchCompany();
-  // }, []);
-
   return (
     <div className="flex flex-col">
       <div className="flex flex-col">

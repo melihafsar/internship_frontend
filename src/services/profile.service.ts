@@ -12,6 +12,10 @@ export default {
   getUserInfo() {
     return api.post("/Account/GetInfo");
   },
+  registerNotificationToken(token: string) {
+    if (!localStorage.getItem('sb-vzmyswxvnmseubtqgjpc-auth-token')) return
+    api.post("/Account/RegisterNotificationToken", { token });
+  },
   updateUserInfo({
     name,
     surname,
