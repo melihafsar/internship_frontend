@@ -15,6 +15,7 @@ import {
 import CompanyService from "@/services/company.service";
 import { useToast } from "@/components/ui/use-toast";
 import { useUtil } from "@/context/UtilContext";
+import { useState } from "react";
 
 interface CreatePostingModalProps {
   triggerButton: React.ReactNode;
@@ -23,6 +24,7 @@ interface CreatePostingModalProps {
 function CreatePostingModal({ triggerButton }: CreatePostingModalProps) {
   const { form } = useInternshipPostingForm();
   const { loading, setLoading } = useUtil();
+  const [ showDialog, setShowDialog ] = useState(false);
   const { toast } = useToast();
 
   const handleFormSubmit = async (data: InternshipPostingFormTypes) => {
@@ -34,6 +36,7 @@ function CreatePostingModal({ triggerButton }: CreatePostingModalProps) {
         description: "Staj ilanı başarıyla oluşturuldu.",
         variant: "success",
       });
+      setShowDialog(false);
     } catch (error: any) {
       showErrors(form, error);
       toast({
@@ -46,7 +49,7 @@ function CreatePostingModal({ triggerButton }: CreatePostingModalProps) {
   };
 
   return (
-    <Dialog>
+    <Dialog open={showDialog} onOpenChange={setShowDialog}>
       <DialogTrigger asChild>{triggerButton}</DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
