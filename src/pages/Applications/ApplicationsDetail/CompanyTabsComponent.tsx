@@ -32,7 +32,7 @@ function CompanyTabsComponent({
           <TabsTrigger value="assessments" className="w-1/2 md:w-[180px]">
             Değerlendirmeler
             <Badge variant="default" className="ml-2 text-[10px] px-1.5 py-0.1">
-              {posting?.number_of_comments || 0}
+              {(posting as any)?.number_of_comments || 0}
             </Badge>
           </TabsTrigger>
           {userType === 1 && (
@@ -42,7 +42,7 @@ function CompanyTabsComponent({
                 variant="default"
                 className="ml-2 text-[10px] px-1.5 py-0.1"
               >
-                {posting?.number_of_applications || 0}
+                {(posting as any)?.number_of_applications || 0}
               </Badge>
             </TabsTrigger>
           )}

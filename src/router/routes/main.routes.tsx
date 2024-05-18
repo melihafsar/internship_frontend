@@ -77,6 +77,7 @@ export const mainRoutes = [
     element: (
       <Page
         title="Şirket Detayları"
+        className=""
         // className="overflow-hidden p-0 m-0"
         // showTitle={false}
       >

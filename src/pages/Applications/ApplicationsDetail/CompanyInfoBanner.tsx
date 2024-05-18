@@ -15,10 +15,10 @@ function CompanyInfoBanner({ posting, userType }: CompanyInfoBannerProps) {
   const [isFollowingPosting, setIsFollowingPosting] = useState(false);
 
   useEffect(() => {
-    setIsFollowingPosting(posting?.is_current_user_following || false);
+    setIsFollowingPosting((posting as any)?.is_current_user_following || false);
   }, [posting]);
 
-  const companyId = posting.company?.company_id;
+  const companyId = (posting as any).company?.company_id;
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -50,7 +50,7 @@ function CompanyInfoBanner({ posting, userType }: CompanyInfoBannerProps) {
       <div className="flex flex-col md:flex-row w-full bg-secondary h-[140px] md:h-[90px] gap-2">
         <img
           className="rounded-md object-cover bg-gray-100 w-[64px] md:w-[128px] border-2 border-white -mt-12 ml-16 z-10 h-[64px] md:h-[128px] cursor-pointer"
-          src={posting.company?.logo_url || "/no-image.svg"}
+          src={(posting as any).company?.logo_url || "/no-image.svg"}
           onClick={handleCompanyClick}
         />
         <div className="flex flex-col md:flex-row justify-between items-center h-full w-full pb-4 md:pb-0 mx-0 md:mx-4">
@@ -59,7 +59,7 @@ function CompanyInfoBanner({ posting, userType }: CompanyInfoBannerProps) {
               className="font-extrabold text-xl mt-2 text-primary cursor-pointer"
               onClick={handleCompanyClick}
             >
-              {posting.company?.name}
+              {(posting as any).company?.name}
             </h1>
             <h5 className="text-muted-foreground text-base">{posting.title}</h5>
           </div>
