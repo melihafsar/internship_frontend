@@ -16,6 +16,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Set image tag
+      id: set_tag
+      run: echo "date=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+    - uses: actions/checkout@v4
     - name: Log in to GitHub Container Registry
       run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "melihafsar" --password-stdin
     - uses: actions/checkout@v4
