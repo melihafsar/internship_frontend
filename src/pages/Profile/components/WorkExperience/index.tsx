@@ -41,7 +41,7 @@ function WorkExperience({ user }: WorkExperienceProps) {
         reason_for_leave: data.is_working_now
           ? undefined
           : data.reason_for_leave,
-      });
+      } as any);
       toast({
         title: "Başarılı",
         description: "Yeni iş deneyimi başarıyla eklendi.",
