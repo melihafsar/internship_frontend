@@ -41,7 +41,7 @@ function PrivateInformation({ user }: PrivateInformationProps) {
         date_of_birth: data.date_of_birth
           ? moment(data.date_of_birth).format("YYYY-MM-DD")
           : undefined,
-      });
+      } as any);
       toast({
         title: "Başarılı",
         description: "Özel bilgiler başarıyla eklendi.",

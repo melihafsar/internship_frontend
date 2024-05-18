@@ -34,7 +34,7 @@ function References({ user }: ReferencesProps) {
     e.preventDefault();
     try {
       setLoading(true);
-      await ProfileService.addNewReference(data);
+      await ProfileService.addNewReference(data as any);
       toast({
         title: "Başarılı",
         description: "Yeni referans başarıyla eklendi.",

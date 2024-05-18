@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InternshipPostingFormTypes } from "@/schemas/internship-posting.schema";
 

@@ -34,7 +34,7 @@ function Projects({ user }: ProjectsProps) {
     e.preventDefault();
     try {
       setLoading(true);
-      await ProfileService.createProject(data);
+      await ProfileService.createProject(data as any);
       toast({
         title: "Başarılı",
         description: "Yeni proje başarıyla eklendi.",

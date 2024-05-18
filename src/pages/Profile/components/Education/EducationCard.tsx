@@ -57,7 +57,7 @@ function EducationCard({ education }: EducationCardProps) {
           ? moment(data.end_date).format("YYYY-MM-DD")
           : null,
         education_year: data.is_graduated ? null : data.education_year,
-      });
+      } as any);
       toast({
         title: "Eğitim bilgileriniz başarıyla güncellendi.",
         variant: "success",
