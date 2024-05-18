@@ -460,7 +460,7 @@ const InternshipPostingForm = ({
                       data={[{ label: "Maaş Ödemesi Var", value: "true" }, { label: "Maaş Ödemesi Yok", value: "false" }]}
                       title="Maaş Ödemesi"
                       value={field.value?.toString()}
-                      onSelect={(value) => field.onChange(value)}
+                      onSelect={(value) => field.onChange(value ? value == "true" : undefined)}
                     /></FormControl>
                   <FormMessage {...field} />
                 </FormItem>

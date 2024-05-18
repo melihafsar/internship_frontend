@@ -24,7 +24,7 @@ const formSchema = z.object({
   requirements: z.string().optional(),
   work_type: z.enum(["Office", "Remote", "Hybrid"]),
   employment_type: z.enum(["FullTime", "PartTime"]),
-  has_salary: z.boolean().optional(),
+  has_salary: z.boolean(),
   dead_line: z.coerce.date(),
 });
 
