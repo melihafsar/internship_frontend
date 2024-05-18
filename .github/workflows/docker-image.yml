@@ -23,5 +23,11 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag ghcr.io/melihafsar/internship-frontend:${{ env.TIMESTAMP }}
 
+    - name: Tag Docker image as latest
+      run: docker tag ghcr.io/melihafsar/internship-frontend:${{ env.TIMESTAMP }} ghcr.io/melihafsar/internship-frontend:latest
+      
     - name: Push the Docker image
       run: docker push ghcr.io/melihafsar/internship-frontend:${{ env.TIMESTAMP }}
+      
+    - name: Push the Docker latest image
+      run: docker push ghcr.io/melihafsar/internship-frontend:latest
