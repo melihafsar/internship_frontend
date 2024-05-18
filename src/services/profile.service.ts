@@ -2,6 +2,7 @@ import {
   Detail,
   Foreignlanguage,
   Reference,
+  ServiceResponse,
   Universityeducation,
   UserProject,
   Work,
@@ -15,6 +16,9 @@ export default {
   registerNotificationToken(token: string) {
     if (!localStorage.getItem('sb-vzmyswxvnmseubtqgjpc-auth-token')) return
     api.post("/Account/RegisterNotificationToken", { token });
+  },
+  getMessages() : Promise<ServiceResponse<{ title: string, body: string, created_at: string }[]>> {
+    return api.get("/Account/Messages");
   },
   updateUserInfo({
     name,
