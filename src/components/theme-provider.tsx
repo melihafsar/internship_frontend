@@ -52,7 +52,7 @@ export function ThemeProvider({
     setTheme: (theme: Theme) => {
       localStorage.setItem(storageKey, theme);
       //@ts-ignore
-      window.FlutterChangeTheme.invoke(theme);
+      window.FlutterChangeTheme?.invoke(theme);
       setTheme(theme);
     },
   };
