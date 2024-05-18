@@ -2,7 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PostingDetailTab from "./PostingDetailTab/PostingDetailTab";
 import AssessmentsTabs from "./AssessmentsTabs";
 import { Badge } from "@/components/ui/badge";
-import PostingAside from "./PostingAside";
+import PostingAside from "./PostingAside/PostingAside";
 import { InternshipPostingFormTypes } from "@/schemas/internship-posting.schema";
 import ApplicationsUserTab from "./ApplicationsUserTab";
 import { cn } from "@/lib/utils";
@@ -62,7 +62,7 @@ function CompanyTabsComponent({
           </TabsContent>
           {currentTab !== "applications" && (
             <div className="w-full md:flex-1">
-              <PostingAside userType={userType} />
+              <PostingAside userType={userType} postingId={posting.id} />
             </div>
           )}
         </div>
