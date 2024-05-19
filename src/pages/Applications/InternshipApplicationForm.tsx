@@ -94,12 +94,16 @@ const InternshipApplicationForm = ({
               control={form.control}
               name="message"
               render={({ field }) => (
-                <FormItem className="w-full h-[100px]">
+                <FormItem className="w-full h-[130px] p-1">
                   <FormLabel className="flex flex-row gap-x-2 items-baseline">
                     Mesajınız
                   </FormLabel>
                   <FormControl>
-                    <Textarea maxLength={2000} {...field} />
+                    <Textarea
+                      maxLength={1000}
+                      className="w-full h-[82px] p-1 resize-none"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage {...field} />
                 </FormItem>

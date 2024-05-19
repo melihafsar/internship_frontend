@@ -26,6 +26,7 @@ const formSchema = z.object({
   employment_type: z.enum(["FullTime", "PartTime"]),
   has_salary: z.boolean(),
   dead_line: z.coerce.date(),
+  is_current_user_applied: z.boolean().optional(),
 });
 
 export type InternshipPostingFormTypes = z.infer<typeof formSchema>;

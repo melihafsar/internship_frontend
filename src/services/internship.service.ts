@@ -19,4 +19,11 @@ export default {
   followPosting(postingId: number, follow: boolean): Promise<ServiceResponse> {
     return api.post(`/Account/Follow/Posting/${postingId}?follow=${follow}`);
   },
+  commentPosting(data: {
+    internship_posting_id: number;
+    comment: string;
+    points: number;
+  }): Promise<ServiceResponse> {
+    return api.post("/Internship/Comment", data);
+  },
 };

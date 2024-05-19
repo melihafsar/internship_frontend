@@ -1,4 +1,4 @@
-import { Pencil } from "lucide-react";
+import { BellRing, Pencil } from "lucide-react";
 
 import UploadService from "@/services/upload.service";
 import { FieldPath, UseFormReturn } from "react-hook-form";
@@ -8,6 +8,10 @@ import { CompanyFormTypes } from "@/schemas/company-form.schema";
 import locationService from "@/services/lookup.service";
 import { ImageUploadDialog } from "@/components/ImageUploadDialog";
 import { cn } from "@/lib/utils";
+import InternshipService from "@/services/internship.service";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
+import { getUserType } from "@/utils/helpers.utils";
 
 const EditIcon = () => {
   return (
@@ -38,11 +42,28 @@ function CompanyBanner({
     type?: "Image" | "Background";
   }>({ show: false, field: undefined });
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
+  const [userType, setUserType] = useState<number | null>(null);
+  const [isFollowingCompany, setIsFollowingCompany] = useState(false);
   const [location, setLocation] = useState<{ country: string; city: string }>({
     country: "",
     city: "",
   });
+  const { toast } = useToast();
+  const { supabase } = useAuth();
+
+  useEffect(() => {
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      const type = getUserType(session);
+      setUserType(type);
+    });
+    return () => {
+      data?.subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    setIsFollowingCompany(form.getValues("is_current_user_following"));
+  }, [form.watch("is_current_user_following")]);
 
   const fetchCountries = async (countryId: number) => {
     const result = await locationService.getCountries();
@@ -110,6 +131,22 @@ function CompanyBanner({
     setLoading(false);
   };
 
+  const handleFollowCompanyClick = async () => {
+    try {
+      await InternshipService.followCompany(
+        form.getValues("id"),
+        !isFollowingCompany
+      );
+      setIsFollowingCompany(!isFollowingCompany);
+    } catch (error) {
+      toast({
+        title: "Hata",
+        description: "Şirket takip edilirken bir hata oluştu.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <>
       <div className="w-full relative md:pb-32">
@@ -123,20 +160,20 @@ function CompanyBanner({
         />
         <div className="w-full">
           <div
-            className={cn("relative flex items-center group cursor-pointer", isReadonly ? "" : "hover:opacity-60 ")}
-            onClick={() =>
-              {
-                if (isReadonly) return;
-                return setUploadDialogProps({
-                  show: true,
-                  field: "background_photo_url",
-                  type: "Background",
-                });
-              }
-            }
+            className={cn(
+              "relative flex items-center group cursor-pointer",
+              isReadonly ? "" : "hover:opacity-60 "
+            )}
+            onClick={() => {
+              if (isReadonly) return;
+              return setUploadDialogProps({
+                show: true,
+                field: "background_photo_url",
+                type: "Background",
+              });
+            }}
           >
             {!isReadonly && <EditIcon />}
-
             <img
               className="rounded-md object-cover bg-gray-100 w-full max-h-[300px]"
               src={companyImages.background}
@@ -146,16 +183,14 @@ function CompanyBanner({
         <div className="md:absolute md:top-[150px] md:left-[50px]">
           <div
             className="relative flex items-center group cursor-pointer"
-            onClick={() =>
-              {
-                if (isReadonly) return;
-                return setUploadDialogProps({
-                  show: true,
-                  field: "logo_url",
-                  type: "Image",
-                });
-              }
-            }
+            onClick={() => {
+              if (isReadonly) return;
+              return setUploadDialogProps({
+                show: true,
+                field: "logo_url",
+                type: "Image",
+              });
+            }}
           >
             {!isReadonly && <EditIcon />}
             <img
@@ -164,24 +199,39 @@ function CompanyBanner({
             />
           </div>
         </div>
-        <div className="flex flex-col md:absolute md:top-[320px] md:left-[350px]">
-          <h1 className="font-extrabold text-3xl mt-2">
-            {form.getValues("name")}
-          </h1>
-          <p className="text-muted-foreground text-lg">
-            {form.getValues("short_description")}
-          </p>
-          <p className="text-muted-foreground">
-            {form.getValues("website_url")} -{" "}
-            {`${form.getValues("number_of_workers") &&
-              form.getValues("number_of_workers") + " çalışan - "
+        <div className="flex flex-col lg:flex-row md:absolute md:top-[320px] md:left-[350px] w-full md:w-[calc(100%-350px)]">
+          <div className="flex flex-col w-full gap-2">
+            <h1 className="font-extrabold text-3xl mt-2">
+              {form.getValues("name")}
+            </h1>
+            <p className="text-muted-foreground text-lg">
+              {form.getValues("short_description")}
+            </p>
+            <p className="text-muted-foreground">
+              {form.getValues("website_url")} -{" "}
+              {`${
+                form.getValues("number_of_workers") &&
+                form.getValues("number_of_workers") + " çalışan - "
               }`}
-            {form.getValues("sector")} - {location.city}, {location.country}
-          </p>
-          <p className="text-muted-foreground text-sm"></p>
+              {form.getValues("sector")} - {location.city}, {location.country}
+            </p>
+          </div>
+          <Button
+            variant="default"
+            className="flex font-semibold rounded-md w-52 gap-2 justify-center mt-2 md:m-0"
+            size="sm"
+            onClick={handleFollowCompanyClick}
+            disabled={!(userType === 0) || isFollowingCompany}
+          >
+            <BellRing
+              fill={isFollowingCompany ? "currentColor" : "none"}
+              size={16}
+            />
+            Şirket{isFollowingCompany ? " Takip Ediliyor" : "i Takip Et"}
+          </Button>
         </div>
       </div>
-      <div className="my-4">
+      <div className="mt-4 md:mt-24">
         <p className="text-muted-foreground">{form.getValues("description")}</p>
       </div>
     </>

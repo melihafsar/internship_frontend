@@ -13,7 +13,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
-import { UserDetail } from "@/types";
+import { InternNotificationMessage, UserDetail } from "@/types";
+import { useUser } from "@/context/UserContext";
+import { useEffect, useState } from "react";
 
 interface ProfileDropdownProps {
   user: UserDetail;
@@ -22,6 +24,17 @@ interface ProfileDropdownProps {
 export const ProfileDropdown = ({ user }: ProfileDropdownProps) => {
   const { supabase } = useAuth();
   const navigate = useNavigate();
+  const { fetchMessages } = useUser();
+  const [messages, setMessages] = useState([] as InternNotificationMessage[]);
+
+  const getMessages = async () => {
+    const messages = await fetchMessages();
+    setMessages(messages.data);
+  };
+
+  useEffect(() => {
+    getMessages();
+  }, []);
 
   const ProfileAvatar = () => {
     return (
@@ -60,7 +73,9 @@ export const ProfileDropdown = ({ user }: ProfileDropdownProps) => {
           </DropdownMenuItem>
           <DropdownMenuItem>
             Mesajlarım
-            <Badge className="ml-2 rounded-full">3</Badge>
+            <Badge className="ml-2 rounded-full">
+              {messages.length > 0 ? messages.length : 0}
+            </Badge>
             <DropdownMenuShortcut>⌘M</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>

@@ -59,4 +59,10 @@ export default {
   getPostingDetail(id: number) {
     return api.get(`/Company/InternshipPosting/Get/${id}`);
   },
+  getApplicationsList(id: number) {
+    return api.get(`/Company/InternshipPosting/GetApplications/${id}`);
+  },
+  getApplicationsDetail(id: number) {
+    return api.get(`/Company/InternshipPosting/GetApplicationDetail/${id}`);
+  },
 };

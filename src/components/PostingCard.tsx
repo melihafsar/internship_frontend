@@ -26,7 +26,7 @@ function PostingCard({ posting, children }: PostingCardProps) {
           width={64}
           height={64}
         />
-        <CardTitle className="px-3 text-lg">{posting.title}</CardTitle>
+        <CardTitle className="px-3 text-lg truncate">{posting.title}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col justify-between gap-y-1 py-0 px-3 my-1">
         <div className="flex flex-col gap-1 h-[90px] justify-between">

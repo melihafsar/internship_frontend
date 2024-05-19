@@ -75,7 +75,11 @@ function PostingDetailTab({ posting, userType }: PostingDetailTabProps) {
           </p>
         </div>
       </div>
-      <ApplyPostingComponents postingId={posting?.id} userType={userType} />
+      <ApplyPostingComponents
+        postingId={posting?.id}
+        userType={userType}
+        isApplied={posting?.is_current_user_applied}
+      />
     </div>
   );
 }

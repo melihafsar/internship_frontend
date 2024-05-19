@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PostingDetailTab from "./PostingDetailTab/PostingDetailTab";
-import AssessmentsTabs from "./AssessmentsTabs";
+import AssessmentsTabs from "./AssessmentsTab/AssessmentsTabs";
 import { Badge } from "@/components/ui/badge";
 import PostingAside from "./PostingAside/PostingAside";
 import { InternshipPostingFormTypes } from "@/schemas/internship-posting.schema";
@@ -18,6 +18,7 @@ function CompanyTabsComponent({
   userType,
 }: CompanyTabsComponentProps) {
   const [currentTab, setCurrentTab] = useState<string>();
+
   return (
     <div className="flex flex-col w-full rounded-none">
       <Tabs
@@ -52,17 +53,22 @@ function CompanyTabsComponent({
             <PostingDetailTab posting={posting} userType={userType} />
           </TabsContent>
           <TabsContent value="assessments" className="m-0 w-full md:w-2/3">
-            <AssessmentsTabs />
+            <AssessmentsTabs comments={(posting as any).comments} />
           </TabsContent>
           <TabsContent
             value="applications"
             className={cn("m-0 w-full", userType === 0 && "md:w-2/3")}
           >
-            <ApplicationsUserTab />
+            <ApplicationsUserTab postingId={posting.id} />
           </TabsContent>
           {currentTab !== "applications" && (
             <div className="w-full md:flex-1">
-              <PostingAside userType={userType} postingId={posting.id} />
+              <PostingAside
+                userType={userType}
+                postingId={posting.id}
+                averagePoints={(posting as any).average_point}
+                numberOfComments={(posting as any).number_of_comments}
+              />
             </div>
           )}
         </div>

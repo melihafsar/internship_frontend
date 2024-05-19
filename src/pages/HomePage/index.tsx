@@ -7,6 +7,7 @@ import SearchBar from "./SearchBar";
 import MostPreferredPost from "./MostPreferredPost";
 import PostingCard from "@/components/PostingCard";
 import InfiniteLoader from "@/components/InfiniteLoader";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function HomePage() {
   const [postings, setPostings] =
@@ -65,19 +66,39 @@ function HomePage() {
       <div className="flex justify-center w-full my-16">
         <MostPreferredPost />
       </div>
-      {postings && (
-        <InfiniteLoader
-          loadMore={fetchPostings}
-          from={pagination.from}
-          totalElements={pagination.total}
-          loading={loading}
-          hasError={hasError}
-          className="flex flex-col justify-center items-center w-[90%] md:flex-row gap-4 flex-wrap mb-8"
-        >
-          {postings?.items.map((posting: InternshipPostingFormTypes) => (
-            <PostingCard key={posting.id} posting={posting} />
+
+      {postings === undefined && loading ? (
+        <div className="flex flex-col justify-center items-center w-[90%] md:flex-row gap-4 flex-wrap mb-8">
+          {Array.from({ length: 10 }).map((_, index) => (
+            <div
+              className="flex flex-col flex-1 min-w-[270px] max-w-[90%] md:max-w-[300px] h-[508px] justify-between items-center gap-2 p-1"
+              key={index}
+            >
+              <Skeleton className="h-4/5 w-full" />
+              <div className="space-y-2 w-full">
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-4 w-4/5" />
+              </div>
+            </div>
           ))}
-        </InfiniteLoader>
+        </div>
+      ) : (
+        postings && (
+          <InfiniteLoader
+            loadMore={fetchPostings}
+            from={pagination.from}
+            totalElements={pagination.total}
+            loading={loading}
+            hasError={hasError}
+            className="flex flex-col justify-center items-center w-[90%] md:flex-row gap-4 flex-wrap mb-8"
+          >
+            {postings?.items.map(
+              (posting: InternshipPostingFormTypes, index) => (
+                <PostingCard key={`${posting.id}-${index}`} posting={posting} />
+              )
+            )}
+          </InfiniteLoader>
+        )
       )}
     </div>
   );

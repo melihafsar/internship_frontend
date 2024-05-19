@@ -1,13 +1,13 @@
-import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { useUtil } from "@/context/UtilContext";
 import ProfileService from "@/services/profile.service";
-import moment from "moment";
+import { InternNotificationMessage } from "@/types";
 import { useEffect, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import MessageCard from "./MessageCard";
 
 function Messages() {
-  const { setLoading } = useUtil();
-  const [messages, setMessages] = useState<{ title: string, body: string, created_at: string }[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState<InternNotificationMessage[]>([]);
   const { toast } = useToast();
 
   const init = async () => {
@@ -15,15 +15,12 @@ function Messages() {
     try {
       const messages = await ProfileService.getMessages();
       setMessages(messages.data);
-    }
-    catch (e) {
-      console.log(e);
+    } catch (e) {
       toast({
         variant: "destructive",
-        content: "Veriler getirilirken bir hata oluştu.",
+        content: "Mesajlarınız getirilirken bir hata oluştu.",
       });
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -32,20 +29,29 @@ function Messages() {
     init();
   }, []);
 
-
-  return <>
-    <div className="space-y-4 ">
-      {messages.map((message, index) => {
-        return <Card key={index} className="p-4 w-max">
-          <CardTitle>{message.title}</CardTitle>
-          <CardDescription className="py-2">{moment(message.created_at).format("YYYY-MM-DD hh:mm")}</CardDescription>
-          <CardContent>{message.body}</CardContent>
-        </Card>;
-      })}
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {loading ? (
+        Array.from({ length: 10 }).map((_, index) => (
+          <div className="flex items-center space-x-4" key={index}>
+            <Skeleton className="h-12 w-12 rounded-full" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-[250px]" />
+              <Skeleton className="h-4 w-[200px]" />
+            </div>
+          </div>
+        ))
+      ) : messages.length === 0 ? (
+        <div className="text-center text-gray-500">
+          Henüz mesajınız bulunmamaktadır.
+        </div>
+      ) : (
+        messages.map((message, index) => {
+          return <MessageCard key={index} message={message} />;
+        })
+      )}
     </div>
-  </>;
+  );
 }
-
-Messages.propTypes = {};
 
 export default Messages;

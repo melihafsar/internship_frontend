@@ -4,9 +4,9 @@ import Page from "@/layouts/Page";
 import { UtilProvider, useUtil } from "@/context/UtilContext";
 import Spinner from "@/components/Spinner";
 import { useAuth } from "@/context/AuthContext.tsx";
-import { getUserType } from "@/utils/helpers.utils.ts";
+import { getUserInfo, getUserType } from "@/utils/helpers.utils.ts";
 import { cn } from "@/lib/utils";
-
+import { lazy } from "react";
 interface ProtectedRouteProps {
   component: React.ElementType;
   userType?: number;
@@ -33,6 +33,17 @@ const ProtectedRoute = ({
   const { supabase } = useAuth();
   const navigate = useNavigate();
   const [userTypeState, setUserTypeState] = useState<number | null>(null);
+  const [userInfo, setUserInfo] = useState<{
+    userType: number | null;
+    userName: string | null;
+    userSurname: string | null;
+    userEmail: string | null;
+  }>({
+    userType: null,
+    userName: null,
+    userSurname: null,
+    userEmail: null,
+  });
 
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
@@ -44,18 +55,40 @@ const ProtectedRoute = ({
         return;
       }
       setUserTypeState(getUserType(session));
+      setUserInfo(getUserInfo(session));
       setIsLoggedIn(true);
       setLoading(false);
     });
     return () => {
       data?.subscription.unsubscribe();
     };
-  }, []);
+  }, [supabase.auth]);
 
   const userAccessGranted =
     userType !== undefined ? userType === userTypeState : true;
 
-  if (loading || isLoggedIn == null) return <Spinner />;
+  // const isUserInformation =
+  //   userInfo.userName !== null && userInfo.userSurname !== null;
+  //   if (!isUserInformation && userTypeState === 0 && title !== "Profilim") {
+  //     toast({
+  //       variant: "destructive",
+  //       content:
+  //         "Profil bilgileriniz eksik. Lütfen profil bilgilerinizi tamamlayınız.",
+  //     });
+  //     return (
+  //       <Page
+  //         title="Profil Bilgileri"
+  //         className={cn(className, fixPageHeight && fixPageHeightClassName)}
+  //         showTitle={showTitle}
+  //       >
+  //         <UtilProvider>
+  //           <Profile />
+  //         </UtilProvider>
+  //       </Page>
+  //     );
+  //   }
+
+  if (loading || isLoggedIn === null) return <Spinner />;
   if (isLoggedIn && userAccessGranted)
     return (
       <Page

@@ -112,15 +112,43 @@ interface PagedListDto<T> {
 }
 
 export interface DetailedCompanyDto {
-  id: number
-  name: string
-  short_description?: string
-  logo_url?: string
-  website_url?: string
-  background_photo_url?: string
-  city_id?: number
-  country_id?: number
-  sector?: string
-  number_of_workers?: number
-  description?: string
+  id: number;
+  name: string;
+  short_description?: string;
+  logo_url?: string;
+  website_url?: string;
+  background_photo_url?: string;
+  city_id?: number;
+  country_id?: number;
+  sector?: string;
+  number_of_workers?: number;
+  description?: string;
+}
+
+interface Comment {
+  comment: string;
+  created_at: string;
+  photo_url: string;
+  points: number;
+  user_id: number;
+  user_name: string;
+  user_surname: string;
+}
+
+interface InternNotificationMessage {
+  title: string;
+  body: string;
+  created_at: string;
+}
+
+interface ApplicationUserDetail {
+  id: number;
+  user_id: number;
+  internship_posting_id: number;
+  name: string;
+  surname: string;
+  profile_photo_url: string;
+  message: string;
+  cv_url: string;
+  created_at: string;
 }

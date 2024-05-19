@@ -16,23 +16,31 @@ import {
   InternshipApplicationFormTypes,
   useInternshipApplicationForm,
 } from "@/schemas/internship-application.schema";
+import { is } from "date-fns/locale";
 
 interface ApplyPostingComponentsProps {
   postingId: number | undefined;
   userType: number | null;
+  isApplied?: boolean;
 }
 
 function ApplyPostingComponents({
   postingId,
   userType,
+  isApplied,
 }: ApplyPostingComponentsProps) {
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [loading, setLoading] = useState(false);
+  const [isAppliedToPosting, setIsAppliedToPosting] = useState<boolean>(
+    isApplied! || false
+  );
   const { toast } = useToast();
+
   const applyToPosting = async (item: InternshipApplicationFormTypes) => {
     setLoading(true);
     try {
       await InternshipService.applyToPosting(item);
+      setIsAppliedToPosting(true);
       setApplyPostingOpen(false);
     } catch {
       toast({
@@ -51,6 +59,19 @@ function ApplyPostingComponents({
     return () => window.removeEventListener("resize", handleResize);
   }, [window.innerWidth]);
 
+  useEffect(() => {
+    applicationFormHandle.form.reset({
+      internship_posting_id: postingId!,
+    });
+    setIsAppliedToPosting(isApplied!);
+  }, [postingId, isApplied]);
+
+  const buttonDisabled =
+    loading ||
+    postingId === undefined ||
+    !(userType === 0) ||
+    isAppliedToPosting;
+
   const triggerButton = (
     <Button
       onClick={() => {
@@ -58,11 +79,11 @@ function ApplyPostingComponents({
           internship_posting_id: postingId!,
         });
       }}
-      disabled={loading || postingId === undefined || !(userType === 0)}
+      disabled={buttonDisabled}
       variant="default"
       className="w-[96%] m-2"
     >
-      İlana Başvur
+      {isAppliedToPosting ? "İlana Başvuruldu" : "İlana Başvur"}
     </Button>
   );
 
@@ -70,10 +91,7 @@ function ApplyPostingComponents({
     <>
       {windowWidth > 768 ? (
         <Dialog open={applyPostingOpen} onOpenChange={setApplyPostingOpen}>
-          <DialogTrigger
-            asChild
-            disabled={loading || postingId === undefined || !(userType === 0)}
-          >
+          <DialogTrigger asChild disabled={buttonDisabled}>
             {triggerButton}
           </DialogTrigger>
           <DialogContent className="max-h-[90vh] overflow-y-auto">
@@ -95,10 +113,7 @@ function ApplyPostingComponents({
         </Dialog>
       ) : (
         <Drawer>
-          <DrawerTrigger
-            asChild
-            disabled={loading || postingId === undefined || !(userType === 0)}
-          >
+          <DrawerTrigger asChild disabled={buttonDisabled}>
             {triggerButton}
           </DrawerTrigger>
           <DrawerContent>
