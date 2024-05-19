@@ -19,6 +19,7 @@ import {
 import ProjectCard from "./ProjectCard";
 import ProjectForm from "./ProjectForm";
 import { showAccordionInProfile } from "@/utils/helpers.utils";
+import { useIsReadonly } from "@/context/IsReadonlyContext";
 
 interface ProjectsProps {
   user: UserDetail;
@@ -29,6 +30,7 @@ function Projects({ user }: ProjectsProps) {
   const { loading, setLoading } = useUtil();
   const { toast } = useToast();
   const formDivRef = useRef<HTMLDivElement>(null);
+  const isReadonly = useIsReadonly();
 
   const handleFormSubmit = async (data: ProjectFormTypes, e: any) => {
     e.preventDefault();
@@ -57,12 +59,12 @@ function Projects({ user }: ProjectsProps) {
     <>
       <div className="flex flex-col md:flex-row justify-between items-center w-full my-2">
         <h5 className="text-md font-medium my-2">
-          Eklediğim Projelerim
+          {!isReadonly ? "Eklediğim Projelerim" : "Kullanıcının Projeleri"}
           <Badge className="ml-2" variant="secondary">
             {user.projects?.length}
           </Badge>
         </h5>
-        <Button
+        {!isReadonly && <Button
           onClick={() =>
             showAccordionInProfile(showForm, formDivRef, setShowForm)
           }
@@ -71,7 +73,7 @@ function Projects({ user }: ProjectsProps) {
         >
           <Plus className="h-4 w-4 mr-2" />
           Yeni Proje Ekleyin
-        </Button>
+        </Button>}
       </div>
       {user.projects?.length > 0 && (
         <>

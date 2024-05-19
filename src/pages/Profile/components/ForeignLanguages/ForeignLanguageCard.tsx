@@ -7,6 +7,7 @@ import ProfileService from "@/services/profile.service";
 import { useToast } from "@/components/ui/use-toast";
 import { useUtil } from "@/context/UtilContext";
 import ForeignLanguageEditModal from "./ForeignLanguageEditModal";
+import { useIsReadonly } from "@/context/IsReadonlyContext";
 interface ForeignLanguagesProps {
   foreignLanguage: Foreignlanguage;
 }
@@ -14,6 +15,7 @@ interface ForeignLanguagesProps {
 function ForeignLanguageCard({ foreignLanguage }: ForeignLanguagesProps) {
   const { toast } = useToast();
   const { setLoading } = useUtil();
+  const isReadOnly = useIsReadonly();
 
   const deleteForeignLanguageById = async (id: number) => {
     try {
@@ -67,15 +69,14 @@ function ForeignLanguageCard({ foreignLanguage }: ForeignLanguagesProps) {
           }
         </p>
         <p className="text-sm text-muted-foreground">
-          {`• ${
-            LanguageDegree.find(
-              (degree: { value: string; label: string }) =>
-                degree.value === foreignLanguage.degree
-            )?.label
-          }`}
+          {`• ${LanguageDegree.find(
+            (degree: { value: string; label: string }) =>
+              degree.value === foreignLanguage.degree
+          )?.label
+            }`}
         </p>
         <div className="flex items-center space-x-2">
-          <ForeignLanguageEditModal
+          {!isReadOnly && (<><ForeignLanguageEditModal
             foreignLanguage={foreignLanguage}
             triggerButton={
               <Button size="icon" variant="ghost">
@@ -87,16 +88,16 @@ function ForeignLanguageCard({ foreignLanguage }: ForeignLanguagesProps) {
               degree: string;
             }) => handleUpdateForeignLanguage(data)}
           />
-          <ConfirmationDialog
-            onConfirm={() => deleteForeignLanguageById(foreignLanguage.id!)}
-            triggerButton={
-              <Button size="icon" variant="ghost">
-                <Trash className="w-4 h-4 text-red-500" />
-              </Button>
-            }
-            headerTitle="Eklediğim Yabancı Dil Bilgisi"
-            description="Bu yabancı dil bilgisini silmek istediğinize emin misiniz?"
-          />
+            <ConfirmationDialog
+              onConfirm={() => deleteForeignLanguageById(foreignLanguage.id!)}
+              triggerButton={
+                <Button size="icon" variant="ghost">
+                  <Trash className="w-4 h-4 text-red-500" />
+                </Button>
+              }
+              headerTitle="Eklediğim Yabancı Dil Bilgisi"
+              description="Bu yabancı dil bilgisini silmek istediğinize emin misiniz?"
+            /></>)}
         </div>
       </div>
     </div>

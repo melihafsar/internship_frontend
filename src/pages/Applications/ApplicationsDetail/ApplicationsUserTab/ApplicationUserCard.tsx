@@ -15,7 +15,7 @@ function ApplicationUserCard({ applicationDetail }: ApplicationUserCardProps) {
             className="flex items-center cursor-pointer"
             onClick={() => {
               window.open(
-                `/applicant-detail/${applicationDetail.user_id}`,
+                `/applicant-detail/${applicationDetail.id}`,
                 "_blank"
               );
             }}

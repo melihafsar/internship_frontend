@@ -1,6 +1,6 @@
 import { CompanyFormTypes } from "@/schemas/company-form.schema";
 import { api } from "../api";
-import { DetailedCompanyDto, PagedListDto, ServiceResponse } from "@/types";
+import { DetailedCompanyDto, DetailedPostingApplication, PagedListDto, ServiceResponse } from "@/types";
 import { InternshipPostingFormTypes } from "@/schemas/internship-posting.schema";
 
 export default {
@@ -62,7 +62,7 @@ export default {
   getApplicationsList(id: number) {
     return api.get(`/Company/InternshipPosting/GetApplications/${id}`);
   },
-  getApplicationsDetail(id: number) {
+  getApplicationsDetail(id: number) : Promise<ServiceResponse<DetailedPostingApplication>> {
     return api.get(`/Company/InternshipPosting/GetApplicationDetail/${id}`);
   },
 };

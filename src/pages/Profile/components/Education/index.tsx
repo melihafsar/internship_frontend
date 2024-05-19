@@ -22,6 +22,7 @@ import EducationCard from "./EducationCard";
 import EducationForm from "./EducationForm";
 import moment from "moment";
 import { showAccordionInProfile } from "@/utils/helpers.utils";
+import { useIsReadonly } from "@/context/IsReadonlyContext";
 
 interface EducationProps {
   user: UserDetail;
@@ -32,6 +33,7 @@ function Education({ user }: EducationProps) {
   const { loading, setLoading } = useUtil();
   const { toast } = useToast();
   const formDivRef = useRef<HTMLDivElement>(null);
+  const isReadonly = useIsReadonly();
 
   const handleFormSubmit = async (data: EducationFormTypes, e: any) => {
     e.preventDefault();
@@ -75,12 +77,12 @@ function Education({ user }: EducationProps) {
     <>
       <div className="flex flex-col md:flex-row justify-between items-center w-full my-2">
         <h5 className="text-md font-medium my-2">
-          Eklediğim Eğitim Bilgilerim
+          {!isReadonly ? "Eklediğim Eğitim Bilgilerim" : "Eğitim Bilgileri"}
           <Badge className="ml-2" variant="secondary">
             {user.university_educations?.length}
           </Badge>
         </h5>
-        <Button
+        {!isReadonly && <Button
           onClick={() =>
             showAccordionInProfile(showForm, formDivRef, setShowForm)
           }
@@ -89,7 +91,7 @@ function Education({ user }: EducationProps) {
         >
           <Plus className="h-4 w-4 mr-2" />
           Eğitim Bilgisi Ekleyin
-        </Button>
+        </Button>}
       </div>
       <Separator className="my-1" />
       {user.university_educations?.length > 0 &&

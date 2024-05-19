@@ -16,6 +16,7 @@ import Projects from "./Projects";
 import References from "./References";
 import ForeignLanguages from "./ForeignLanguages";
 import { UserDetail } from "@/types";
+import { is } from "date-fns/locale";
 
 export const navigationItems = [
   {
@@ -72,57 +73,81 @@ export const userInfoFields = [
   {
     id: "contact",
     title: "İletişim Bilgileri",
-    description:
-      "İletişim bilgilerinizi doğru bir şekilde doldurmanız sizi diğer kullanıcılarla buluşturmamız da yardımcı olacaktır.",
+    description: (isReadOnly?: boolean): string => {
+      return isReadOnly
+        ? ""
+        : "İletişim bilgilerinizi doğru bir şekilde doldurmanız sizi diğer kullanıcılarla buluşturmamız da yardımcı olacaktır."
+    },
     component: (user: UserDetail) => <ContactDetails user={user} />,
   },
   {
     id: "experience",
     title: "İş Deneyimleri",
-    description:
-      "İş deneyimlerinizi paylaşarak daha fazla iş fırsatı yakalayın.",
+    description: (isReadOnly?: boolean) => {
+      return isReadOnly
+        ? ""
+        : "İş deneyimlerinizi paylaşarak daha fazla iş fırsatı yakalayın.";
+    },
     component: (user: UserDetail) => <WorkExperience user={user} />,
   },
   {
     id: "education",
     title: "Eğitim Bilgileri",
-    description:
-      "Eğitim bilgilerinizi paylaşmanız sizi diğer adaylardan öne çıkarır.",
+    description: (isReadOnly?: boolean) => {
+      return isReadOnly
+        ? ""
+        : "Eğitim bilgilerinizi paylaşmanız sizi diğer adaylardan öne çıkarır.";
+    },
     component: (user: UserDetail) => <Education user={user} />,
   },
   {
     id: "private",
     title: "Özel Bilgiler",
-    description:
-      "Firmaların sizi daha iyi tanımasına yardımcı olacak bilgilerinizi doldurarak daha fazla iş fırsatı yakalayın.",
+    description: (isReadOnly?: boolean) => {
+      return isReadOnly
+        ? ""
+        : "Firmaların sizi daha iyi tanımasına yardımcı olacak bilgilerinizi doldurarak daha fazla iş fırsatı yakalayın.";
+    },
     component: (user: UserDetail) => <PrivateInformation user={user} />,
   },
   // {
   //   id: "skills",
   //   title: "Yetenekler",
-  //   description:
-  //     "Yeteneklerinizden bahsederek daha farklı alanlarda iş fırsatları yakalayabilirsiniz.",
+  //   description: (isReadOnly?: boolean) => {
+  // return isReadOnly
+  //   ? ""
+  //    : //     "Yeteneklerinizden bahsederek daha farklı alanlarda iş fırsatları yakalayabilirsiniz.";
+  //},
   //   component: (user : UserDetail) =>  <Skills user={user}/>,
   // },
   {
     id: "languages",
     title: "Yabancı Diller",
-    description:
-      "Öğrendiğiniz yabancı dilleri yazarak yaşadığınız ülkeye göre farklı dillerde iş fırsatları yakalayabilirsiniz.",
+    description: (isReadOnly?: boolean) => {
+      return isReadOnly
+        ? ""
+        : "Öğrendiğiniz yabancı dilleri yazarak yaşadığınız ülkeye göre farklı dillerde iş fırsatları yakalayabilirsiniz.";
+    },
     component: (user: UserDetail) => <ForeignLanguages user={user} />,
   },
   {
     id: "projects",
     title: "Projeler",
-    description:
-      "Yaptığınız projeleri paylaşarak firmaların sizi daha eşsiz bulmasını sağlayın.",
+    description: (isReadOnly?: boolean) => {
+      return isReadOnly
+        ? ""
+        : "Yaptığınız projeleri paylaşarak firmaların sizi daha eşsiz bulmasını sağlayın.";
+    },
     component: (user: UserDetail) => <Projects user={user} />,
   },
   {
     id: "references",
     title: "Referanslar",
-    description:
-      "Referanslarınız ile firmaların sizi daha iyi tanımasını sağlayın.",
+    description: (isReadOnly?: boolean) => {
+      return isReadOnly
+        ? ""
+        : "Referanslarınız ile firmaların sizi daha iyi tanımasını sağlayın.";
+    },
     component: (user: UserDetail) => <References user={user} />,
   },
 ];
