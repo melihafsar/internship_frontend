@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/form";
 import { ImageUploadDialog } from "../../../../components/ImageUploadDialog";
 import { UserDetail } from "@/types";
+import { useAuth } from "@/context/AuthContext";
 
 interface ContactDetailsProps {
   user: UserDetail;
@@ -159,6 +160,7 @@ function ContactDetails({ user }: ContactDetailsProps) {
   const { loading, setLoading } = useUtil();
   const [showUploadDialog, setShowUploadDialog] = useState(false);
   const { toast } = useToast();
+  const { supabase } = useAuth();
 
   const handleFormSubmit = async (data: any) => {
     try {
@@ -168,6 +170,7 @@ function ContactDetails({ user }: ContactDetailsProps) {
         surname: data.surname,
         phone_number: data.phoneNumber,
       });
+      await supabase.auth.refreshSession();
       toast({
         title: "Başarılı",
         description: "Bilgileriniz başarıyla güncellendi.",
