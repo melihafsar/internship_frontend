@@ -29,6 +29,7 @@ interface ComboboxProps {
   className?: string;
   onSelect: (value: string) => void;
   value?: string;
+  cleanable?: boolean;
 }
 
 
@@ -38,11 +39,18 @@ export function Combobox({
   className,
   onSelect,
   value,
+  cleanable,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState(value || "");
 
   const handleSelect = (value: string) => {
+    if (cleanable && selectedValue === value) {
+      setSelectedValue(undefined);
+      onSelect(undefined);
+      setOpen(false);
+      return;
+    }
     setSelectedValue(value);
     onSelect(value);
     setOpen(false);
@@ -83,7 +91,7 @@ export function Combobox({
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    selectedValue === item.label ? "opacity-100" : "opacity-0"
+                    selectedValue === item.value ? "opacity-100" : "opacity-0"
                   )}
                 />
                 {item.label}

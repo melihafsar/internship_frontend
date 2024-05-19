@@ -3,7 +3,7 @@ import { InternshipPostingFormTypes } from "@/schemas/internship-posting.schema"
 import { PagedListDto } from "@/types";
 import { useEffect, useState } from "react";
 import CompanyService from "@/services/company.service";
-import SearchBar from "./SearchBar";
+import SearchBar, { PostingFilters } from "./SearchBar";
 import MostPreferredPost from "./MostPreferredPost";
 import PostingCard from "@/components/PostingCard";
 import InfiniteLoader from "@/components/InfiniteLoader";
@@ -21,18 +21,37 @@ function HomePage() {
     total: 0,
   });
 
-  const fetchPostings = async () => {
+  const [filters, setFilters] = useState<PostingFilters>({});
+
+  const filtersChanged = (value: PostingFilters) => {
+    setPagination({
+      ...pagination,
+      from: 0,
+    });
+    setPostings(undefined);
+    setFilters(value);
+  };
+
+  useEffect(() => {
+    fetchPostings(false);
+  }, [filters]);
+
+  const fetchPostings = async (usePrevData: boolean = true) => {
     setLoading(true);
     try {
       const response = await CompanyService.listPostings(
         pagination.from,
         undefined,
         pagination.take,
-        "CreatedAt"
+        "CreatedAt",
+        filters.matchQuery,
+        filters.workType,
+        filters.employmentType,
+        filters.hasSalary,
       );
       setPostings((prev) => ({
         ...response.data,
-        items: prev
+        items: prev && usePrevData
           ? [...prev.items, ...response.data.items]
           : response.data.items,
       }));
@@ -61,7 +80,7 @@ function HomePage() {
         <h1 className="text-2xl md:text-4xl text-center text-primary font-bold italic my-8">
           Staj Programları
         </h1>
-        <SearchBar />
+        <SearchBar filters={filters} setFilters={filtersChanged}/>
       </div>
       <div className="flex justify-center w-full my-16">
         <MostPreferredPost />

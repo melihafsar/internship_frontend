@@ -20,7 +20,11 @@ export default {
     from: number,
     companyId?: number,
     take?: number,
-    sort?: string
+    sort?: string,
+    matchQuery?: string,
+    workType?: string,
+    employmentType?: string,
+    salary?: string,
   ): Promise<ServiceResponse<PagedListDto<InternshipPostingFormTypes>>> {
     return api
       .get(`/Company/InternshipPosting/List`, {
@@ -29,6 +33,10 @@ export default {
           companyId,
           take,
           sort,
+          matchQuery,
+          workType,
+          employmentType,
+          salary,
         },
       })
       .then(
