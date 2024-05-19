@@ -18,9 +18,10 @@ import CompanyService from "@/services/company.service";
 import { useToast } from "@/components/ui/use-toast";
 interface CompanyPostingCardProps {
   posting: InternshipPostingFormTypes;
+  isReadonly?: boolean;
 }
 
-function CompanyPostingCard({ posting }: CompanyPostingCardProps) {
+function CompanyPostingCard({ posting, isReadonly }: CompanyPostingCardProps) {
   const { form } = useInternshipPostingForm();
   const [loading, setLoading] = useState(false);
   const [updatePostingModalOpen, setUpdatePostingModalOpen] = useState(false);
@@ -111,7 +112,7 @@ function CompanyPostingCard({ posting }: CompanyPostingCardProps) {
     );
   };
 
-  return <PostingCard posting={posting}>{accessFunctionality()}</PostingCard>;
+  return <PostingCard posting={posting}>{!isReadonly && accessFunctionality()}</PostingCard>;
 }
 
 export default CompanyPostingCard;

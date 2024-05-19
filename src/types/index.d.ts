@@ -110,3 +110,17 @@ interface PagedListDto<T> {
   count: number;
   total: number;
 }
+
+export interface DetailedCompanyDto {
+  id: number
+  name: string
+  short_description?: string
+  logo_url?: string
+  website_url?: string
+  background_photo_url?: string
+  city_id?: number
+  country_id?: number
+  sector?: string
+  number_of_workers?: number
+  description?: string
+}

@@ -14,9 +14,10 @@ import InfiniteLoader from "@/components/InfiniteLoader";
 
 interface CompanyPostsProps {
   company: CompanyFormTypes;
+  isReadonly?: boolean;
 }
 
-function index({ company }: CompanyPostsProps) {
+function index({ company, isReadonly }: CompanyPostsProps) {
   const [loading, setLoading] = useState(false);
   const [postings, setPostings] =
     useState<PagedListDto<InternshipPostingFormTypes>>();
@@ -68,19 +69,19 @@ function index({ company }: CompanyPostsProps) {
     <div className="flex flex-col gap-2">
       <div className="flex flex-row justify-between items-center w-full gap-2">
         <h4 className="font-semibold tracking-tight">
-          Yayınladığım Staj İlanlarım{" "}
+          {!isReadonly ? "Yayınladığım Staj İlanlarım " : "Şirketin Staj İlanları "}
           <Badge className="ml-2 rounded-full">
             {(postings && postings?.total) || 0}
           </Badge>
         </h4>
-        <CreatePostingModal
+        {!isReadonly && <CreatePostingModal
           triggerButton={
             <Button variant="secondary">
               <Plus className="w-4 h-4 mr-1" strokeWidth={3} /> Yeni Staj İlanı
               Yayınla
             </Button>
           }
-        />
+        />}
       </div>
       <Separator className="mt-1 mb-4" />
       {postings ? (
@@ -94,7 +95,7 @@ function index({ company }: CompanyPostsProps) {
             className="flex flex-col md:flex-row w-full gap-4 flex-wrap"
           >
             {postings?.items.map((posting: InternshipPostingFormTypes) => (
-              <CompanyPostingCard key={posting.id} posting={posting} />
+              <CompanyPostingCard key={posting.id} posting={posting} isReadonly={isReadonly} />
             ))}
           </InfiniteLoader>
         </div>

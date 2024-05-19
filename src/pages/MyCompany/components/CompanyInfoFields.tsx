@@ -10,9 +10,10 @@ import { CompanyFormTypes } from "@/schemas/company-form.schema";
 
 interface CompanyInfoFieldsProps {
   company?: CompanyFormTypes;
+  isReadonly?: boolean;
 }
 
-function CompanyInfoFields({ company }: CompanyInfoFieldsProps) {
+function CompanyInfoFields({ company, isReadonly }: CompanyInfoFieldsProps) {
   return (
     <>
       {companyInfoFields.map((field: any) => (
@@ -20,9 +21,9 @@ function CompanyInfoFields({ company }: CompanyInfoFieldsProps) {
           <Card className="border-2 hover:ease-in hover:duration-500 hover:border-orange-500 ">
             <CardHeader className="bg-primary-foreground rounded-t-md mb-4">
               <CardTitle className="text-lg">{field.title}</CardTitle>
-              <CardDescription>{field.description}</CardDescription>
+              <CardDescription>{field.description(isReadonly)}</CardDescription>
             </CardHeader>
-            <CardContent>{field.component(company)}</CardContent>
+            <CardContent>{field.component(company, isReadonly)}</CardContent>
           </Card>
         </div>
       ))}

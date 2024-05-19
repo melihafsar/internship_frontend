@@ -1,11 +1,15 @@
 import { CompanyFormTypes } from "@/schemas/company-form.schema";
 import { api } from "../api";
-import { PagedListDto, ServiceResponse } from "@/types";
+import { DetailedCompanyDto, PagedListDto, ServiceResponse } from "@/types";
 import { InternshipPostingFormTypes } from "@/schemas/internship-posting.schema";
 
 export default {
   getCompany(): Promise<ServiceResponse<CompanyFormTypes>> {
     return api.get("/Company/Get");
+  },
+
+  getDetailedCompany(id: number): Promise<ServiceResponse<DetailedCompanyDto>> {
+    return api.get(`/Company/Get/${id}`);
   },
   updateCompany(data: CompanyFormTypes) {
     const dto = { ...data };

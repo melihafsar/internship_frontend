@@ -20,9 +20,10 @@ import CompanyBanner from "./CompanyBanner";
 
 interface CompanyDetailProps {
   company: CompanyFormTypes;
+  isReadonly?: boolean;
 }
 
-function index({ company }: CompanyDetailProps) {
+function index({ company, isReadonly }: CompanyDetailProps) {
   const { form } = useCompanyForm();
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -71,8 +72,9 @@ function index({ company }: CompanyDetailProps) {
           companyImages={companyImages}
           setCompanyImages={setCompanyImages}
           handleFormSubmit={handleFormSubmit}
+          isReadonly={isReadonly}
         />
-        <Button
+        {!isReadonly && <Button
           onClick={() =>
             showAccordionInProfile(showForm, formDivRef, setShowForm)
           }
@@ -81,9 +83,9 @@ function index({ company }: CompanyDetailProps) {
         >
           <Edit className="h-4 w-4 mr-2" />
           Şirket Bilgilerini Düzenle
-        </Button>
+        </Button>}
       </div>
-      <Accordion
+      {!isReadonly && <Accordion
         type="single"
         collapsible
         value={showForm ? "company_detail" : undefined}
@@ -98,7 +100,7 @@ function index({ company }: CompanyDetailProps) {
             />
           </AccordionContent>
         </AccordionItem>
-      </Accordion>
+      </Accordion>}
     </div>
   );
 }

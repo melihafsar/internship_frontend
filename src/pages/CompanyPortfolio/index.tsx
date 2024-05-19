@@ -1,15 +1,73 @@
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/components/ui/use-toast";
+import { useUtil } from "@/context/UtilContext";
+import CompanyService from "@/services/company.service";
+import { DetailedCompanyDto } from "@/types";
+import { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import CompanyNavigationItems from "../MyCompany/components/CompanyNavigationItems";
+import CompanyInfoFields from "../MyCompany/components/CompanyInfoFields";
 
 function CompanyPortfolio() {
-  const location = useLocation();
-  const companyId = location.pathname.split("/")[2];
+  const [activeTab, setActiveTab] = useState("contact");
+  const { loading, setLoading } = useUtil();
+  const { toast } = useToast();
+  const [detailedCompany, setDetailedCompany] = useState<DetailedCompanyDto>();
+  let { id } = useParams();
+
+  const getData = async () => {
+    setLoading(true);
+    try {
+      const companyDetail = await CompanyService.getDetailedCompany(parseInt(id));
+      setDetailedCompany(companyDetail.data);
+    }
+    catch (error) {
+      console.error(error);
+      toast({
+        title: "Hata",
+        description: "Şirket detayları getirilirken bir hata oluştu.",
+        variant: "destructive",
+      });
+    }
+    finally {
+      setLoading(false);
+    }
+
+  }
 
   useEffect(() => {
-    console.log(companyId);
-  }, [companyId]);
+    getData();
+  }, []);
 
-  return <div>CompanyPortfolio / Detail</div>;
+  if (loading)
+    return <div className="pb-2 scroll-smooth">
+      <Separator className="my-6" />
+      <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+        <aside className="bg-primary-foreground rounded-md lg:bg-transparent lg:w-1/5 sticky top-0 z-30">
+          <nav className="flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1 overflow-x-auto py-2 sticky top-2">
+            <Skeleton className="w-full h-[400px]" />
+          </nav>
+        </aside>
+        <div className="flex-1 max-w-[1400px]">
+          <Skeleton className="w-full h-[800px]" />
+        </div>
+      </div>
+    </div>;;
+
+  return <div className="pb-2 scroll-smooth">
+    <Separator className="my-6" />
+    <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+      <aside className="bg-primary-foreground rounded-md lg:bg-transparent lg:w-1/5 sticky top-0 z-30">
+        <nav className="flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1 overflow-x-auto py-2 sticky top-2">
+          <CompanyNavigationItems activeTab={activeTab} />
+        </nav>
+      </aside>
+      <div className="flex-1 max-w-[1400px]">
+        <CompanyInfoFields company={detailedCompany} isReadonly={true} />
+      </div>
+    </div>
+  </div>;
 }
 
 export default CompanyPortfolio;

@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { CompanyFormTypes } from "@/schemas/company-form.schema";
 import locationService from "@/services/lookup.service";
 import { ImageUploadDialog } from "@/components/ImageUploadDialog";
+import { cn } from "@/lib/utils";
 
 const EditIcon = () => {
   return (
@@ -21,6 +22,7 @@ interface CompanyBannerProps {
   companyImages: { logo: string; background: string };
   setCompanyImages: (images: { logo: string; background: string }) => void;
   handleFormSubmit: (data: CompanyFormTypes) => void;
+  isReadonly?: boolean;
 }
 
 function CompanyBanner({
@@ -28,6 +30,7 @@ function CompanyBanner({
   companyImages,
   setCompanyImages,
   handleFormSubmit,
+  isReadonly,
 }: CompanyBannerProps) {
   const [uploadDialogProps, setUploadDialogProps] = useState<{
     show: boolean;
@@ -120,16 +123,20 @@ function CompanyBanner({
         />
         <div className="w-full">
           <div
-            className="hover:opacity-60 relative flex items-center group cursor-pointer"
+            className={cn("relative flex items-center group cursor-pointer", isReadonly ? "" : "hover:opacity-60 ")}
             onClick={() =>
-              setUploadDialogProps({
-                show: true,
-                field: "background_photo_url",
-                type: "Background",
-              })
+              {
+                if (isReadonly) return;
+                return setUploadDialogProps({
+                  show: true,
+                  field: "background_photo_url",
+                  type: "Background",
+                });
+              }
             }
           >
-            <EditIcon />
+            {!isReadonly && <EditIcon />}
+
             <img
               className="rounded-md object-cover bg-gray-100 w-full max-h-[300px]"
               src={companyImages.background}
@@ -140,14 +147,17 @@ function CompanyBanner({
           <div
             className="relative flex items-center group cursor-pointer"
             onClick={() =>
-              setUploadDialogProps({
-                show: true,
-                field: "logo_url",
-                type: "Image",
-              })
+              {
+                if (isReadonly) return;
+                return setUploadDialogProps({
+                  show: true,
+                  field: "logo_url",
+                  type: "Image",
+                });
+              }
             }
           >
-            <EditIcon />
+            {!isReadonly && <EditIcon />}
             <img
               className="rounded-md object-cover bg-gray-100 w-[256px]"
               src={companyImages.logo}
@@ -163,10 +173,9 @@ function CompanyBanner({
           </p>
           <p className="text-muted-foreground">
             {form.getValues("website_url")} -{" "}
-            {`${
-              form.getValues("number_of_workers") &&
+            {`${form.getValues("number_of_workers") &&
               form.getValues("number_of_workers") + " çalışan - "
-            }`}
+              }`}
             {form.getValues("sector")} - {location.city}, {location.country}
           </p>
           <p className="text-muted-foreground text-sm"></p>

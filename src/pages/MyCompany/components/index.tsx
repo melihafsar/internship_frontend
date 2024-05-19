@@ -2,6 +2,7 @@ import { CompanyFormTypes } from "@/schemas/company-form.schema";
 import { Building2, ScrollText } from "lucide-react";
 import CompanyDetail from "./CompanyDetail";
 import CompanyPosts from "./CompanyPosts";
+import { is } from "date-fns/locale";
 
 export const navigationItems = [
   {
@@ -23,18 +24,23 @@ export const companyInfoFields = [
     id: "company-detail",
     title: "Şirket Detayları",
     description:
-      "Şirket bilgilerinizi doğru bir şekilde doldurmanız sizi diğer kullanıcılarla buluşturmamız da yardımcı olacaktır. Şirketinizin görünürlüğünü arttıracaktır",
-    component: (company: CompanyFormTypes) => (
-      <CompanyDetail company={company} />
+      (isReadOnly?: boolean) => {
+        return isReadOnly ? "" :
+          "Şirket bilgilerini zi doğru bir şekilde doldurmanız sizi diğer kullanıcılarla buluşturmamız da yardımcı olacaktır. Şirketinizin görünürlüğünü arttıracaktır"
+      },
+    component: (company: CompanyFormTypes, isReadonly?: boolean) => (
+      <CompanyDetail company={company} isReadonly={isReadonly} />
     ),
   },
   {
     id: "company-posts",
     title: "Şirket Staj İlanları",
-    description:
-      "Yayınladığınız staj ilanları diğer kullanıcılar tarafından görüntülenecektir. İlanlarınızı güncel tutarak daha fazla stajyere ulaşabilirsiniz.",
-    component: (company: CompanyFormTypes) => (
-      <CompanyPosts company={company} />
+    description: (isReadOnly?: boolean) => {
+      return isReadOnly ? "" :
+        "Yayınladığınız staj ilanları diğer kullanıcılar tarafından görüntülenecektir. İlanlarınızı güncel tutarak daha fazla stajyere ulaşabilirsiniz."
+    },
+    component: (company: CompanyFormTypes, isReadonly?: boolean) => (
+      <CompanyPosts company={company} isReadonly={isReadonly} />
     ),
   },
 ];
