@@ -42,9 +42,7 @@ function Messages() {
           </div>
         ))
       ) : messages.length === 0 ? (
-        <div className="text-center text-gray-500">
-          Henüz mesajınız bulunmamaktadır.
-        </div>
+        <div className="text-gray-500">Henüz mesajınız bulunmamaktadır.</div>
       ) : (
         messages.map((message, index) => {
           return <MessageCard key={index} message={message} />;

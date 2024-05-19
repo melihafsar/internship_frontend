@@ -153,73 +153,112 @@ interface ApplicationUserDetail {
   created_at: string;
 }
 
-
 export interface DetailedPostingApplication {
-  id: number
-  internship_posting_id: number
-  message: string
-  cv_url: string
-  user_id: number
-  email: string
-  name: string
-  surname: string
-  profile_photo_url: string
-  phone_number: string
+  id: number;
+  internship_posting_id: number;
+  message: string;
+  cv_url: string;
+  user_id: number;
+  email: string;
+  name: string;
+  surname: string;
+  profile_photo_url: string;
+  phone_number: string;
   foreign_languages: Array<{
-    language_code: string
-    degree: string
-    id: number
-  }>
+    language_code: string;
+    degree: string;
+    id: number;
+  }>;
   university_educations: Array<{
-    university_id: number
-    university_name: string
-    faculty: string
-    department: string
-    start_date: string
-    end_date: string
-    education_year: number
-    is_graduated: boolean
-    gpa: number
-    description: string
-    id: number
-  }>
+    university_id: number;
+    university_name: string;
+    faculty: string;
+    department: string;
+    start_date: string;
+    end_date: string;
+    education_year: number;
+    is_graduated: boolean;
+    gpa: number;
+    description: string;
+    id: number;
+  }>;
   works: Array<{
-    position: string
-    company_name: string
-    start_date: string
-    end_date: string
-    is_working_now: boolean
-    description: string
-    duties: string
-    work_type: string
-    reason_for_leave: string
-    id: number
-  }>
+    position: string;
+    company_name: string;
+    start_date: string;
+    end_date: string;
+    is_working_now: boolean;
+    description: string;
+    duties: string;
+    work_type: string;
+    reason_for_leave: string;
+    id: number;
+  }>;
   projects: Array<{
-    project_name: string
-    description: string
-    project_link: string
-    id: number
-  }>
+    project_name: string;
+    description: string;
+    project_link: string;
+    id: number;
+  }>;
   references: Array<{
-    id: number
-    name: string
-    surname: string
-    company: string
-    duty: string
-    email: string
-    phone_number: string
-    description: string
-  }>
+    id: number;
+    name: string;
+    surname: string;
+    company: string;
+    duty: string;
+    email: string;
+    phone_number: string;
+    description: string;
+  }>;
   detail: {
-    date_of_birth: string
-    gender: string
-    driver_licenses: Array<string>
-    marital_status: string
-    military_status: string
-    country_id: number
-    city_id: number
-    district: string
-    address: string
-  }
+    date_of_birth: string;
+    gender: string;
+    driver_licenses: Array<string>;
+    marital_status: string;
+    military_status: string;
+    country_id: number;
+    city_id: number;
+    district: string;
+    address: string;
+  };
+}
+
+//TODO
+
+interface Company {
+  company_id: number;
+  name: string;
+  short_description: string;
+  logo_url: string;
+  number_of_comments: number;
+  average_points: number;
+  is_current_user_following: boolean;
+}
+
+interface Posting {
+  id: number;
+  is_current_user_following: boolean;
+  is_current_user_applied: boolean;
+  company: Company;
+  title: string;
+  image_url: string;
+  background_photo_url: string;
+  description: string;
+  sector: string;
+  country_id: number;
+  city_id: number;
+  location: string;
+  requirements: string;
+  work_type: string;
+  employment_type: string;
+  has_salary: boolean;
+  dead_line: string;
+}
+
+interface MyApplicationType {
+  id: number;
+  internship_posting_id: number;
+  message: string;
+  cv_url: string;
+  posting: Posting;
 }

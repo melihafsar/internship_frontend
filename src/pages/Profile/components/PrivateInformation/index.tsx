@@ -34,31 +34,27 @@ function PrivateInformation({ user }: PrivateInformationProps) {
   const isReadonly = useIsReadonly();
   const [countryList, setCountryList] = useState<ComboboxData>([]);
   const [cityList, setCityList] = useState<ComboboxData>([]);
-  
 
   const getCountryList = async () => {
     const response = await LookupService.getCountries();
-    const coutryList = response.map(
-      (item) => {
-        return {
-          value: item.id.toString(),
-          label: item.name,
-        };
-      }
-    );
+    const coutryList = response.map((item) => {
+      return {
+        value: item.id.toString(),
+        label: item.name,
+      };
+    });
     setCountryList(coutryList);
   };
 
   const getCitiesList = async (countryId: number) => {
+    if (countryId) return;
     const response = await LookupService.getCities(countryId);
-    const cityList = response.map(
-      (item) => {
-        return {
-          value: item.id.toString(),
-          label: item.name,
-        };
-      }
-    );
+    const cityList = response.map((item) => {
+      return {
+        value: item.id.toString(),
+        label: item.name,
+      };
+    });
     setCityList(cityList);
   };
 
@@ -67,7 +63,7 @@ function PrivateInformation({ user }: PrivateInformationProps) {
   }, []);
 
   useEffect(() => {
-    if (user.detail.country_id) getCitiesList(user.detail.country_id);
+    if (user.detail?.country_id) getCitiesList(user.detail?.country_id);
   }, [user]);
 
   const getGenderText = (genderEnum: string) => {
@@ -79,7 +75,7 @@ function PrivateInformation({ user }: PrivateInformationProps) {
       default:
         return "Belirtilmemiş";
     }
-  }
+  };
 
   const getMaritialStatusText = (maritalStatusEnum: string) => {
     switch (maritalStatusEnum) {
@@ -90,7 +86,7 @@ function PrivateInformation({ user }: PrivateInformationProps) {
       default:
         return "Belirtilmemiş";
     }
-  }
+  };
 
   const getMilitaryStatusText = (maritalStatusEnum: string) => {
     switch (maritalStatusEnum) {
@@ -103,7 +99,7 @@ function PrivateInformation({ user }: PrivateInformationProps) {
       default:
         return "Belirtilmemiş";
     }
-  }
+  };
 
   const handleFormSubmit = async (
     data: PrivateInformationFormTypes,
@@ -140,55 +136,68 @@ function PrivateInformation({ user }: PrivateInformationProps) {
         <h5 className="text-sm font-medium my-2">
           {!isReadonly ? "Eklediğim Özel Bilgilerim" : "Özel Bilgiler"}
         </h5>
-        {!isReadonly && <Button
-          onClick={() =>
-            showAccordionInProfile(showForm, formDivRef, setShowForm)
-          }
-          variant="outline"
-          className="flex items-center space-x-2 mb-2"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Özel Bilgilerinizi Düzenleyin
-        </Button>}
+        {!isReadonly && (
+          <Button
+            onClick={() =>
+              showAccordionInProfile(showForm, formDivRef, setShowForm)
+            }
+            variant="outline"
+            className="flex items-center space-x-2 mb-2"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Özel Bilgilerinizi Düzenleyin
+          </Button>
+        )}
       </div>
       <div>
         <p className="text-sm font-medium my-2">
           <span className="font-semibold">Doğum Tarihi:</span>{" "}
-          {user?.detail?.date_of_birth ? moment(user?.detail?.date_of_birth).format("DD.MM.YYYY") : "Girilmemiş"}
+          {user?.detail?.date_of_birth
+            ? moment(user?.detail?.date_of_birth).format("DD.MM.YYYY")
+            : "Girilmemiş"}
         </p>
         <p className="text-sm font-medium my-2">
-          <span className="font-semibold mr-1">Cinsiyet:</span> 
-          { getGenderText(user?.detail?.gender) }
+          <span className="font-semibold mr-1">Cinsiyet:</span>
+          {getGenderText(user?.detail?.gender)}
         </p>
         <p className="text-sm font-medium my-2">
-          <span className="font-semibold mr-1">Evlilik Durumu:</span> 
-          { getMaritialStatusText(user?.detail?.marital_status) }
+          <span className="font-semibold mr-1">Evlilik Durumu:</span>
+          {getMaritialStatusText(user?.detail?.marital_status)}
         </p>
         <p className="text-sm font-medium my-2">
-          <span className="font-semibold mr-1">Sürücü Belgeleri:</span> 
-          { user?.detail?.driver_licenses.join(", ") }
+          <span className="font-semibold mr-1">Sürücü Belgeleri:</span>
+          {user?.detail?.driver_licenses.join(", ")}
         </p>
         <p className="text-sm font-medium my-2">
-          <span className="font-semibold mr-1">Askerlik Durumu:</span> 
-          { getMilitaryStatusText(user?.detail?.military_status) }
+          <span className="font-semibold mr-1">Askerlik Durumu:</span>
+          {getMilitaryStatusText(user?.detail?.military_status)}
         </p>
         <p className="text-sm font-medium my-2">
-          <span className="font-semibold mr-1">Ülke:</span> 
-          { countryList.find((item: { value: string; label: string }) => item.value == user?.detail?.country_id?.toString())?.label }
+          <span className="font-semibold mr-1">Ülke:</span>
+          {
+            countryList.find(
+              (item: { value: string; label: string }) =>
+                item.value == user?.detail?.country_id?.toString()
+            )?.label
+          }
         </p>
         <p className="text-sm font-medium my-2">
-          <span className="font-semibold mr-1">Şehir:</span> 
-          { cityList.find((item : { value: string; label: string }) => item.value == user?.detail?.city_id?.toString())?.label }
+          <span className="font-semibold mr-1">Şehir:</span>
+          {
+            cityList.find(
+              (item: { value: string; label: string }) =>
+                item.value == user?.detail?.city_id?.toString()
+            )?.label
+          }
         </p>
         <p className="text-sm font-medium my-2">
-          <span className="font-semibold mr-1">İlçe:</span> 
-          { user?.detail?.district }
+          <span className="font-semibold mr-1">İlçe:</span>
+          {user?.detail?.district}
         </p>
         <p className="text-sm font-medium my-2">
-          <span className="font-semibold mr-1">Tam Adres:</span> 
-          { user?.detail?.address }
+          <span className="font-semibold mr-1">Tam Adres:</span>
+          {user?.detail?.address}
         </p>
-        
       </div>
       <Accordion
         type="single"

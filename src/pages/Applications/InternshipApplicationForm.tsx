@@ -13,6 +13,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { InternshipApplicationFormTypes } from "@/schemas/internship-application.schema";
 import UploadService from "@/services/upload.service";
 import { getError } from "@/utils/helpers.utils";
+import { RotateCw } from "lucide-react";
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 
@@ -39,7 +40,7 @@ const InternshipApplicationForm = ({
     e.preventDefault();
     if (!file) {
       toast({
-        title: "Lütfen bir resim dosyası seçin!",
+        title: "Lütfen bir dosya seçiniz.",
         variant: "destructive",
       });
       return;
@@ -51,7 +52,7 @@ const InternshipApplicationForm = ({
     } catch (error: any) {
       const errorDetails = getError(error);
       toast({
-        title: errorDetails?.details ?? "Resim yüklenirken bir hata oluştu.",
+        title: errorDetails?.details ?? "Dosya yüklenirken bir hata oluştu.",
         variant: "destructive",
       });
       return;
@@ -82,7 +83,11 @@ const InternshipApplicationForm = ({
                     <Button
                       type="button"
                       onClick={() => setUploadDialogProps({ show: true })}
+                      disabled={loading}
                     >
+                      {loading && (
+                        <RotateCw className="mr-2 h-4 w-4 animate-spin" />
+                      )}
                       {field.value?.file_name ?? "CV Yükle"}
                     </Button>
                   </FormControl>

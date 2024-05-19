@@ -26,4 +26,7 @@ export default {
   }): Promise<ServiceResponse> {
     return api.post("/Internship/Comment", data);
   },
+  listInternApplications(): Promise<ServiceResponse> {
+    return api.get("/Account/ListApplications");
+  },
 };

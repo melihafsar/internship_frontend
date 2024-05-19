@@ -16,7 +16,6 @@ import Projects from "./Projects";
 import References from "./References";
 import ForeignLanguages from "./ForeignLanguages";
 import { UserDetail } from "@/types";
-import { is } from "date-fns/locale";
 
 export const navigationItems = [
   {
@@ -43,12 +42,6 @@ export const navigationItems = [
     href: "#private",
     icon: <FolderKey />,
   },
-  // {
-  //   id: "skills-nav",
-  //   label: "Yetenekler",
-  //   href: "#skills",
-  //   icon: <LayoutTemplate />,
-  // },
   {
     id: "languages-nav",
     label: "Yabancı Diller",
@@ -76,7 +69,7 @@ export const userInfoFields = [
     description: (isReadOnly?: boolean): string => {
       return isReadOnly
         ? ""
-        : "İletişim bilgilerinizi doğru bir şekilde doldurmanız sizi diğer kullanıcılarla buluşturmamız da yardımcı olacaktır."
+        : "İletişim bilgilerinizi doğru bir şekilde doldurmanız sizi diğer kullanıcılarla buluşturmamız da yardımcı olacaktır.";
     },
     component: (user: UserDetail) => <ContactDetails user={user} />,
   },
@@ -110,16 +103,6 @@ export const userInfoFields = [
     },
     component: (user: UserDetail) => <PrivateInformation user={user} />,
   },
-  // {
-  //   id: "skills",
-  //   title: "Yetenekler",
-  //   description: (isReadOnly?: boolean) => {
-  // return isReadOnly
-  //   ? ""
-  //    : //     "Yeteneklerinizden bahsederek daha farklı alanlarda iş fırsatları yakalayabilirsiniz.";
-  //},
-  //   component: (user : UserDetail) =>  <Skills user={user}/>,
-  // },
   {
     id: "languages",
     title: "Yabancı Diller",
