@@ -21,7 +21,7 @@ function DesktopMenu() {
       const type = getUserType(session);
       const routes = mainRoutes.filter((route) => {
         if (route.showNavBar && route.userType !== undefined) {
-          return route.userType === type;
+          return route.userType === type || (type === undefined && route.userType === -1);
         }
         return route.showNavBar;
       });

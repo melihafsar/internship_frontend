@@ -8,7 +8,7 @@ function MainLayout() {
   return (
     <Suspense fallback={<Spinner />}>
       <Header children={<NavigationMenu />} />
-      <div className="flex flex-col">
+      <div className="flex flex-col [&_.login]:min-h-[calc(100vh-80px-2rem)]">
         <Outlet />
       </div>
     </Suspense>
