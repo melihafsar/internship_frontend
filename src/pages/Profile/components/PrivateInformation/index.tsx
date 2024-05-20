@@ -21,6 +21,7 @@ import { showAccordionInProfile } from "@/utils/helpers.utils";
 import { useIsReadonly } from "@/context/IsReadonlyContext";
 import { ComboboxData } from "@/components/ui/combobox";
 import LookupService from "@/services/lookup.service";
+import { cn } from "@/lib/utils";
 
 interface PrivateInformationProps {
   user: UserDetail;
@@ -47,7 +48,7 @@ function PrivateInformation({ user }: PrivateInformationProps) {
   };
 
   const getCitiesList = async (countryId: number) => {
-    if (countryId) return;
+    if (!countryId) return;
     const response = await LookupService.getCities(countryId);
     const cityList = response.map((item) => {
       return {
@@ -63,7 +64,8 @@ function PrivateInformation({ user }: PrivateInformationProps) {
   }, []);
 
   useEffect(() => {
-    if (user.detail?.country_id) getCitiesList(user.detail?.country_id);
+    if (!!user?.detail?.country_id) 
+      getCitiesList(user.detail?.country_id);
   }, [user]);
 
   const getGenderText = (genderEnum: string) => {
@@ -149,18 +151,25 @@ function PrivateInformation({ user }: PrivateInformationProps) {
           </Button>
         )}
       </div>
-      <div>
-        <p className="text-sm font-medium my-2">
-          <span className="font-semibold">Doğum Tarihi:</span>{" "}
-          {user?.detail?.date_of_birth
-            ? moment(user?.detail?.date_of_birth).format("DD.MM.YYYY")
-            : "Girilmemiş"}
-        </p>
-        <p className="text-sm font-medium my-2">
-          <span className="font-semibold mr-1">Cinsiyet:</span>
-          {getGenderText(user?.detail?.gender)}
-        </p>
-        <p className="text-sm font-medium my-2">
+      <div className="flex flex-col gap-1/2 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 w-full">
+          <p className="text-sm font-medium my-2">
+            <span className="font-semibold">Doğum Tarihi:</span>{" "}
+            {user?.detail?.date_of_birth
+              ? moment(user?.detail?.date_of_birth).format("DD.MM.YYYY")
+              : "Girilmemiş"}
+          </p>
+          <p className="text-sm font-medium my-2">
+            <span className="font-semibold mr-1">Cinsiyet:</span>
+            {getGenderText(user?.detail?.gender)}
+          </p>
+          <p className={cn("text-sm font-medium my-2", user?.detail?.gender !== 'Male' && "invisible")}>
+            <span className="font-semibold mr-1">Askerlik Durumu:</span>
+            {getMilitaryStatusText(user?.detail?.military_status)}
+          </p>
+        </div>
+       <div className="grid grid-cols-1 md:grid-cols-3 w-full">
+       <p className="text-sm font-medium my-2">
           <span className="font-semibold mr-1">Evlilik Durumu:</span>
           {getMaritialStatusText(user?.detail?.marital_status)}
         </p>
@@ -168,33 +177,34 @@ function PrivateInformation({ user }: PrivateInformationProps) {
           <span className="font-semibold mr-1">Sürücü Belgeleri:</span>
           {user?.detail?.driver_licenses.join(", ")}
         </p>
-        <p className="text-sm font-medium my-2">
-          <span className="font-semibold mr-1">Askerlik Durumu:</span>
-          {getMilitaryStatusText(user?.detail?.military_status)}
-        </p>
-        <p className="text-sm font-medium my-2">
-          <span className="font-semibold mr-1">Ülke:</span>
-          {
-            countryList.find(
-              (item: { value: string; label: string }) =>
-                item.value == user?.detail?.country_id?.toString()
-            )?.label
-          }
-        </p>
-        <p className="text-sm font-medium my-2">
-          <span className="font-semibold mr-1">Şehir:</span>
-          {
-            cityList.find(
-              (item: { value: string; label: string }) =>
-                item.value == user?.detail?.city_id?.toString()
-            )?.label
-          }
-        </p>
-        <p className="text-sm font-medium my-2">
-          <span className="font-semibold mr-1">İlçe:</span>
-          {user?.detail?.district}
-        </p>
-        <p className="text-sm font-medium my-2">
+       </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 w-full">
+          <p className="text-sm font-medium my-2">
+            <span className="font-semibold mr-1">Ülke:</span>
+            {
+              countryList.find(
+                (item: { value: string; label: string }) =>
+                  item.value == user?.detail?.country_id?.toString()
+              )?.label
+            }
+          </p>
+          <p className="text-sm font-medium my-2">
+            <span className="font-semibold mr-1">Şehir:</span>
+            {
+              cityList.find(
+                (item: { value: string; label: string }) =>
+                  item.value == user?.detail?.city_id?.toString()
+              )?.label
+            }
+          </p>
+          <p className="text-sm font-medium my-2">
+            <span className="font-semibold mr-1">İlçe:</span>
+            {user?.detail?.district}
+          </p>
+
+        </div>
+        <p className="text-sm font-medium mb-2">
           <span className="font-semibold mr-1">Tam Adres:</span>
           {user?.detail?.address}
         </p>
