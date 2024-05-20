@@ -70,9 +70,6 @@ function HomePage() {
     setLoading(false);
   };
 
-  useEffect(() => {
-    fetchPostings();
-  }, []);
 
   return (
     <div className="flex flex-col w-full items-center">

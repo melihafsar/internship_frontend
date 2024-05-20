@@ -52,6 +52,7 @@ function CompanyPostingCard({ posting, isReadonly }: CompanyPostingCardProps) {
     setLoading(true);
     console.log(data);
     try {
+      delete data.is_current_user_applied;
       await CompanyService.updatePosting(data);
       toast({
         title: "Başarılı",
