@@ -44,12 +44,15 @@ export const mainRoutes = [
   {
     path: "/login",
     id: "login",
-    element: <Page
-      title="Giriş Yap"
-      className="overflow-hidden p-0 m-0 h-screen flex items-center login justify-center"
-      showTitle={false}>
-      <Login />
-    </Page>,
+    element: (
+      <Page
+        title="Giriş Yap"
+        className="overflow-hidden p-0 m-0 h-screen flex items-center login justify-center"
+        showTitle={false}
+      >
+        <Login />
+      </Page>
+    ),
     meta: {
       title: "Giriş Yap",
     },
@@ -96,8 +99,8 @@ export const mainRoutes = [
         title="Şirket Detayları"
         showTitle={false}
         className=""
-      // className="overflow-hidden p-0 m-0"
-      // showTitle={false}
+        // className="overflow-hidden p-0 m-0"
+        // showTitle={false}
       >
         <CompanyDetail />
       </Page>
@@ -149,12 +152,7 @@ export const mainRoutes = [
   },
   {
     path: "/user-registered",
-    element: (
-      <ProtectedRoute
-        title=""
-        component={(args) => <UserRegister {...args} />}
-      />
-    ),
+    element: <UserRegister />,
     meta: {
       title: "Kullanıcı Kayıt",
     },

@@ -67,9 +67,9 @@ function PostingCard({ posting, children }: PostingCardProps) {
             <p className="text-sm font-semibold line-clamp-1 truncate text-primary-500">
               {posting?.company?.name}
             </p>
-            <p className="flex items-center gap-2 text-sm text-gray-400">
+            <div className="flex items-center gap-2 text-sm text-gray-400">
               <Progress
-                value={posting.company?.average_points}
+                value={posting.company?.average_points * 10}
                 className="flex-1 h-1"
               />
               <Badge className="rounded-full text-xs">
@@ -79,7 +79,7 @@ function PostingCard({ posting, children }: PostingCardProps) {
                     : "0.0"
                 }`}
               </Badge>
-            </p>
+            </div>
           </div>
         </div>
       </CardContent>

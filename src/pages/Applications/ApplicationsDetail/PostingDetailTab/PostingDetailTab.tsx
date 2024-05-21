@@ -79,6 +79,7 @@ function PostingDetailTab({ posting, userType }: PostingDetailTabProps) {
         postingId={posting?.id}
         userType={userType}
         isApplied={posting?.is_current_user_applied}
+        deadLine={posting?.dead_line}
       />
     </div>
   );

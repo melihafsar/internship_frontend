@@ -23,7 +23,7 @@ function CarouselCard({ posting }: CarouselCardProps) {
           />
           <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center h-32 group-hover:h-48 p-2 w-full bg-opacity-60 transform translate-y-1/2 group-hover:translate-y-0 transition-all duration-500  bg-gradient-to-t from-secondary via-secondary/70 to-secondary/30">
             <div className="opacity-100 group-hover:opacity-100">
-              <h2 className="text-center text-sm font-bold truncate mt-8">
+              <h2 className="text-center text-sm font-bold truncate mt-8 w-[210px]">
                 {posting.title}
               </h2>
               <div className="flex flex-row justify-evenly text-xs font-semibold gap-2 items-center">

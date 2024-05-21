@@ -113,7 +113,11 @@ function CompanyPostingCard({ posting, isReadonly }: CompanyPostingCardProps) {
     );
   };
 
-  return <PostingCard posting={posting}>{!isReadonly && accessFunctionality()}</PostingCard>;
+  return (
+    <PostingCard posting={posting}>
+      {!isReadonly && accessFunctionality()}
+    </PostingCard>
+  );
 }
 
 export default CompanyPostingCard;

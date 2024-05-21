@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
@@ -28,6 +28,9 @@ import { ImageUploadDialog } from "../../../../components/ImageUploadDialog";
 import { UserDetail } from "@/types";
 import { useAuth } from "@/context/AuthContext";
 import { useIsReadonly } from "@/context/IsReadonlyContext";
+import { useLocation } from "react-router-dom";
+import { showAccordionInProfile } from "@/utils/helpers.utils";
+import React from "react";
 
 interface ContactDetailsProps {
   user: UserDetail;
@@ -164,6 +167,21 @@ function ContactDetails({ user }: ContactDetailsProps) {
   const { supabase } = useAuth();
   const isReadonly = useIsReadonly();
 
+  const location = useLocation();
+  const formDivRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (location.state === "username required") {
+      showAccordionInProfile(showForm, formDivRef, setShowForm);
+      toast({
+        title: "Önce Ad ve Soyad Bilgilerinizi Doldurun",
+        description:
+          "Profilinizi tamamlamak için ad ve soyad bilgilerinizi doldurmalısınız.",
+        variant: "destructive",
+      });
+    }
+  }, [location]);
+
   const handleFormSubmit = async (data: any) => {
     try {
       setLoading(true);
@@ -235,13 +253,15 @@ function ContactDetails({ user }: ContactDetailsProps) {
             setShowUploadDialog(true);
           }}
         >
-          {!isReadonly && <Pencil className="absolute h-6 w-6 top-1/2 right-1/2 transform translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 z-50" />}
+          {!isReadonly && (
+            <Pencil className="absolute h-6 w-6 top-1/2 right-1/2 transform translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 z-50" />
+          )}
           <Avatar className="h-32 w-32 m-4">
             <AvatarImage src={user?.profile_photo_url} alt="profil_resmim" />
             <AvatarFallback>
               {user?.name
                 ? user?.name?.charAt(0).toUpperCase() +
-                user?.surname?.charAt(0).toUpperCase()
+                  user?.surname?.charAt(0).toUpperCase()
                 : user?.email?.slice(0, 2)}
             </AvatarFallback>
           </Avatar>
@@ -251,14 +271,16 @@ function ContactDetails({ user }: ContactDetailsProps) {
             <h1 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-2xl">
               {user.name || "Ad"} {user.surname || "Soyad"}
             </h1>
-            {!isReadonly && <Button
-              onClick={() => setShowForm(!showForm)}
-              variant="outline"
-              className="flex items-center space-x-2"
-            >
-              <Pencil className="h-4 w-4 mr-2" />
-              Bilgilerinizi Düzenleyin
-            </Button>}
+            {!isReadonly && (
+              <Button
+                onClick={() => setShowForm(!showForm)}
+                variant="outline"
+                className="flex items-center space-x-2"
+              >
+                <Pencil className="h-4 w-4 mr-2" />
+                Bilgilerinizi Düzenleyin
+              </Button>
+            )}
           </div>
           <div className="mb-2 text-muted-foreground text-[12px] md:text-sm">
             <div className="flex space-x-1 justify-between">
@@ -281,7 +303,7 @@ function ContactDetails({ user }: ContactDetailsProps) {
         value={showForm ? "profile" : undefined}
         collapsible
       >
-        <AccordionItem value="profile">
+        <AccordionItem value="profile" ref={formDivRef}>
           <AccordionContent>
             <Separator className="my-1" />
             <ContactDetailsForm

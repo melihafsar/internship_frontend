@@ -1,7 +1,7 @@
 import PostingCard from "@/components/PostingCard";
 import { Button } from "@/components/ui/button";
 import { MyApplicationType } from "@/types";
-import { useEffect, useState } from "react";
+import { mobileCheck } from "@/utils/helpers.utils";
 
 interface ApplicationCardProps {
   data: MyApplicationType;
@@ -17,7 +17,7 @@ function ApplicationCard({ data }: ApplicationCardProps) {
             className="bottom-0 w-full"
             size="xs"
             onClick={() => {
-              window.open(data?.cv_url, "_blank");
+              window.open(data?.cv_url, mobileCheck() ? "_self" : "_blank");
             }}
           >
             Özgeçmişi Göster

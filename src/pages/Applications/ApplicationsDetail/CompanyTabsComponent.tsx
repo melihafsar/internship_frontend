@@ -26,8 +26,11 @@ function CompanyTabsComponent({
         className="w-full"
         onValueChange={(value) => setCurrentTab(value)}
       >
-        <TabsList className="flex flex-row justify-center  md:justify-start w-full rounded-t-none h-full px-2 md:pl-16">
-          <TabsTrigger className="w-1/2 md:w-[150px]" value="posting-detail">
+        <TabsList className="flex flex-row justify-center md:justify-start w-full rounded-t-none h-full px-2 md:pl-16 overflow-x-auto px-4 pb-2">
+          <TabsTrigger
+            className="w-1/2 ml-20 md:m-0 md:w-[150px]"
+            value="posting-detail"
+          >
             İlan Detayları
           </TabsTrigger>
           <TabsTrigger value="assessments" className="w-1/2 md:w-[180px]">

@@ -16,18 +16,20 @@ import {
   InternshipApplicationFormTypes,
   useInternshipApplicationForm,
 } from "@/schemas/internship-application.schema";
-import { is } from "date-fns/locale";
+import moment from "moment";
 
 interface ApplyPostingComponentsProps {
   postingId: number | undefined;
   userType: number | null;
   isApplied?: boolean;
+  deadLine: Date;
 }
 
 function ApplyPostingComponents({
   postingId,
   userType,
   isApplied,
+  deadLine,
 }: ApplyPostingComponentsProps) {
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [loading, setLoading] = useState(false);
@@ -45,7 +47,7 @@ function ApplyPostingComponents({
     } catch {
       toast({
         title: "Hata",
-        description: "Şirket bilgileri getirilirken bir hata oluştu.",
+        description: "İlan başvurusu yapılırken bir hata oluştu.",
       });
     }
     setLoading(false);
@@ -69,6 +71,7 @@ function ApplyPostingComponents({
   const buttonDisabled =
     loading ||
     postingId === undefined ||
+    moment(deadLine).isBefore(moment()) ||
     !(userType === 0) ||
     isAppliedToPosting;
 

@@ -25,11 +25,11 @@ export const ProfileDropdown = ({ user }: ProfileDropdownProps) => {
   const { supabase } = useAuth();
   const navigate = useNavigate();
   const { fetchMessages } = useUser();
-  const [messages, setMessages] = useState([] as InternNotificationMessage[]);
+  const [messages, setMessages] = useState<InternNotificationMessage[]>([]);
 
   const getMessages = async () => {
     const messages = await fetchMessages();
-    setMessages(messages.data);
+    setMessages(messages?.data ?? []);
   };
 
   useEffect(() => {
