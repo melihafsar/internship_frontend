@@ -46,7 +46,6 @@ function index() {
   };
 
   const register = async () => {
-    console.log("register");
     try {
       await UserService.isRegistered().then(
         ({ is_registered }: { is_registered: boolean }) => {

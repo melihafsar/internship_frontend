@@ -25,8 +25,9 @@ export default function Page({
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
       const user = getUserInfo(session);
       if (
-        (user.userName === null || user.userSurname === null) &&
+        (user?.userName === null || user?.userSurname === null) &&
         user.userType !== undefined &&
+        user.userType === 0 &&
         location.pathname !== "/profile"
       ) {
         navigate("/profile", { state: "username required" });

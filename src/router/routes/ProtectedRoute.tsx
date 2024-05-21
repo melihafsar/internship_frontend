@@ -6,7 +6,7 @@ import Spinner from "@/components/Spinner";
 import { useAuth } from "@/context/AuthContext.tsx";
 import { getUserInfo, getUserType } from "@/utils/helpers.utils.ts";
 import { cn } from "@/lib/utils";
-import { lazy } from "react";
+
 interface ProtectedRouteProps {
   component: React.ElementType;
   userType?: number;
@@ -69,15 +69,14 @@ const ProtectedRoute = ({
     userType !== undefined ? true : userType === userTypeState;
 
   if (loading || isLoggedIn === null) return <Spinner />;
-  if (
-    isLoggedIn &&
-    userAccessGranted &&
-    location.pathname !== "/profile" &&
-    (userInfo.userName === null || userInfo.userSurname === null)
-  ) {
-    return <Navigate to="/profile" state="username required" />;
-  }
   if (isLoggedIn && userAccessGranted) {
+    if (
+      userInfo.userType === 0 &&
+      location.pathname !== "/profile" &&
+      (userInfo.userName === null || userInfo.userSurname === null)
+    ) {
+      return <Navigate to="/profile" state="username required" />;
+    }
     return (
       <Page
         title={title}

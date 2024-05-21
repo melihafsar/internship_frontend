@@ -107,9 +107,9 @@ export const Login = () => {
       password: form.getValues("password"),
     });
 
+    setLoading(false);
     if (error) {
       defaultToastError(error);
-      setLoading(false);
       return;
     }
     navigate(`/user-registered?userType=${currentUser}`);
