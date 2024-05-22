@@ -17,8 +17,8 @@ const ApplicantPortfolio = lazy(() => import("@/pages/ApplicantPortfolio"));
 const Login = lazy(() => import("@/pages/Login"));
 
 const messagesTitle = (
-  <div className="flex items-center space-x-2">
-    <Mail />
+  <div className="flex items-center gap-1">
+    <Mail size={20} />
     <span>Mesajlarım</span>
   </div>
 );

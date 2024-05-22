@@ -66,7 +66,7 @@ const ProtectedRoute = ({
   }, [supabase.auth]);
 
   const userAccessGranted =
-    userType !== undefined ? true : userType === userTypeState;
+    userType === undefined ? true : userType === userTypeState;
 
   if (loading || isLoggedIn === null) return <Spinner />;
   if (isLoggedIn && userAccessGranted) {

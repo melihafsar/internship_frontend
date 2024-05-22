@@ -31,6 +31,7 @@ import { useIsReadonly } from "@/context/IsReadonlyContext";
 import { useLocation } from "react-router-dom";
 import { showAccordionInProfile } from "@/utils/helpers.utils";
 import React from "react";
+import LookupService from "@/services/lookup.service";
 
 interface ContactDetailsProps {
   user: UserDetail;
@@ -170,6 +171,29 @@ function ContactDetails({ user }: ContactDetailsProps) {
   const location = useLocation();
   const formDivRef = React.useRef<HTMLDivElement>(null);
 
+  const [countryList, setCountryList] = useState<
+    { id: number; name: string }[]
+  >([]);
+  const [cityList, setCityList] = useState<{ id: number; name: string }[]>([]);
+
+  const getCountryList = async () => {
+    const response = await LookupService.getCountries();
+    setCountryList(response);
+  };
+
+  const getCitiesList = async (countryId: number) => {
+    const response = await LookupService.getCities(countryId);
+    setCityList(response);
+  };
+
+  useEffect(() => {
+    if (!countryList.length) getCountryList();
+  }, []);
+
+  useEffect(() => {
+    if (user.detail.country_id) getCitiesList(user.detail.country_id);
+  }, [user.detail.country_id]);
+
   useEffect(() => {
     if (location.state === "username required") {
       showAccordionInProfile(showForm, formDivRef, setShowForm);
@@ -284,16 +308,46 @@ function ContactDetails({ user }: ContactDetailsProps) {
           </div>
           <div className="mb-2 text-muted-foreground text-[12px] md:text-sm">
             <div className="flex space-x-1 justify-between">
-              <p>Frontend Developer</p>
-              <p>İstanbul, Türkiye</p>
+              <p>
+                {user.works.length > 0
+                  ? user.works[user.works.length - 1].position
+                  : "Pozisyon Bilgisi Yok"}
+              </p>
+              {cityList.find((item) => item.id === user.detail.city_id)?.name +
+                ", " +
+                countryList.find((item) => item.id === user.detail.country_id)
+                  ?.name}
             </div>
             <div className="flex space-x-1 justify-between">
-              <p>22 yaşında</p>
-              <p>Marmara Üniversitesi</p>
+              <p>
+                {user.detail.date_of_birth
+                  ? `${
+                      new Date().getFullYear() -
+                      new Date(user.detail.date_of_birth).getFullYear()
+                    } Yaşında`
+                  : "Yaş Bilgisi Yok"}
+              </p>
+              <p>
+                {user.university_educations.length > 0
+                  ? user.university_educations[
+                      user.university_educations.length - 1
+                    ].university_name
+                  : "Eğitim Bilgisi Yok"}
+              </p>
             </div>
             <div className="flex space-x-1 justify-between flex-wrap">
-              <p>Twitter: @shadcn</p>
-              <p>Website: https://shadcn.com</p>
+              <a href={"mailto:" + user.email}>{user.email}</a>
+              <p>
+                {user.foreign_languages.length > 0
+                  ? `Yabancı Dil: ${
+                      user.foreign_languages[user.foreign_languages.length - 1]
+                        .language_code +
+                      " - " +
+                      user.foreign_languages[user.foreign_languages.length - 1]
+                        .degree
+                    }`
+                  : "Yabancı Dil Bilgisi Yok"}
+              </p>
             </div>
           </div>
         </div>

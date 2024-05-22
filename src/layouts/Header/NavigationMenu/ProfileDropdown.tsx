@@ -38,7 +38,7 @@ export const ProfileDropdown = ({ user }: ProfileDropdownProps) => {
 
   const ProfileAvatar = () => {
     return (
-      <div className="flex justify-center items-center space-x-2">
+      <div className="flex justify-center items-center gap-2">
         <Avatar className="w-8 h-8">
           <AvatarImage src={user?.profile_photo_url} alt="profil_resmim" />
           <AvatarFallback>
