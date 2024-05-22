@@ -81,8 +81,19 @@ function HomePage() {
         </h1>
         <SearchBar filters={filters} setFilters={filtersChanged} />
       </div>
-      <div className="flex justify-center w-full my-16">
+      <div className="flex flex-col justify-start w-full mt-12 mb-4">
+        <h2 className="text-xl font-bold text-primary ml-8 md:ml-20">
+          En Çok Tercih Edilenler
+        </h2>
+      </div>
+      <div className="flex justify-center w-full mb-12">
         <MostPreferredPost />
+      </div>
+
+      <div className="flex flex-col justify-start w-full mb-4">
+        <h2 className="text-xl font-bold text-primary ml-8 md:ml-20">
+          Tüm İlanlar
+        </h2>
       </div>
 
       {postings === undefined && loading ? (

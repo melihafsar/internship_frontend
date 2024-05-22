@@ -13,7 +13,7 @@ interface MessageCardProps {
 
 function MessageCard({ message }: MessageCardProps) {
   return (
-    <Card className="flex-1 p-4 hover:bg-gray-900">
+    <Card className="flex-1 p-4 md:hover:bg-foreground/10">
       <CardTitle className="text-lg truncate">{message.title}</CardTitle>
       <CardDescription className="py-2 text-sm text-gray-600">
         {moment(message.created_at).format("YYYY-MM-DD hh:mm")}

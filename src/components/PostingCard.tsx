@@ -18,7 +18,10 @@ function PostingCard({ posting, children }: PostingCardProps) {
   const navigate = useNavigate();
   return (
     <Card className="flex-1 min-w-[270px] max-w-[90%] md:max-w-[300px] p-5 select-none p-0 hover:shadow-lg transition-transform duration-300 transform hover:scale-105">
-      <CardHeader className="p-0">
+      <CardHeader
+        className="p-0 cursor-pointer"
+        onClick={() => navigate(`/applications/${posting.id}`)}
+      >
         <img
           className="mb-3 object-cover w-full h-64 rounded-t-lg"
           src={posting.image_url}
@@ -47,7 +50,7 @@ function PostingCard({ posting, children }: PostingCardProps) {
             </p>
           </div>
         </div>
-        <div className="">
+        <div>
           <Button
             variant={"link"}
             className="py-0"

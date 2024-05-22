@@ -5,7 +5,7 @@ import Page from "@/layouts/Page";
 
 const Profile = lazy(() => import("@/pages/Profile"));
 const HomePage = lazy(() => import("@/pages/HomePage"));
-const Applications = lazy(() => import("@/pages/Applications"));
+const Applications = lazy(() => import("@/pages/Applications/MyApplications"));
 const Messages = lazy(() => import("@/pages/Messages"));
 const UserRegister = lazy(() => import("@/pages/UserRegister"));
 const MyCompany = lazy(() => import("@/pages/MyCompany"));
@@ -67,6 +67,7 @@ export const mainRoutes = [
         userType={0}
         title="Başvurularım"
         component={Applications}
+        showTitle={false}
       />
     ),
     meta: {

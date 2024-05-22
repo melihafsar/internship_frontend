@@ -16,6 +16,7 @@ import {
 import { useState } from "react";
 import CompanyService from "@/services/company.service";
 import { useToast } from "@/components/ui/use-toast";
+import { CalendarCheck2, Pencil } from "lucide-react";
 interface CompanyPostingCardProps {
   posting: InternshipPostingFormTypes;
   isReadonly?: boolean;
@@ -79,9 +80,10 @@ function CompanyPostingCard({ posting, isReadonly }: CompanyPostingCardProps) {
         >
           <DialogTrigger asChild>
             <Button
-              className="flex-1"
+              className="flex-1 flex gap-1"
               onClick={() => form.reset({ ...posting })}
             >
+              <Pencil size={16} />
               Düzenle
             </Button>
           </DialogTrigger>
@@ -102,11 +104,12 @@ function CompanyPostingCard({ posting, isReadonly }: CompanyPostingCardProps) {
           </DialogContent>
         </Dialog>
         <Button
-          className="flex-1"
+          className="flex-1 flex gap-1"
           disabled={new Date(posting.dead_line) < new Date()}
           onClick={() => deletePosting(posting)}
           variant={"destructive"}
         >
+          <CalendarCheck2 size={16} />
           Sonlandır
         </Button>
       </div>

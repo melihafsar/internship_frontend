@@ -4,10 +4,10 @@ import InternshipService from "@/services/internship.service";
 import { MyApplicationType, ServiceResponse } from "@/types";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-import ApplicationCard from "./ApplicationsDetail/ApplicationCard";
+import ApplicationCard from "../ApplicationsDetail/ApplicationCard";
 import { Card } from "@/components/ui/card";
 
-function Applications() {
+function ApplicationsList() {
   const [internApplicationsData, setInternApplicationsData] = useState<
     MyApplicationType[]
   >([]);
@@ -35,8 +35,10 @@ function Applications() {
   }, []);
 
   return (
-    <div className="w-full md:w-[90%] h-full">
-      <div className="flex justify-center md:justify-start items-center gap-4 flex-wrap my-2 h-full w-full">
+    <div className="flex flex-col h-full w-full lg:flex-1">
+      <h1 className="text-2xl font-semibold my-2 mb-5">Başvurularım</h1>
+
+      <div className="flex justify-center md:justify-start items-center gap-4 flex-wrap">
         {loading ? (
           Array.from({ length: 6 }).map((_, index) => (
             <Card
@@ -67,4 +69,5 @@ function Applications() {
     </div>
   );
 }
-export default Applications;
+
+export default ApplicationsList;
