@@ -31,8 +31,8 @@ function PostingDetailTab({ posting, userType }: PostingDetailTabProps) {
   }, []);
 
   useEffect(() => {
-    if (posting.country_id) getCitiesList(posting.country_id);
-  }, [posting.country_id]);
+    if (posting?.country_id) getCitiesList(posting?.country_id);
+  }, [posting?.country_id]);
 
   return (
     <div className="flex flex-col w-full h-full items-center justify-center border-4 border-secondary rounded-md">
@@ -49,7 +49,7 @@ function PostingDetailTab({ posting, userType }: PostingDetailTabProps) {
             {`${posting?.location} - ${
               cityList.find((item) => item.id === posting.city_id)?.name
             }, ${
-              countryList.find((item) => item.id === posting.country_id)?.name
+              countryList.find((item) => item.id === posting?.country_id)?.name
             }`}
           </p>
           <p>
