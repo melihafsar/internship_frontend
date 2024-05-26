@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ApplicationUserDetail } from "@/types";
+import { mobileCheck } from "@/utils/helpers.utils";
 
 interface ApplicationUserCardProps {
   applicationDetail: ApplicationUserDetail;
@@ -56,7 +57,10 @@ function ApplicationUserCard({ applicationDetail }: ApplicationUserCardProps) {
         className="mt-2 bottom-0"
         size="xs"
         onClick={() => {
-          window.open(applicationDetail.cv_url, "_blank");
+          window.open(
+            applicationDetail.cv_url,
+            mobileCheck() ? "_self" : "_blank"
+          );
         }}
       >
         Özgeçmişi Göster

@@ -5,7 +5,7 @@ import Page from "@/layouts/Page";
 
 const Profile = lazy(() => import("@/pages/Profile"));
 const HomePage = lazy(() => import("@/pages/HomePage"));
-const Applications = lazy(() => import("@/pages/Applications"));
+const Applications = lazy(() => import("@/pages/Applications/MyApplications"));
 const Messages = lazy(() => import("@/pages/Messages"));
 const UserRegister = lazy(() => import("@/pages/UserRegister"));
 const MyCompany = lazy(() => import("@/pages/MyCompany"));
@@ -17,8 +17,8 @@ const ApplicantPortfolio = lazy(() => import("@/pages/ApplicantPortfolio"));
 const Login = lazy(() => import("@/pages/Login"));
 
 const messagesTitle = (
-  <div className="flex items-center space-x-2">
-    <Mail />
+  <div className="flex items-center gap-1">
+    <Mail size={20} />
     <span>Mesajlarım</span>
   </div>
 );
@@ -44,12 +44,15 @@ export const mainRoutes = [
   {
     path: "/login",
     id: "login",
-    element: <Page
-      title="Giriş Yap"
-      className="overflow-hidden p-0 m-0 h-screen flex items-center login justify-center"
-      showTitle={false}>
-      <Login />
-    </Page>,
+    element: (
+      <Page
+        title="Giriş Yap"
+        className="overflow-hidden p-0 m-0 h-screen flex items-center login justify-center"
+        showTitle={false}
+      >
+        <Login />
+      </Page>
+    ),
     meta: {
       title: "Giriş Yap",
     },
@@ -64,6 +67,7 @@ export const mainRoutes = [
         userType={0}
         title="Başvurularım"
         component={Applications}
+        showTitle={false}
       />
     ),
     meta: {
@@ -96,8 +100,8 @@ export const mainRoutes = [
         title="Şirket Detayları"
         showTitle={false}
         className=""
-      // className="overflow-hidden p-0 m-0"
-      // showTitle={false}
+        // className="overflow-hidden p-0 m-0"
+        // showTitle={false}
       >
         <CompanyDetail />
       </Page>
@@ -149,12 +153,7 @@ export const mainRoutes = [
   },
   {
     path: "/user-registered",
-    element: (
-      <ProtectedRoute
-        title=""
-        component={(args) => <UserRegister {...args} />}
-      />
-    ),
+    element: <UserRegister />,
     meta: {
       title: "Kullanıcı Kayıt",
     },

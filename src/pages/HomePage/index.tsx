@@ -15,6 +15,7 @@ function HomePage() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
+
   const [pagination, setPagination] = useState({
     from: 0,
     take: 10,
@@ -25,8 +26,9 @@ function HomePage() {
 
   const filtersChanged = (value: PostingFilters) => {
     setPagination({
-      ...pagination,
       from: 0,
+      take: 10,
+      total: 0,
     });
     setPostings(undefined);
     setFilters(value);
@@ -47,13 +49,14 @@ function HomePage() {
         filters.matchQuery,
         filters.workType,
         filters.employmentType,
-        filters.hasSalary,
+        filters.hasSalary
       );
       setPostings((prev) => ({
         ...response.data,
-        items: prev && usePrevData
-          ? [...prev.items, ...response.data.items]
-          : response.data.items,
+        items:
+          prev && usePrevData
+            ? [...prev.items, ...response.data.items]
+            : response.data.items,
       }));
       setPagination({
         ...pagination,
@@ -70,17 +73,27 @@ function HomePage() {
     setLoading(false);
   };
 
-
   return (
     <div className="flex flex-col w-full items-center">
       <div className="flex flex-col justify-center items-center bg-secondary w-full h-64">
         <h1 className="text-2xl md:text-4xl text-center text-primary font-bold italic my-8">
           Staj Programları
         </h1>
-        <SearchBar filters={filters} setFilters={filtersChanged}/>
+        <SearchBar filters={filters} setFilters={filtersChanged} />
       </div>
-      <div className="flex justify-center w-full my-16">
+      <div className="flex flex-col justify-start w-full mt-12 mb-4">
+        <h2 className="text-xl font-bold text-primary ml-8 md:ml-20">
+          En Çok Tercih Edilenler
+        </h2>
+      </div>
+      <div className="flex justify-center w-full mb-12">
         <MostPreferredPost />
+      </div>
+
+      <div className="flex flex-col justify-start w-full mb-4">
+        <h2 className="text-xl font-bold text-primary ml-8 md:ml-20">
+          Tüm İlanlar
+        </h2>
       </div>
 
       {postings === undefined && loading ? (

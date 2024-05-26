@@ -46,7 +46,6 @@ function index() {
   };
 
   const register = async () => {
-    console.log("register");
     await supabase.auth.getSession();
     try {
       await UserService.isRegistered().then(

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
@@ -28,6 +28,10 @@ import { ImageUploadDialog } from "../../../../components/ImageUploadDialog";
 import { UserDetail } from "@/types";
 import { useAuth } from "@/context/AuthContext";
 import { useIsReadonly } from "@/context/IsReadonlyContext";
+import { useLocation } from "react-router-dom";
+import { showAccordionInProfile } from "@/utils/helpers.utils";
+import React from "react";
+import LookupService from "@/services/lookup.service";
 
 interface ContactDetailsProps {
   user: UserDetail;
@@ -164,6 +168,44 @@ function ContactDetails({ user }: ContactDetailsProps) {
   const { supabase } = useAuth();
   const isReadonly = useIsReadonly();
 
+  const location = useLocation();
+  const formDivRef = React.useRef<HTMLDivElement>(null);
+
+  const [countryList, setCountryList] = useState<
+    { id: number; name: string }[]
+  >([]);
+  const [cityList, setCityList] = useState<{ id: number; name: string }[]>([]);
+
+  const getCountryList = async () => {
+    const response = await LookupService.getCountries();
+    setCountryList(response);
+  };
+
+  const getCitiesList = async (countryId: number) => {
+    const response = await LookupService.getCities(countryId);
+    setCityList(response);
+  };
+
+  useEffect(() => {
+    if (!countryList.length) getCountryList();
+  }, []);
+
+  useEffect(() => {
+    if (user.detail.country_id) getCitiesList(user.detail.country_id);
+  }, [user.detail.country_id]);
+
+  useEffect(() => {
+    if (location.state === "username required") {
+      showAccordionInProfile(showForm, formDivRef, setShowForm);
+      toast({
+        title: "Önce Ad ve Soyad Bilgilerinizi Doldurun",
+        description:
+          "Profilinizi tamamlamak için ad ve soyad bilgilerinizi doldurmalısınız.",
+        variant: "destructive",
+      });
+    }
+  }, [location]);
+
   const handleFormSubmit = async (data: any) => {
     try {
       setLoading(true);
@@ -235,13 +277,15 @@ function ContactDetails({ user }: ContactDetailsProps) {
             setShowUploadDialog(true);
           }}
         >
-          {!isReadonly && <Pencil className="absolute h-6 w-6 top-1/2 right-1/2 transform translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 z-50" />}
+          {!isReadonly && (
+            <Pencil className="absolute h-6 w-6 top-1/2 right-1/2 transform translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 z-50" />
+          )}
           <Avatar className="h-32 w-32 m-4">
             <AvatarImage src={user?.profile_photo_url} alt="profil_resmim" />
             <AvatarFallback>
               {user?.name
                 ? user?.name?.charAt(0).toUpperCase() +
-                user?.surname?.charAt(0).toUpperCase()
+                  user?.surname?.charAt(0).toUpperCase()
                 : user?.email?.slice(0, 2)}
             </AvatarFallback>
           </Avatar>
@@ -251,27 +295,59 @@ function ContactDetails({ user }: ContactDetailsProps) {
             <h1 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-2xl">
               {user.name || "Ad"} {user.surname || "Soyad"}
             </h1>
-            {!isReadonly && <Button
-              onClick={() => setShowForm(!showForm)}
-              variant="outline"
-              className="flex items-center space-x-2"
-            >
-              <Pencil className="h-4 w-4 mr-2" />
-              Bilgilerinizi Düzenleyin
-            </Button>}
+            {!isReadonly && (
+              <Button
+                onClick={() => setShowForm(!showForm)}
+                variant="outline"
+                className="flex items-center space-x-2"
+              >
+                <Pencil className="h-4 w-4 mr-2" />
+                Bilgilerinizi Düzenleyin
+              </Button>
+            )}
           </div>
           <div className="mb-2 text-muted-foreground text-[12px] md:text-sm">
             <div className="flex space-x-1 justify-between">
-              <p>Frontend Developer</p>
-              <p>İstanbul, Türkiye</p>
+              <p>
+                {user.works.length > 0
+                  ? user.works[user.works.length - 1].position
+                  : "Pozisyon Bilgisi Yok"}
+              </p>
+              {cityList.find((item) => item.id === user.detail.city_id)?.name +
+                ", " +
+                countryList.find((item) => item.id === user.detail.country_id)
+                  ?.name}
             </div>
             <div className="flex space-x-1 justify-between">
-              <p>22 yaşında</p>
-              <p>Marmara Üniversitesi</p>
+              <p>
+                {user.detail.date_of_birth
+                  ? `${
+                      new Date().getFullYear() -
+                      new Date(user.detail.date_of_birth).getFullYear()
+                    } Yaşında`
+                  : "Yaş Bilgisi Yok"}
+              </p>
+              <p>
+                {user.university_educations.length > 0
+                  ? user.university_educations[
+                      user.university_educations.length - 1
+                    ].university_name
+                  : "Eğitim Bilgisi Yok"}
+              </p>
             </div>
             <div className="flex space-x-1 justify-between flex-wrap">
-              <p>Twitter: @shadcn</p>
-              <p>Website: https://shadcn.com</p>
+              <a href={"mailto:" + user.email}>{user.email}</a>
+              <p>
+                {user.foreign_languages.length > 0
+                  ? `Yabancı Dil: ${
+                      user.foreign_languages[user.foreign_languages.length - 1]
+                        .language_code +
+                      " - " +
+                      user.foreign_languages[user.foreign_languages.length - 1]
+                        .degree
+                    }`
+                  : "Yabancı Dil Bilgisi Yok"}
+              </p>
             </div>
           </div>
         </div>
@@ -281,7 +357,7 @@ function ContactDetails({ user }: ContactDetailsProps) {
         value={showForm ? "profile" : undefined}
         collapsible
       >
-        <AccordionItem value="profile">
+        <AccordionItem value="profile" ref={formDivRef}>
           <AccordionContent>
             <Separator className="my-1" />
             <ContactDetailsForm

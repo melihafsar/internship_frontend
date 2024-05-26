@@ -29,4 +29,7 @@ export default {
   listInternApplications(): Promise<ServiceResponse> {
     return api.get("/Account/ListApplications");
   },
+  listRecommendedPosting(): Promise<ServiceResponse> {
+    return api.get("/Internship/Suggestions");
+  },
 };

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Page from "@/layouts/Page";
 import { UtilProvider, useUtil } from "@/context/UtilContext";
 import Spinner from "@/components/Spinner";
 import { useAuth } from "@/context/AuthContext.tsx";
 import { getUserInfo, getUserType } from "@/utils/helpers.utils.ts";
 import { cn } from "@/lib/utils";
-import { lazy } from "react";
+
 interface ProtectedRouteProps {
   component: React.ElementType;
   userType?: number;
@@ -33,6 +33,7 @@ const ProtectedRoute = ({
   const { supabase } = useAuth();
   const navigate = useNavigate();
   const [userTypeState, setUserTypeState] = useState<number | null>(null);
+  const location = useLocation();
   const [userInfo, setUserInfo] = useState<{
     userType: number | null;
     userName: string | null;
@@ -65,31 +66,17 @@ const ProtectedRoute = ({
   }, [supabase.auth]);
 
   const userAccessGranted =
-    userType !== undefined ? userType === userTypeState : true;
-
-  // const isUserInformation =
-  //   userInfo.userName !== null && userInfo.userSurname !== null;
-  //   if (!isUserInformation && userTypeState === 0 && title !== "Profilim") {
-  //     toast({
-  //       variant: "destructive",
-  //       content:
-  //         "Profil bilgileriniz eksik. Lütfen profil bilgilerinizi tamamlayınız.",
-  //     });
-  //     return (
-  //       <Page
-  //         title="Profil Bilgileri"
-  //         className={cn(className, fixPageHeight && fixPageHeightClassName)}
-  //         showTitle={showTitle}
-  //       >
-  //         <UtilProvider>
-  //           <Profile />
-  //         </UtilProvider>
-  //       </Page>
-  //     );
-  //   }
+    userType === undefined ? true : userType === userTypeState;
 
   if (loading || isLoggedIn === null) return <Spinner />;
-  if (isLoggedIn && userAccessGranted)
+  if (isLoggedIn && userAccessGranted) {
+    if (
+      userInfo.userType === 0 &&
+      location.pathname !== "/profile" &&
+      (userInfo.userName === null || userInfo.userSurname === null)
+    ) {
+      return <Navigate to="/profile" state="username required" />;
+    }
     return (
       <Page
         title={title}
@@ -101,6 +88,7 @@ const ProtectedRoute = ({
         </UtilProvider>
       </Page>
     );
+  }
   return <Navigate to="/login" replace />;
 };
 

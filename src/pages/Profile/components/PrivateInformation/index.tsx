@@ -64,8 +64,7 @@ function PrivateInformation({ user }: PrivateInformationProps) {
   }, []);
 
   useEffect(() => {
-    if (!!user?.detail?.country_id) 
-      getCitiesList(user.detail?.country_id);
+    if (!!user?.detail?.country_id) getCitiesList(user.detail?.country_id);
   }, [user]);
 
   const getGenderText = (genderEnum: string) => {
@@ -135,9 +134,11 @@ function PrivateInformation({ user }: PrivateInformationProps) {
   return (
     <>
       <div className="flex flex-col md:flex-row justify-between items-center w-full my-2">
-        <h5 className="text-sm font-medium my-2">
-          {!isReadonly ? "Eklediğim Özel Bilgilerim" : "Özel Bilgiler"}
-        </h5>
+        {!isReadonly && (
+          <h5 className="text-sm font-medium my-2">
+            Eklediğim Özel Bilgilerim
+          </h5>
+        )}
         {!isReadonly && (
           <Button
             onClick={() =>
@@ -152,35 +153,40 @@ function PrivateInformation({ user }: PrivateInformationProps) {
         )}
       </div>
       <div className="flex flex-col gap-1/2 w-full">
-        <div className="grid grid-cols-1 md:grid-cols-3 w-full">
-          <p className="text-sm font-medium my-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 w-full font-normal">
+          <p className="text-sm my-2">
             <span className="font-semibold">Doğum Tarihi:</span>{" "}
             {user?.detail?.date_of_birth
               ? moment(user?.detail?.date_of_birth).format("DD.MM.YYYY")
               : "Girilmemiş"}
           </p>
-          <p className="text-sm font-medium my-2">
+          <p className="text-sm my-2">
             <span className="font-semibold mr-1">Cinsiyet:</span>
             {getGenderText(user?.detail?.gender)}
           </p>
-          <p className={cn("text-sm font-medium my-2", user?.detail?.gender !== 'Male' && "invisible")}>
+          <p
+            className={cn(
+              "text-sm my-2",
+              user?.detail?.gender !== "Male" && "invisible"
+            )}
+          >
             <span className="font-semibold mr-1">Askerlik Durumu:</span>
             {getMilitaryStatusText(user?.detail?.military_status)}
           </p>
         </div>
-       <div className="grid grid-cols-1 md:grid-cols-3 w-full">
-       <p className="text-sm font-medium my-2">
-          <span className="font-semibold mr-1">Evlilik Durumu:</span>
-          {getMaritialStatusText(user?.detail?.marital_status)}
-        </p>
-        <p className="text-sm font-medium my-2">
-          <span className="font-semibold mr-1">Sürücü Belgeleri:</span>
-          {user?.detail?.driver_licenses.join(", ")}
-        </p>
-       </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 w-full font-normal">
+          <p className="text-sm my-2">
+            <span className="font-semibold mr-1">Evlilik Durumu:</span>
+            {getMaritialStatusText(user?.detail?.marital_status)}
+          </p>
+          <p className="text-sm my-2">
+            <span className="font-semibold mr-1">Sürücü Belgeleri:</span>
+            {user?.detail?.driver_licenses.join(", ")}
+          </p>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 w-full">
-          <p className="text-sm font-medium my-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 w-full font-normal">
+          <p className="text-sm my-2">
             <span className="font-semibold mr-1">Ülke:</span>
             {
               countryList.find(
@@ -189,7 +195,7 @@ function PrivateInformation({ user }: PrivateInformationProps) {
               )?.label
             }
           </p>
-          <p className="text-sm font-medium my-2">
+          <p className="text-sm my-2">
             <span className="font-semibold mr-1">Şehir:</span>
             {
               cityList.find(
@@ -198,13 +204,12 @@ function PrivateInformation({ user }: PrivateInformationProps) {
               )?.label
             }
           </p>
-          <p className="text-sm font-medium my-2">
+          <p className="text-sm my-2">
             <span className="font-semibold mr-1">İlçe:</span>
             {user?.detail?.district}
           </p>
-
         </div>
-        <p className="text-sm font-medium mb-2">
+        <p className="text-sm mb-2">
           <span className="font-semibold mr-1">Tam Adres:</span>
           {user?.detail?.address}
         </p>
