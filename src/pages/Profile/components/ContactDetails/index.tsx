@@ -191,8 +191,8 @@ function ContactDetails({ user }: ContactDetailsProps) {
   }, []);
 
   useEffect(() => {
-    if (user.detail.country_id) getCitiesList(user.detail.country_id);
-  }, [user.detail.country_id]);
+    if (user.detail?.country_id) getCitiesList(user.detail?.country_id);
+  }, [user.detail?.country_id]);
 
   useEffect(() => {
     if (location.state === "username required") {
@@ -309,21 +309,21 @@ function ContactDetails({ user }: ContactDetailsProps) {
           <div className="mb-2 text-muted-foreground text-[12px] md:text-sm">
             <div className="flex space-x-1 justify-between">
               <p>
-                {user.works.length > 0
-                  ? user.works[user.works.length - 1].position
+                {user?.works.length > 0
+                  ? user.works[user?.works.length - 1].position
                   : "Pozisyon Bilgisi Yok"}
               </p>
               {cityList.find((item) => item.id === user.detail.city_id)?.name +
                 ", " +
-                countryList.find((item) => item.id === user.detail.country_id)
+                countryList.find((item) => item.id === user.detail?.country_id)
                   ?.name}
             </div>
             <div className="flex space-x-1 justify-between">
               <p>
-                {user.detail.date_of_birth
+                {user.detail?.date_of_birth
                   ? `${
                       new Date().getFullYear() -
-                      new Date(user.detail.date_of_birth).getFullYear()
+                      new Date(user.detail?.date_of_birth).getFullYear()
                     } Yaşında`
                   : "Yaş Bilgisi Yok"}
               </p>

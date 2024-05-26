@@ -99,14 +99,14 @@ function PrivateInfoForm({
     console.log("initialValues", initialValues);
     if (initialValues)
       form.reset({
-        date_of_birth: initialValues.date_of_birth
-          ? new Date(initialValues.date_of_birth)
+        date_of_birth: initialValues?.date_of_birth
+          ? new Date(initialValues?.date_of_birth)
           : new Date(new Date().setDate(new Date().getDate() - 1)),
         gender: initialValues.gender || "",
         driver_licenses: initialValues.driver_licenses || [],
         marital_status: initialValues.marital_status || "",
         military_status: initialValues.military_status || "",
-        country_id: initialValues.country_id || 0,
+        country_id: initialValues?.country_id || 0,
         city_id: initialValues.city_id || 0,
         district: initialValues.district || "",
         address: initialValues.address || "",

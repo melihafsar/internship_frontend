@@ -111,8 +111,8 @@ function PrivateInformation({ user }: PrivateInformationProps) {
       setLoading(true);
       await ProfileService.updateUserDetails({
         ...data,
-        date_of_birth: data.date_of_birth
-          ? moment(data.date_of_birth).format("YYYY-MM-DD")
+        date_of_birth: data?.date_of_birth
+          ? moment(data?.date_of_birth).format("YYYY-MM-DD")
           : undefined,
       } as any);
       toast({

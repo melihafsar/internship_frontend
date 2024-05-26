@@ -47,7 +47,7 @@ function PostingDetailTab({ posting, userType }: PostingDetailTabProps) {
           <p>
             <span className="text-base font-medium">Çalışma Konumu: </span>
             {`${posting?.location} - ${
-              cityList.find((item) => item.id === posting.city_id)?.name
+              cityList.find((item) => item.id === posting?.city_id)?.name
             }, ${
               countryList.find((item) => item.id === posting?.country_id)?.name
             }`}
