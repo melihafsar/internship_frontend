@@ -309,8 +309,8 @@ function ContactDetails({ user }: ContactDetailsProps) {
           <div className="mb-2 text-muted-foreground text-[12px] md:text-sm">
             <div className="flex space-x-1 justify-between">
               <p>
-                {user?.works.length > 0
-                  ? user.works[user?.works.length - 1].position
+                {user?.works?.length > 0
+                  ? user.works[user?.works?.length - 1].position
                   : "Pozisyon Bilgisi Yok"}
               </p>
               {cityList.find((item) => item.id === user.detail.city_id)?.name +
