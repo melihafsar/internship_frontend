@@ -168,7 +168,7 @@ function ContactDetails({ user }: ContactDetailsProps) {
   const [showForm, setShowForm] = useState(false);
   const { loading, setLoading } = useUtil();
   const [showUploadDialog, setShowUploadDialog] = useState(false);
-  const { linkedinProviderToken } = useAuth();
+  const { linkedinProviderToken, supabase } = useAuth();
   const [linkedinImportState, setLinkedinImportState] = useState<{
     linkedLinkedin: boolean,
     scrapingLinkedin: boolean,
@@ -178,7 +178,6 @@ function ContactDetails({ user }: ContactDetailsProps) {
   const [showLinkedinImportDialog, setshowLinkedinImportDialog] = useState(false);
 
   const { toast } = useToast();
-  const { supabase } = useAuth();
   const isReadonly = useIsReadonly();
 
   const location = useLocation();
@@ -220,9 +219,20 @@ function ContactDetails({ user }: ContactDetailsProps) {
   }, [location]);
 
   const linkWithLinkedin = async () => {
+    if (!linkedinImportState.linkedLinkedin) {
+      await supabase.auth.linkIdentity({
+        provider: "linkedin_oidc",
+        options: {
+          redirectTo: window.location.origin + "/profile",
+        }
+      });
+
+      return;
+    }
+
     try {
       setLinkedinImportState({ ...linkedinImportState, scrapingLinkedin: true });
-      
+
       if (!linkedinProviderToken) {
         toast({
           title: "Hata",
@@ -328,7 +338,7 @@ function ContactDetails({ user }: ContactDetailsProps) {
         data={scrapeResult}
         setData={setScrapeResult}
       />
-      
+
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <div
           className="hover:opacity-60 flex items-center relative group cursor-pointer"
@@ -345,7 +355,7 @@ function ContactDetails({ user }: ContactDetailsProps) {
             <AvatarFallback>
               {user?.name
                 ? user?.name?.charAt(0).toUpperCase() +
-                  user?.surname?.charAt(0).toUpperCase()
+                user?.surname?.charAt(0).toUpperCase()
                 : user?.email?.slice(0, 2)}
             </AvatarFallback>
           </Avatar>
@@ -356,7 +366,7 @@ function ContactDetails({ user }: ContactDetailsProps) {
               {user.name || "Ad"} {user.surname || "Soyad"}
             </h1>
             <div className="flex flex-col gap-2">
-              {!isReadonly && <TooltipProvider>
+              {!isReadonly && linkedinImportState.linkedLinkedin && <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
@@ -376,7 +386,7 @@ function ContactDetails({ user }: ContactDetailsProps) {
                 </Tooltip>
               </TooltipProvider>}
               {!isReadonly && (
-              <Button
+                <Button
                   onClick={() => setShowForm(!showForm)}
                   variant="outline"
                   className="flex items-center space-x-2"
@@ -384,8 +394,8 @@ function ContactDetails({ user }: ContactDetailsProps) {
                   <Pencil className="h-4 w-4 mr-2" />
                   Bilgilerinizi Düzenleyin
                 </Button>
+              )}
             </div>
-            )}
           </div>
           <div className="mb-2 text-muted-foreground text-[12px] md:text-sm">
             <div className="flex space-x-1 justify-between">
@@ -402,17 +412,16 @@ function ContactDetails({ user }: ContactDetailsProps) {
             <div className="flex space-x-1 justify-between">
               <p>
                 {user.detail?.date_of_birth
-                  ? `${
-                      new Date().getFullYear() -
-                      new Date(user.detail?.date_of_birth).getFullYear()
-                    } Yaşında`
+                  ? `${new Date().getFullYear() -
+                  new Date(user.detail?.date_of_birth).getFullYear()
+                  } Yaşında`
                   : "Yaş Bilgisi Yok"}
               </p>
               <p>
                 {user.university_educations.length > 0
                   ? user.university_educations[
-                      user.university_educations.length - 1
-                    ].university_name
+                    user.university_educations.length - 1
+                  ].university_name
                   : "Eğitim Bilgisi Yok"}
               </p>
             </div>
@@ -420,13 +429,12 @@ function ContactDetails({ user }: ContactDetailsProps) {
               <a href={"mailto:" + user.email}>{user.email}</a>
               <p>
                 {user.foreign_languages.length > 0
-                  ? `Yabancı Dil: ${
-                      user.foreign_languages[user.foreign_languages.length - 1]
-                        .language_code +
-                      " - " +
-                      user.foreign_languages[user.foreign_languages.length - 1]
-                        .degree
-                    }`
+                  ? `Yabancı Dil: ${user.foreign_languages[user.foreign_languages.length - 1]
+                    .language_code +
+                  " - " +
+                  user.foreign_languages[user.foreign_languages.length - 1]
+                    .degree
+                  }`
                   : "Yabancı Dil Bilgisi Yok"}
               </p>
             </div>

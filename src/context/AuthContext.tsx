@@ -72,6 +72,51 @@ if (mobileCheck()) {
 }
 
 export const AuthProvider = ({ children }: any) => {
+  const toast = useToast();
+  const [linkedinProviderToken, setLinkedinProviderToken] = useState<{ access_token: string; refresh_token: string }>()
+
+  useEffect(() => {
+    if (!mobileCheck()) {
+      const messaging = getMessaging(app);
+      const unsub = onMessage(messaging, (payload) => {
+        toast.toast({
+          title: payload.notification?.title,
+          description: payload.notification?.body,
+          variant: "success",
+        });
+      });
+      return unsub;
+    } else {
+      window.FlutterRegisterToken?.postMessage("init");
+    }
+  }, []);
+
+  useEffect(() => {
+    const access_token = localStorage.getItem("linkedinProviderToken")
+    const refresh_token = localStorage.getItem("linkedinProviderRefreshToken")
+    if (access_token && refresh_token) {
+      setLinkedinProviderToken({ access_token, refresh_token })
+    }
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event == "INITIAL_SESSION" && session?.user.user_metadata["iss"] == "https://www.linkedin.com/oauth" && session?.provider_token && session?.provider_refresh_token) {
+          setLinkedinProviderToken({ access_token: session?.provider_token, refresh_token: session?.refresh_token })
+          localStorage.setItem("linkedinProviderToken", session?.provider_token)
+          localStorage.setItem("linkedinProviderRefreshToken", session?.provider_refresh_token)
+        }
+        if (event === "SIGNED_OUT") {
+          localStorage.removeItem("linkedinProviderToken")
+          localStorage.removeItem("linkedinProviderRefreshToken")
+          setLinkedinProviderToken(undefined)
+        }
+      });
+
+    return () => {
+      authListener.subscription?.unsubscribe();
+    };
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{ supabase, session: supabase.auth.getSession() as any, linkedinProviderToken }}
