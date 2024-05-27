@@ -21,7 +21,10 @@ function DesktopMenu() {
       const type = getUserType(session);
       const routes = mainRoutes.filter((route) => {
         if (route.showNavBar && route.userType !== undefined) {
-          return route.userType === type;
+          return (
+            route.userType === type ||
+            (type === undefined && route.userType === -1)
+          );
         }
         return route.showNavBar;
       });
@@ -48,7 +51,7 @@ function DesktopMenu() {
       <Button
         variant="ghost"
         className={cn(
-          typeof route.meta.title === "string" ? "w-28" : "",
+          typeof route.meta.title === "string" ? "" : "",
           match(route.path) ? "bg-orange-500 text-white" : ""
         )}
         onClick={() => navigate(route.path)}

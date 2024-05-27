@@ -7,9 +7,10 @@ import { useUtil } from "@/context/UtilContext";
 import { ProjectFormTypes } from "@/schemas/project-form.schema";
 import ProjectEditModal from "./ProjectEditModal";
 import { useMemo, useState } from "react";
-import { ImageUploadDialog } from "../ContactDetails/ImageUploadDialog";
+import { ImageUploadDialog } from "../../../../components/ImageUploadDialog";
 import { Link } from "react-router-dom";
 import { UserProject } from "@/types";
+import { useIsReadonly } from "@/context/IsReadonlyContext";
 
 interface ProjectCardProps {
   project: UserProject;
@@ -21,9 +22,8 @@ const ImgMemo = ({ src }: { src: string }) => {
       <img
         src={src}
         alt="proje-thumbnail"
-        className={`rounded-md object-cover bg-gray-100 ${
-          src === "/no-image.svg" ? "w-[128px]" : "w-[256px]"
-        }`}
+        className={`rounded-md object-cover bg-gray-100 ${src === "/no-image.svg" ? "w-[128px]" : "w-[256px]"
+          }`}
       />
     ),
     [src]
@@ -38,6 +38,7 @@ function ProjectCard({ project }: ProjectCardProps) {
   const [imageUrl, setImageUrl] = useState(
     project.project_thumbnail || "/no-image.svg"
   );
+  const isReadonly = useIsReadonly();
 
   const deleteProjectById = async (id: number) => {
     try {
@@ -124,13 +125,15 @@ function ProjectCard({ project }: ProjectCardProps) {
       >
         <div
           className="hover:opacity-60 flex items-center relative group cursor-pointer"
-          onClick={() => setShowUploadDialog(true)}
+          onClick={() => {
+            if (isReadonly) return;
+            setShowUploadDialog(true);
+          }}
         >
-          <Pencil
-            className={`absolute h-6 w-6 top-1/2  transform translate-x-[220%]  -translate-y-1/2 opacity-0 group-hover:opacity-100 z-50 ${
-              imageUrl !== "/no-image.svg" && "translate-x-[500%]"
-            }`}
-          />
+          {!isReadonly && <Pencil
+            className={`absolute h-6 w-6 top-1/2  transform translate-x-[220%]  -translate-y-1/2 opacity-0 group-hover:opacity-100 z-50 ${imageUrl !== "/no-image.svg" && "translate-x-[500%]"
+              }`}
+          />}
           <ImgMemo src={imageUrl} />
         </div>
         <div className="flex flex-col justify-start flex-1">
@@ -144,7 +147,7 @@ function ProjectCard({ project }: ProjectCardProps) {
             </Link>
 
             <div>
-              <ProjectEditModal
+              {!isReadonly && (<><ProjectEditModal
                 project={project}
                 triggerButton={
                   <Button size="icon" variant="ghost">
@@ -153,16 +156,16 @@ function ProjectCard({ project }: ProjectCardProps) {
                 }
                 handleUpdateProject={handleUpdateProject}
               />
-              <ConfirmationDialog
-                onConfirm={() => deleteProjectById(project.id!)}
-                triggerButton={
-                  <Button size="icon" variant="ghost">
-                    <Trash className="w-4 h-4 text-red-500" />
-                  </Button>
-                }
-                headerTitle="Eklediğim Projemi Sil"
-                description="Eklemiş olduğunuz projenizi silmek istediğinize emin misiniz?"
-              />
+                <ConfirmationDialog
+                  onConfirm={() => deleteProjectById(project.id!)}
+                  triggerButton={
+                    <Button size="icon" variant="ghost">
+                      <Trash className="w-4 h-4 text-red-500" />
+                    </Button>
+                  }
+                  headerTitle="Eklediğim Projemi Sil"
+                  description="Eklemiş olduğunuz projenizi silmek istediğinize emin misiniz?"
+                /></>)}
             </div>
           </div>
           <div className="flex items-center space-x-2">

@@ -17,6 +17,7 @@ import ProfileService from "@/services/profile.service";
 import { WorkFormTypes, useWorkForm } from "@/schemas/work-form.schema";
 import moment from "moment";
 import { showAccordionInProfile } from "@/utils/helpers.utils";
+import { useIsReadonly } from "@/context/IsReadonlyContext";
 
 interface WorkExperienceProps {
   user: UserDetail;
@@ -27,6 +28,7 @@ function WorkExperience({ user }: WorkExperienceProps) {
   const { loading, setLoading } = useUtil();
   const { toast } = useToast();
   const formDivRef = useRef<HTMLDivElement>(null);
+  const isReadonly = useIsReadonly();
 
   const handleFormSubmit = async (data: WorkFormTypes, e: any) => {
     e.preventDefault();
@@ -41,7 +43,7 @@ function WorkExperience({ user }: WorkExperienceProps) {
         reason_for_leave: data.is_working_now
           ? undefined
           : data.reason_for_leave,
-      });
+      } as any);
       toast({
         title: "Başarılı",
         description: "Yeni iş deneyimi başarıyla eklendi.",
@@ -63,12 +65,12 @@ function WorkExperience({ user }: WorkExperienceProps) {
     <>
       <div className="flex flex-col md:flex-row justify-between items-center w-full my-2">
         <h5 className="text-md font-medium my-2">
-          Eklediğim İş Deneyimlerim
+          {!isReadonly ? "Eklediğim İş Deneyimlerim" : "İş Deneyimleri"}
           <Badge className="ml-2" variant="secondary">
             {user.works?.length}
           </Badge>
         </h5>
-        <Button
+        {!isReadonly && <Button
           onClick={() =>
             showAccordionInProfile(showForm, formDivRef, setShowForm)
           }
@@ -77,7 +79,7 @@ function WorkExperience({ user }: WorkExperienceProps) {
         >
           <Plus className="h-4 w-4 mr-2" />
           İş Deneyimi Ekleyin
-        </Button>
+        </Button>}
       </div>
       {user.works?.length > 0 && (
         <>

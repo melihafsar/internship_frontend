@@ -5,23 +5,26 @@ import { useForm } from "react-hook-form";
 const formSchema = z.object({
   id: z.number().optional(),
   internship_posting_id: z.number(),
-  message: z.string().optional(),
-  cv: z.object({
-    cv_url: z.string().optional(),
-    file_name: z.string().optional(),
-  }).optional()
+  message: z
+    .string()
+    .max(1000, {
+      message: "Başvuru mesajınız en fazla 1000 karakter olabilir.",
+    })
+    .optional(),
+  cv: z
+    .object({
+      cv_url: z.string().optional(),
+      file_name: z.string().optional(),
+    })
+    .optional(),
 });
-
-
 
 export type InternshipApplicationFormTypes = z.infer<typeof formSchema>;
 
 export const useInternshipApplicationForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-    },
+    defaultValues: {},
   });
   return { form };
 };
-

@@ -9,6 +9,7 @@ import { useUtil } from "@/context/UtilContext";
 import EducationEditModal from "./EducationEditModal";
 import { EducationFormTypes } from "@/schemas/education-form.schema";
 import moment from "moment";
+import { useIsReadonly } from "@/context/IsReadonlyContext";
 
 interface EducationCardProps {
   education: Universityeducation;
@@ -17,6 +18,7 @@ interface EducationCardProps {
 function EducationCard({ education }: EducationCardProps) {
   const { toast } = useToast();
   const { setLoading } = useUtil();
+  const isReadonly = useIsReadonly();
 
   const deleteEducationById = async (id: number) => {
     try {
@@ -57,7 +59,7 @@ function EducationCard({ education }: EducationCardProps) {
           ? moment(data.end_date).format("YYYY-MM-DD")
           : null,
         education_year: data.is_graduated ? null : data.education_year,
-      });
+      } as any);
       toast({
         title: "Eğitim bilgileriniz başarıyla güncellendi.",
         variant: "success",
@@ -81,7 +83,7 @@ function EducationCard({ education }: EducationCardProps) {
       <div className="flex flex-col md:flex-row justify-between items-center space-x-2">
         <p className="font-semibold"> ■ {education.university_name}</p>
         <div>
-          <EducationEditModal
+          {!isReadonly && (<><EducationEditModal
             education={education}
             triggerButton={
               <Button size="icon" variant="ghost">
@@ -90,16 +92,16 @@ function EducationCard({ education }: EducationCardProps) {
             }
             handleUpdateEducation={handleUpdateEducation}
           />
-          <ConfirmationDialog
-            onConfirm={() => deleteEducationById(education.id!)}
-            triggerButton={
-              <Button size="icon" variant="ghost">
-                <Trash className="w-4 h-4 text-red-500" />
-              </Button>
-            }
-            headerTitle="Eklediğim Eğitimi Sil"
-            description="Eğitimi silmek istediğinize emin misiniz?"
-          />
+            <ConfirmationDialog
+              onConfirm={() => deleteEducationById(education.id!)}
+              triggerButton={
+                <Button size="icon" variant="ghost">
+                  <Trash className="w-4 h-4 text-red-500" />
+                </Button>
+              }
+              headerTitle="Eklediğim Eğitimi Sil"
+              description="Eğitimi silmek istediğinize emin misiniz?"
+            /></>)}
         </div>
       </div>
       <p className="font-light">

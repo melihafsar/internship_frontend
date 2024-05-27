@@ -1,0 +1,41 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Cache Docker layers
+      uses: actions/cache@v2
+      with:
+        path: ~/.docker
+        key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
+        restore-keys: |
+          ${{ runner.os }}-docker-
+
+    - name: Set image tag
+      id: set_tag
+      run: echo "TIMESTAMP=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+
+    - name: Log in to GitHub Container Registry
+      run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "melihafsar" --password-stdin
+
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag ghcr.io/melihafsar/internship-frontend:${{ env.TIMESTAMP }}
+
+    - name: Tag Docker image as latest
+      run: docker tag ghcr.io/melihafsar/internship-frontend:${{ env.TIMESTAMP }} ghcr.io/melihafsar/internship-frontend:latest
+      
+    - name: Push the Docker image
+      run: docker push ghcr.io/melihafsar/internship-frontend:${{ env.TIMESTAMP }}
+      
+    - name: Push the Docker latest image
+      run: docker push ghcr.io/melihafsar/internship-frontend:latest

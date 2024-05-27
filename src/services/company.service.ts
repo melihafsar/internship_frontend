@@ -1,11 +1,15 @@
 import { CompanyFormTypes } from "@/schemas/company-form.schema";
 import { api } from "../api";
-import { PagedListDto, ServiceReponse } from "@/types";
+import { DetailedCompanyDto, DetailedPostingApplication, PagedListDto, ServiceResponse } from "@/types";
 import { InternshipPostingFormTypes } from "@/schemas/internship-posting.schema";
 
 export default {
-  getCompany(): Promise<ServiceReponse<CompanyFormTypes>> {
+  getCompany(): Promise<ServiceResponse<CompanyFormTypes>> {
     return api.get("/Company/Get");
+  },
+
+  getDetailedCompany(id: number): Promise<ServiceResponse<DetailedCompanyDto>> {
+    return api.get(`/Company/Get/${id}`);
   },
   updateCompany(data: CompanyFormTypes) {
     const dto = { ...data };
@@ -14,18 +18,30 @@ export default {
   },
   listPostings(
     from: number,
-    companyId?: number
-  ): Promise<ServiceReponse<PagedListDto<InternshipPostingFormTypes>>> {
+    companyId?: number,
+    take?: number,
+    sort?: string,
+    matchQuery?: string,
+    workType?: string,
+    employmentType?: string,
+    salary?: string,
+  ): Promise<ServiceResponse<PagedListDto<InternshipPostingFormTypes>>> {
     return api
       .get(`/Company/InternshipPosting/List`, {
         params: {
           from,
           companyId,
+          take,
+          sort,
+          matchQuery,
+          workType,
+          employmentType,
+          salary,
         },
       })
       .then(
         (
-          response: ServiceReponse<PagedListDto<InternshipPostingFormTypes>>
+          response: ServiceResponse<PagedListDto<InternshipPostingFormTypes>>
         ) => {
           response.data.items.forEach((item) => {
             item.dead_line = new Date(item.dead_line);
@@ -47,5 +63,14 @@ export default {
   endPosting(data: InternshipPostingFormTypes) {
     const id = data.id;
     return api.post(`/Company/InternshipPosting/End/${id}`);
+  },
+  getPostingDetail(id: number) {
+    return api.get(`/Company/InternshipPosting/Get/${id}`);
+  },
+  getApplicationsList(id: number) {
+    return api.get(`/Company/InternshipPosting/GetApplications/${id}`);
+  },
+  getApplicationsDetail(id: number) : Promise<ServiceResponse<DetailedPostingApplication>> {
+    return api.get(`/Company/InternshipPosting/GetApplicationDetail/${id}`);
   },
 };

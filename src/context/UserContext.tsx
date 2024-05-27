@@ -1,4 +1,4 @@
-import { UserDetail } from "@/types";
+import { InternNotificationMessage, UserDetail } from "@/types";
 import React, { createContext, useEffect, useMemo, useState } from "react";
 import { useAuth } from "./AuthContext";
 import { getUserType } from "@/utils/helpers.utils";
@@ -13,6 +13,7 @@ interface UserContextProps {
   companyDetail: CompanyFormTypes;
   setCompanyDetail: React.Dispatch<React.SetStateAction<CompanyFormTypes>>;
   userType: number | null;
+  fetchMessages: () => Promise<{ data: InternNotificationMessage[] }>;
 }
 
 export const UserContext = createContext<UserContextProps>({
@@ -21,6 +22,7 @@ export const UserContext = createContext<UserContextProps>({
   companyDetail: {} as CompanyFormTypes,
   setCompanyDetail: () => {},
   userType: null,
+  fetchMessages: async () => ({ data: [] }),
 });
 
 export const UserProvider = ({ children }: any) => {
@@ -31,8 +33,14 @@ export const UserProvider = ({ children }: any) => {
   const [companyDetail, setCompanyDetail] = useState<CompanyFormTypes>(
     {} as CompanyFormTypes
   );
-
   const { supabase } = useAuth();
+
+  const isAvailableData =
+    userType !== 1 &&
+    userDetailData?.id !== undefined &&
+    !!userDetailData?.name &&
+    !!userDetailData?.surname;
+
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
       const type = getUserType(session);
@@ -77,6 +85,18 @@ export const UserProvider = ({ children }: any) => {
     }
   };
 
+  const fetchMessages = async () => {
+    if (isAvailableData) return;
+    try {
+      return await ProfileService.getMessages();
+    } catch {
+      toast({
+        title: "Hata",
+        description: "Mesajlar getirilirken bir hata oluştu.",
+      });
+    }
+  };
+
   const value = useMemo(
     () => ({
       userDetailData,
@@ -84,8 +104,9 @@ export const UserProvider = ({ children }: any) => {
       userType,
       companyDetail,
       setCompanyDetail,
+      fetchMessages,
     }),
-    [userDetailData]
+    [userDetailData, companyDetail, userType]
   );
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

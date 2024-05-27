@@ -17,8 +17,12 @@ export default {
   getUserInfo() {
     return api.post("/Account/GetInfo");
   },
-  getUniversities() {
-    return api.get("/University/List");
+  registerNotificationToken(token: string) {
+    if (!localStorage.getItem('sb-vzmyswxvnmseubtqgjpc-auth-token')) return
+    api.post("/Account/RegisterNotificationToken", { token });
+  },
+  getMessages() : Promise<ServiceResponse<{ title: string, body: string, created_at: string }[]>> {
+    return api.get("/Account/Messages");
   },
   updateUserInfo({
     name,

@@ -11,7 +11,7 @@ function Profile() {
   const { userDetailData } = useUser();
 
   useEffect(() => {
-    if (location.hash) setActiveTab(location.hash.slice(1));
+    if (location.hash) setActiveTab(location?.hash?.slice(1));
   }, [location.hash]);
 
   return (

@@ -10,6 +10,7 @@ import moment from "moment";
 import { WorkFormTypes } from "@/schemas/work-form.schema";
 import WorkEditModal from "./WorkEditModal";
 import { workTypesArray } from "@/const";
+import { useIsReadonly } from "@/context/IsReadonlyContext";
 
 interface WorkCardProps {
   work: Work;
@@ -18,6 +19,7 @@ interface WorkCardProps {
 function WorkCard({ work }: WorkCardProps) {
   const { toast } = useToast();
   const { setLoading } = useUtil();
+  const isReadonly = useIsReadonly();
 
   const workDetails = [
     {
@@ -90,7 +92,7 @@ function WorkCard({ work }: WorkCardProps) {
       <div className="flex flex-col md:flex-row justify-between items-center space-x-2">
         <p className="font-semibold"> ■ {work.company_name}</p>
         <div>
-          <WorkEditModal
+          {!isReadonly && (<><WorkEditModal
             work={work}
             triggerButton={
               <Button size="icon" variant="ghost">
@@ -99,23 +101,22 @@ function WorkCard({ work }: WorkCardProps) {
             }
             handleUpdateWork={handleUpdateWorkHistory}
           />
-          <ConfirmationDialog
-            onConfirm={() => deleteWorkHistoryById(work.id!)}
-            triggerButton={
-              <Button size="icon" variant="ghost">
-                <Trash className="w-4 h-4 text-red-500" />
-              </Button>
-            }
-            headerTitle="Eklediğim Çalışma Deneyimini Sil"
-            description="Çalışma deneyiminizi silmek istediğinize emin misiniz?"
-          />
+            <ConfirmationDialog
+              onConfirm={() => deleteWorkHistoryById(work.id!)}
+              triggerButton={
+                <Button size="icon" variant="ghost">
+                  <Trash className="w-4 h-4 text-red-500" />
+                </Button>
+              }
+              headerTitle="Eklediğim Çalışma Deneyimini Sil"
+              description="Çalışma deneyiminizi silmek istediğinize emin misiniz?"
+            /></>)}
         </div>
       </div>
       <div className="flex flex-col md:flex-row justify-between items-center space-x-2">
         <p className="font-light">
-          {`${work.position} - ${
-            workTypesArray.find((type) => type.value === work.work_type)?.label
-          }`}
+          {`${work.position} - ${workTypesArray.find((type) => type.value === work.work_type)?.label
+            }`}
         </p>
         <p className="text-muted-foreground text-sm">
           {formatToLocaleDate(work.start_date)} -{" "}

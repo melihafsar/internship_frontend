@@ -13,7 +13,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
-import { UserDetail } from "@/types";
+import { InternNotificationMessage, UserDetail } from "@/types";
+import { useUser } from "@/context/UserContext";
+import { useEffect, useState } from "react";
 
 interface ProfileDropdownProps {
   user: UserDetail;
@@ -22,10 +24,21 @@ interface ProfileDropdownProps {
 export const ProfileDropdown = ({ user }: ProfileDropdownProps) => {
   const { supabase } = useAuth();
   const navigate = useNavigate();
+  const { fetchMessages } = useUser();
+  const [messages, setMessages] = useState<InternNotificationMessage[]>([]);
+
+  const getMessages = async () => {
+    const messages = await fetchMessages();
+    setMessages(messages?.data ?? []);
+  };
+
+  useEffect(() => {
+    getMessages();
+  }, []);
 
   const ProfileAvatar = () => {
     return (
-      <div className="flex justify-center items-center space-x-2">
+      <div className="flex justify-center items-center gap-2">
         <Avatar className="w-8 h-8">
           <AvatarImage src={user?.profile_photo_url} alt="profil_resmim" />
           <AvatarFallback>
@@ -34,7 +47,7 @@ export const ProfileDropdown = ({ user }: ProfileDropdownProps) => {
               : user?.email?.charAt(0)}
           </AvatarFallback>
         </Avatar>
-        <h3 className="text-sm font-semibold">
+        <h3 className="text-sm font-semibold max-w-40 truncate">
           {user?.name && user?.surname
             ? `${user.name} ${user.surname}`
             : user?.email}
@@ -46,7 +59,9 @@ export const ProfileDropdown = ({ user }: ProfileDropdownProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost">{ProfileAvatar()}</Button>
+        <Button variant="ghost" className="max-w-56 truncate">
+          {ProfileAvatar()}
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>{ProfileAvatar()}</DropdownMenuLabel>
@@ -58,7 +73,9 @@ export const ProfileDropdown = ({ user }: ProfileDropdownProps) => {
           </DropdownMenuItem>
           <DropdownMenuItem>
             Mesajlarım
-            <Badge className="ml-2 rounded-full">3</Badge>
+            <Badge className="ml-2 rounded-full">
+              {messages.length > 0 ? messages.length : 0}
+            </Badge>
             <DropdownMenuShortcut>⌘M</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>

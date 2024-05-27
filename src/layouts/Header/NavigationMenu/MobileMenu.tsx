@@ -18,13 +18,15 @@ function MobileMenu() {
   const navigate = useNavigate();
   const { supabase } = useAuth();
   const [filteredRoutes, setFilteredRoutes] = useState<any[]>([]);
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
       const type = getUserType(session);
+      setIsSignedIn(type !== undefined);
       const routes = mainRoutes.filter((route) => {
         if (route.showNavBar && route.userType !== undefined) {
-          return route.userType === type;
+          return route.userType === type || (type === undefined && route.userType === -1);
         }
         return route.showNavBar;
       });
@@ -53,15 +55,17 @@ function MobileMenu() {
             </DropdownMenuItem>
           ))}
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={async () => {
-            await supabase.auth.signOut();
-            navigate("/login");
-          }}
-        >
-          Çıkış Yap
-        </DropdownMenuItem>
+
+        {isSignedIn && <>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={async () => {
+              await supabase.auth.signOut();
+              navigate("/login");
+            }}
+          >
+            Çıkış Yap
+          </DropdownMenuItem></>}
       </DropdownMenuContent>
     </DropdownMenu>
   );

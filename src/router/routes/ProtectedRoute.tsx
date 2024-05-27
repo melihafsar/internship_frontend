@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Page from "@/layouts/Page";
-import { useUtil } from "@/context/UtilContext";
+import { UtilProvider, useUtil } from "@/context/UtilContext";
 import Spinner from "@/components/Spinner";
 import { useAuth } from "@/context/AuthContext.tsx";
-import { getUserType } from "@/utils/helpers.utils.ts";
+import { getUserInfo, getUserType } from "@/utils/helpers.utils.ts";
+import { cn } from "@/lib/utils";
 
 interface ProtectedRouteProps {
   component: React.ElementType;
   userType?: number;
-
   [key: string]: any;
-
   fixPageHeight?: boolean;
+  showTitle?: boolean;
+  className?: string;
 }
 
 const fixPageHeightClassName = "overflow-hidden h-[calc(100vh-80px-4rem)]";
@@ -23,6 +24,8 @@ const ProtectedRoute = ({
   title,
   authenticated,
   fixPageHeight = false,
+  showTitle = true,
+  className,
   ...rest
 }: ProtectedRouteProps) => {
   const { loading, setLoading } = useUtil();
@@ -30,6 +33,18 @@ const ProtectedRoute = ({
   const { supabase } = useAuth();
   const navigate = useNavigate();
   const [userTypeState, setUserTypeState] = useState<number | null>(null);
+  const location = useLocation();
+  const [userInfo, setUserInfo] = useState<{
+    userType: number | null;
+    userName: string | null;
+    userSurname: string | null;
+    userEmail: string | null;
+  }>({
+    userType: null,
+    userName: null,
+    userSurname: null,
+    userEmail: null,
+  });
 
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
@@ -41,27 +56,39 @@ const ProtectedRoute = ({
         return;
       }
       setUserTypeState(getUserType(session));
+      setUserInfo(getUserInfo(session));
       setIsLoggedIn(true);
       setLoading(false);
     });
     return () => {
       data?.subscription.unsubscribe();
     };
-  }, []);
+  }, [supabase.auth]);
 
   const userAccessGranted =
-    userType !== undefined ? userType === userTypeState : true;
+    userType === undefined ? true : userType === userTypeState;
 
-  if (loading || isLoggedIn == null) return <Spinner />;
-  if (isLoggedIn && userAccessGranted)
+  if (loading || isLoggedIn === null) return <Spinner />;
+  if (isLoggedIn && userAccessGranted) {
+    if (
+      userInfo.userType === 0 &&
+      location.pathname !== "/profile" &&
+      (userInfo.userName === null || userInfo.userSurname === null)
+    ) {
+      return <Navigate to="/profile" state="username required" />;
+    }
     return (
       <Page
         title={title}
-        className={fixPageHeight ? fixPageHeightClassName : ""}
+        className={cn(className, fixPageHeight && fixPageHeightClassName)}
+        showTitle={showTitle}
       >
-        <Component {...rest} />
+        <UtilProvider>
+          <Component {...rest} />
+        </UtilProvider>
       </Page>
     );
+  }
   return <Navigate to="/login" replace />;
 };
 

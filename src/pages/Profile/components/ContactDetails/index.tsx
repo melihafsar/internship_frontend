@@ -24,8 +24,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ImageUploadDialog } from "./ImageUploadDialog";
+import { ImageUploadDialog } from "../../../../components/ImageUploadDialog";
 import { UserDetail } from "@/types";
+import { useIsReadonly } from "@/context/IsReadonlyContext";
+import { useLocation } from "react-router-dom";
+import { showAccordionInProfile } from "@/utils/helpers.utils";
+import React from "react";
+import LookupService from "@/services/lookup.service";
 import { useAuth } from "@/context/AuthContext";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ImportLinkedinDialog } from "./ImportLinkedinModal";
@@ -173,6 +178,46 @@ function ContactDetails({ user }: ContactDetailsProps) {
   const [showLinkedinImportDialog, setshowLinkedinImportDialog] = useState(false);
 
   const { toast } = useToast();
+  const { supabase } = useAuth();
+  const isReadonly = useIsReadonly();
+
+  const location = useLocation();
+  const formDivRef = React.useRef<HTMLDivElement>(null);
+
+  const [countryList, setCountryList] = useState<
+    { id: number; name: string }[]
+  >([]);
+  const [cityList, setCityList] = useState<{ id: number; name: string }[]>([]);
+
+  const getCountryList = async () => {
+    const response = await LookupService.getCountries();
+    setCountryList(response);
+  };
+
+  const getCitiesList = async (countryId: number) => {
+    const response = await LookupService.getCities(countryId);
+    setCityList(response);
+  };
+
+  useEffect(() => {
+    if (!countryList.length) getCountryList();
+  }, []);
+
+  useEffect(() => {
+    if (user.detail?.country_id) getCitiesList(user.detail?.country_id);
+  }, [user.detail?.country_id]);
+
+  useEffect(() => {
+    if (location.state === "username required") {
+      showAccordionInProfile(showForm, formDivRef, setShowForm);
+      toast({
+        title: "Önce Ad ve Soyad Bilgilerinizi Doldurun",
+        description:
+          "Profilinizi tamamlamak için ad ve soyad bilgilerinizi doldurmalısınız.",
+        variant: "destructive",
+      });
+    }
+  }, [location]);
 
   const linkWithLinkedin = async () => {
     try {
@@ -222,6 +267,7 @@ function ContactDetails({ user }: ContactDetailsProps) {
         surname: data.surname,
         phone_number: data.phoneNumber,
       });
+      await supabase.auth.refreshSession();
       toast({
         title: "Başarılı",
         description: "Bilgileriniz başarıyla güncellendi.",
@@ -286,21 +332,31 @@ function ContactDetails({ user }: ContactDetailsProps) {
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <div
           className="hover:opacity-60 flex items-center relative group cursor-pointer"
-          onClick={() => setShowUploadDialog(true)}
+          onClick={() => {
+            if (isReadonly) return;
+            setShowUploadDialog(true);
+          }}
         >
-          <Pencil className="absolute h-6 w-6 top-1/2 right-1/2 transform translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 z-50" />
+          {!isReadonly && (
+            <Pencil className="absolute h-6 w-6 top-1/2 right-1/2 transform translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 z-50" />
+          )}
           <Avatar className="h-32 w-32 m-4">
             <AvatarImage src={user?.profile_photo_url} alt="profil_resmim" />
-            <AvatarFallback>MA</AvatarFallback>
+            <AvatarFallback>
+              {user?.name
+                ? user?.name?.charAt(0).toUpperCase() +
+                  user?.surname?.charAt(0).toUpperCase()
+                : user?.email?.slice(0, 2)}
+            </AvatarFallback>
           </Avatar>
         </div>
         <div className="flex flex-1 flex-col space-y-2">
           <div className="flex flex-col gap-y-2 md:gap-y-0 md:flex-row justify-between items-center">
             <h1 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-2xl">
-              {user.name} {user.surname}
+              {user.name || "Ad"} {user.surname || "Soyad"}
             </h1>
             <div className="flex flex-col gap-2">
-              <TooltipProvider>
+              {!isReadonly && <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
@@ -318,40 +374,71 @@ function ContactDetails({ user }: ContactDetailsProps) {
                     }
                   </TooltipContent>
                 </Tooltip>
-              </TooltipProvider>
+              </TooltipProvider>}
+              {!isReadonly && (
               <Button
-                onClick={() => setShowForm(!showForm)}
-                variant="outline"
-                className="flex items-center space-x-2"
-              >
-                <Pencil className="h-4 w-4 mr-2" />
-                Bilgilerinizi Düzenleyin
-              </Button>
+                  onClick={() => setShowForm(!showForm)}
+                  variant="outline"
+                  className="flex items-center space-x-2"
+                >
+                  <Pencil className="h-4 w-4 mr-2" />
+                  Bilgilerinizi Düzenleyin
+                </Button>
             </div>
+            )}
           </div>
           <div className="mb-2 text-muted-foreground text-[12px] md:text-sm">
             <div className="flex space-x-1 justify-between">
-              <p>Frontend Developer</p>
-              <p>İstanbul, Türkiye</p>
+              <p>
+                {user?.works?.length > 0
+                  ? user.works[user?.works?.length - 1].position
+                  : "Pozisyon Bilgisi Yok"}
+              </p>
+              {cityList.find((item) => item.id === user.detail.city_id)?.name +
+                ", " +
+                countryList.find((item) => item.id === user.detail?.country_id)
+                  ?.name}
             </div>
             <div className="flex space-x-1 justify-between">
-              <p>22 yaşında</p>
-              <p>Marmara Üniversitesi</p>
+              <p>
+                {user.detail?.date_of_birth
+                  ? `${
+                      new Date().getFullYear() -
+                      new Date(user.detail?.date_of_birth).getFullYear()
+                    } Yaşında`
+                  : "Yaş Bilgisi Yok"}
+              </p>
+              <p>
+                {user.university_educations.length > 0
+                  ? user.university_educations[
+                      user.university_educations.length - 1
+                    ].university_name
+                  : "Eğitim Bilgisi Yok"}
+              </p>
             </div>
             <div className="flex space-x-1 justify-between flex-wrap">
-              <p>Twitter: @shadcn</p>
-              <p>Website: https://shadcn.com</p>
+              <a href={"mailto:" + user.email}>{user.email}</a>
+              <p>
+                {user.foreign_languages.length > 0
+                  ? `Yabancı Dil: ${
+                      user.foreign_languages[user.foreign_languages.length - 1]
+                        .language_code +
+                      " - " +
+                      user.foreign_languages[user.foreign_languages.length - 1]
+                        .degree
+                    }`
+                  : "Yabancı Dil Bilgisi Yok"}
+              </p>
             </div>
           </div>
         </div>
       </div>
-
       <Accordion
         type="single"
         value={showForm ? "profile" : undefined}
         collapsible
       >
-        <AccordionItem value="profile">
+        <AccordionItem value="profile" ref={formDivRef}>
           <AccordionContent>
             <Separator className="my-1" />
             <ContactDetailsForm

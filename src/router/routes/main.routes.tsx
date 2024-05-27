@@ -1,21 +1,24 @@
 import { lazy } from "react";
 import ProtectedRoute from "./ProtectedRoute";
-import Page from "@/layouts/Page";
 import { Mail } from "lucide-react";
+import Page from "@/layouts/Page";
 
 const Profile = lazy(() => import("@/pages/Profile"));
 const HomePage = lazy(() => import("@/pages/HomePage"));
-const Applications = lazy(() => import("@/pages/Applications"));
+const Applications = lazy(() => import("@/pages/Applications/MyApplications"));
 const Messages = lazy(() => import("@/pages/Messages"));
 const UserRegister = lazy(() => import("@/pages/UserRegister"));
 const MyCompany = lazy(() => import("@/pages/MyCompany"));
-const InternshipPostingPage = lazy(
-  () => import("@/pages/MyCompany/InternshipPosting")
+const ApplicationsDetailPage = lazy(
+  () => import("@/pages/Applications/ApplicationsDetail")
 );
+const CompanyDetail = lazy(() => import("@/pages/CompanyPortfolio"));
+const ApplicantPortfolio = lazy(() => import("@/pages/ApplicantPortfolio"));
+const Login = lazy(() => import("@/pages/Login"));
 
 const messagesTitle = (
-  <div className="flex items-center space-x-2">
-    <Mail />
+  <div className="flex items-center gap-1">
+    <Mail size={20} />
     <span>Mesajlarım</span>
   </div>
 );
@@ -27,7 +30,8 @@ export const mainRoutes = [
     element: (
       <Page
         title="Anasayfa"
-        className="overflow-hidden h-[calc(100vh-80px-4rem)]"
+        className="overflow-hidden p-0 m-0"
+        showTitle={false}
       >
         <HomePage />
       </Page>
@@ -38,6 +42,24 @@ export const mainRoutes = [
     showNavBar: true,
   },
   {
+    path: "/login",
+    id: "login",
+    element: (
+      <Page
+        title="Giriş Yap"
+        className="overflow-hidden p-0 m-0 h-screen flex items-center login justify-center"
+        showTitle={false}
+      >
+        <Login />
+      </Page>
+    ),
+    meta: {
+      title: "Giriş Yap",
+    },
+    showNavBar: true,
+    userType: -1,
+  },
+  {
     path: "/applications",
     id: "applications",
     element: (
@@ -45,6 +67,7 @@ export const mainRoutes = [
         userType={0}
         title="Başvurularım"
         component={Applications}
+        showTitle={false}
       />
     ),
     meta: {
@@ -52,6 +75,57 @@ export const mainRoutes = [
     },
     showNavBar: true,
     userType: 0,
+  },
+  {
+    path: "/applications/:id",
+    id: "applications-detail",
+    element: (
+      <ProtectedRoute
+        title="İlan Detayları"
+        component={ApplicationsDetailPage}
+        showTitle={false}
+        className="overflow-hidden p-0 m-0"
+      />
+    ),
+    meta: {
+      title: "İlan Detayları",
+    },
+    showNavBar: false,
+  },
+  {
+    path: "/company-detail/:id",
+    id: "company-detail",
+    element: (
+      <Page
+        title="Şirket Detayları"
+        showTitle={false}
+        className=""
+        // className="overflow-hidden p-0 m-0"
+        // showTitle={false}
+      >
+        <CompanyDetail />
+      </Page>
+    ),
+    meta: {
+      title: "Şirket Detayları",
+    },
+    showNavBar: false,
+  },
+  {
+    path: "/applicant-detail/:id",
+    id: "applicant-detail",
+    element: (
+      <ProtectedRoute
+        userType={1}
+        title="Başvuran Detayları"
+        component={ApplicantPortfolio}
+      />
+    ),
+    meta: {
+      title: "Başvuran Detayları",
+    },
+    showNavBar: false,
+    userType: 1,
   },
   {
     path: "/messages",
@@ -79,28 +153,23 @@ export const mainRoutes = [
   },
   {
     path: "/user-registered",
-    element: (
-      <ProtectedRoute
-        title=""
-        component={(args) => <UserRegister {...args} />}
-      />
-    ),
+    element: <UserRegister />,
     meta: {
       title: "Kullanıcı Kayıt",
     },
     showNavBar: false,
   },
   {
-    path: "/my-posting",
+    path: "/my-company#company-posts",
     element: (
       <ProtectedRoute
         userType={1}
         title="Staj İlanı Oluştur"
-        component={InternshipPostingPage}
+        component={MyCompany}
       />
     ),
     meta: {
-      title: "İlan oluştur",
+      title: "İlan Oluştur",
     },
     showNavBar: true,
     userType: 1,

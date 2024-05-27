@@ -36,8 +36,8 @@ import {
   genderTypesArray,
 } from "@/const";
 import { MultiSelect } from "@/components/MultiSelect";
-import LocationService from "@/services/location.service.ts";
 import { Combobox, ComboboxData } from "@/components/ui/combobox";
+import LookupService from "@/services/lookup.service";
 
 interface WorkFormProps {
   form: UseFormReturn<PrivateInformationFormTypes>;
@@ -61,7 +61,7 @@ function PrivateInfoForm({
   const showOtherAddressField = form.getValues("city_id") !== (null || 0);
 
   const getCountryList = async () => {
-    const response = await LocationService.getCountries();
+    const response = await LookupService.getCountries();
     const coutryList = response.map(
       (item) => {
         return {
@@ -74,7 +74,7 @@ function PrivateInfoForm({
   };
 
   const getCitiesList = async (countryId: number) => {
-    const response = await LocationService.getCities(countryId);
+    const response = await LookupService.getCities(countryId);
     const cityList = response.map(
       (item) => {
         return {
@@ -99,14 +99,14 @@ function PrivateInfoForm({
     console.log("initialValues", initialValues);
     if (initialValues)
       form.reset({
-        date_of_birth: initialValues.date_of_birth
-          ? new Date(initialValues.date_of_birth)
+        date_of_birth: initialValues?.date_of_birth
+          ? new Date(initialValues?.date_of_birth)
           : new Date(new Date().setDate(new Date().getDate() - 1)),
         gender: initialValues.gender || "",
         driver_licenses: initialValues.driver_licenses || [],
         marital_status: initialValues.marital_status || "",
         military_status: initialValues.military_status || "",
-        country_id: initialValues.country_id || 0,
+        country_id: initialValues?.country_id || 0,
         city_id: initialValues.city_id || 0,
         district: initialValues.district || "",
         address: initialValues.address || "",

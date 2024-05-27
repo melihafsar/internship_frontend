@@ -19,6 +19,7 @@ import {
 import ReferenceCard from "./ReferenceCard";
 import ReferenceForm from "./ReferenceForm";
 import { showAccordionInProfile } from "@/utils/helpers.utils";
+import { useIsReadonly } from "@/context/IsReadonlyContext";
 
 interface ReferencesProps {
   user: UserDetail;
@@ -29,12 +30,13 @@ function References({ user }: ReferencesProps) {
   const { loading, setLoading } = useUtil();
   const { toast } = useToast();
   const formDivRef = useRef<HTMLDivElement>(null);
+  const isReadonly = useIsReadonly();
 
   const handleFormSubmit = async (data: ReferencesFormTypes, e: any) => {
     e.preventDefault();
     try {
       setLoading(true);
-      await ProfileService.addNewReference(data);
+      await ProfileService.addNewReference(data as any);
       toast({
         title: "Başarılı",
         description: "Yeni referans başarıyla eklendi.",
@@ -56,12 +58,12 @@ function References({ user }: ReferencesProps) {
     <>
       <div className="flex flex-col md:flex-row justify-between items-center w-full my-2">
         <h5 className="text-md font-medium my-2">
-          Eklediğim Referanslarım
+          {!isReadonly ? "Eklediğim Referanslarım" : "Kullanıcının Referansları"}
           <Badge className="ml-2" variant="secondary">
             {user.references?.length}
           </Badge>
         </h5>
-        <Button
+        {!isReadonly && <Button
           onClick={() =>
             showAccordionInProfile(showForm, formDivRef, setShowForm)
           }
@@ -70,7 +72,7 @@ function References({ user }: ReferencesProps) {
         >
           <Plus className="h-4 w-4 mr-2" />
           Referans Bilgisi Ekleyin
-        </Button>
+        </Button>}
       </div>
       {user.references?.length > 0 && (
         <>

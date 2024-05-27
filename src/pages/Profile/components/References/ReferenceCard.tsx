@@ -6,6 +6,7 @@ import ProfileService from "@/services/profile.service";
 import ReferenceEditModal from "./ReferenceEditModal";
 import { Button } from "@/components/ui/button";
 import ConfirmationDialog from "@/components/ConfirmationDialog";
+import { useIsReadonly } from "@/context/IsReadonlyContext";
 
 interface ReferenceCardProps {
   reference: Reference;
@@ -14,6 +15,7 @@ interface ReferenceCardProps {
 function ReferenceCard({ reference }: ReferenceCardProps) {
   const { toast } = useToast();
   const { setLoading } = useUtil();
+  const isReadonly = useIsReadonly();
 
   const deleteReferenceById = async (id: number) => {
     try {
@@ -61,7 +63,7 @@ function ReferenceCard({ reference }: ReferenceCardProps) {
           •<p className="text-muted-foreground">{reference.duty}</p>
         </div>
         <div>
-          <ReferenceEditModal
+         {!isReadonly && (<><ReferenceEditModal
             reference={reference}
             triggerButton={
               <Button size="icon" variant="ghost">
@@ -79,11 +81,11 @@ function ReferenceCard({ reference }: ReferenceCardProps) {
             }
             headerTitle="Eklediğim Referansımı Sil"
             description="Bu referansı silmek istediğinizden emin misiniz?"
-          />
+          /></>)}
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row justify-between items-center space-x-2 text-muted-foreground text-muted-foreground">
+      <div className="flex flex-col md:flex-row justify-between items-center space-x-2 text-muted-foreground">
         <div className="flex flex-col md:flex-row gap-2 items-center">
           <p className="flex">
             <Mail className="w-4 h-4 m-1 ml-0" />
