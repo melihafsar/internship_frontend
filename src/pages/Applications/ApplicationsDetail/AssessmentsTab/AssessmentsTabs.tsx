@@ -7,7 +7,7 @@ interface AssessmentsTabsProps {
 function AssessmentsTabs({ comments }: AssessmentsTabsProps) {
   return (
     <div className="flex flex-col w-full h-full border-4 border-secondary rounded-md">
-      {comments.length === 0 && (
+      {comments?.length === 0 && (
         <div className="flex items-center justify-center w-full text-center my-4">
           <span>Bu staj için daha önce yorum yapılmamıştır.</span>
         </div>

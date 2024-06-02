@@ -187,7 +187,7 @@ function ContactDetails({ user }: ContactDetailsProps) {
   };
 
   useEffect(() => {
-    if (!countryList.length) getCountryList();
+    if (!countryList?.length) getCountryList();
   }, []);
 
   useEffect(() => {
@@ -328,9 +328,9 @@ function ContactDetails({ user }: ContactDetailsProps) {
                   : "Yaş Bilgisi Yok"}
               </p>
               <p>
-                {user.university_educations.length > 0
+                {user.university_educations?.length > 0
                   ? user.university_educations[
-                      user.university_educations.length - 1
+                      user.university_educations?.length - 1
                     ].university_name
                   : "Eğitim Bilgisi Yok"}
               </p>
@@ -338,12 +338,12 @@ function ContactDetails({ user }: ContactDetailsProps) {
             <div className="flex space-x-1 justify-between flex-wrap">
               <a href={"mailto:" + user.email}>{user.email}</a>
               <p>
-                {user.foreign_languages.length > 0
+                {user.foreign_languages?.length > 0
                   ? `Yabancı Dil: ${
-                      user.foreign_languages[user.foreign_languages.length - 1]
+                      user.foreign_languages[user.foreign_languages?.length - 1]
                         .language_code +
                       " - " +
-                      user.foreign_languages[user.foreign_languages.length - 1]
+                      user.foreign_languages[user.foreign_languages?.length - 1]
                         .degree
                     }`
                   : "Yabancı Dil Bilgisi Yok"}

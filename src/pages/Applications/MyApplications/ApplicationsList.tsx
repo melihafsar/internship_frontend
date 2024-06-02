@@ -53,7 +53,7 @@ function ApplicationsList() {
               <Skeleton className="h-6 w-[95%] my-2" />
             </Card>
           ))
-        ) : internApplicationsData.length === 0 ? (
+        ) : internApplicationsData?.length === 0 ? (
           <div className="text-gray-500">
             Henüz başvurduğunuz bir ilan bulunmamaktadır.
           </div>

@@ -41,7 +41,7 @@ function Messages() {
             </div>
           </div>
         ))
-      ) : messages.length === 0 ? (
+      ) : messages?.length === 0 ? (
         <div className="text-gray-500">Henüz mesajınız bulunmamaktadır.</div>
       ) : (
         messages.map((message, index) => {

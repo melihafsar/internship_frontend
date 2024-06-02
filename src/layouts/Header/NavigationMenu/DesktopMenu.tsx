@@ -74,7 +74,7 @@ function DesktopMenu() {
 
   return (
     <ul className="flex flex-row space-x-2">
-      {filteredRoutes.length > 0 &&
+      {filteredRoutes?.length > 0 &&
         filteredRoutes.map((route: any) => (
           <li key={route.path}>{renderComponent(route)}</li>
         ))}

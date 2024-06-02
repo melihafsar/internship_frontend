@@ -74,7 +74,7 @@ export const ProfileDropdown = ({ user }: ProfileDropdownProps) => {
           <DropdownMenuItem>
             Mesajlarım
             <Badge className="ml-2 rounded-full">
-              {messages.length > 0 ? messages.length : 0}
+              {messages?.length > 0 ? messages?.length : 0}
             </Badge>
             <DropdownMenuShortcut>⌘M</DropdownMenuShortcut>
           </DropdownMenuItem>

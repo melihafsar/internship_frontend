@@ -60,7 +60,7 @@ function PrivateInformation({ user }: PrivateInformationProps) {
   };
 
   useEffect(() => {
-    if (!countryList.length) getCountryList();
+    if (!countryList?.length) getCountryList();
   }, []);
 
   useEffect(() => {

@@ -55,7 +55,7 @@ function InternshipsForYou() {
               <Skeleton className="h-6 w-[95%] my-2" />
             </Card>
           ))
-        ) : recommendedPosting.length === 0 ? (
+        ) : recommendedPosting?.length === 0 ? (
           <div className="text-gray-500">
             Henüz önerilen bir ilan bulunmamaktadır.
           </div>

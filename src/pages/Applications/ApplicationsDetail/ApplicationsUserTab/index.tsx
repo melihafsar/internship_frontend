@@ -54,7 +54,7 @@ function ApplicationsUserTab({ postingId }: ApplicationsUserTabProps) {
             </div>
           </div>
         ))
-      ) : applicationsList.length === 0 ? (
+      ) : applicationsList?.length === 0 ? (
         <div className="flex items-center justify-center w-full text-center my-4">
           <span>Bu staj için daha önce başvuru yapılmamıştır.</span>
         </div>

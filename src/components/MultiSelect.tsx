@@ -73,8 +73,8 @@ function MultiSelect({
               </Badge>
             ))} */}
             <p className="text-muted-foreground text-[11px]">
-              {selected.length > 0
-                ? `${selected.length} seçenek seçildi`
+              {selected?.length > 0
+                ? `${selected?.length} seçenek seçildi`
                 : "En az bir tane seçeneği seçiniz..."}
             </p>
           </div>
