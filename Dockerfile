@@ -1,9 +1,9 @@
-FROM node:20-alpine 
+FROM oven/bun:latest
 WORKDIR /app
 COPY . .
 ENV VITE_API_URL https://internshipapi.osman.tech
-RUN npm i 
-RUN npm run build
+RUN bun install
+RUN bun run build
 ENV NODE_ENV production
 EXPOSE 4173
-CMD ["npx", "vite", "preview", "--host"]
+CMD ["bunx", "vite", "preview", "--host"]
